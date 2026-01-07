@@ -1,6 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { Container, Box } from "@mui/material";
+import { Container } from "@mui/material";
 import PictureCaptureView from "./view/moles/PictureCaptureView";
 
 const theme = createTheme({
