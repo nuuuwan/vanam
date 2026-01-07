@@ -18,11 +18,8 @@ const WelcomeSection = () => {
         Welcome to Vanam
       </Typography>
       <Typography variant="body1" sx={{ mb: 2 }} color="text.secondary">
-        A mobile-first web app for cataloguing trees. Point your phone at a
-        plant, take a photo, and Vanam records it as a structured observation.
-      </Typography>
-      <Typography variant="body1" sx={{ mb: 3 }} color="text.secondary">
-        Each observation captures:
+        A web app for cataloguing trees. Point your phone at a plant, take a
+        photo, and vanam records it as a structured observation with:
       </Typography>
       <List
         sx={{
@@ -35,33 +32,36 @@ const WelcomeSection = () => {
           <ListItemIcon>
             <LocationOnIcon color="primary" />
           </ListItemIcon>
-          <ListItemText
-            primary="GPS Location"
-            secondary="Latitude and longitude extracted from photo metadata"
-          />
+          <ListItemText primary="GPS latitude and longitude" />
         </ListItem>
         <ListItem>
           <ListItemIcon>
             <PhotoCameraIcon color="primary" />
           </ListItemIcon>
-          <ListItemText
-            primary="Species Identification"
-            secondary="Powered by PlantNet AI for accurate plant recognition"
-          />
+          <ListItemText primary="Species identification via PlantNet" />
         </ListItem>
         <ListItem>
           <ListItemIcon>
             <ImageIcon color="primary" />
           </ListItemIcon>
-          <ListItemText
-            primary="Image & Metadata"
-            secondary="Complete observation record with contextual information"
-          />
+          <ListItemText primary="Image and contextual metadata" />
         </ListItem>
       </List>
-      <Typography variant="body2" sx={{ color: "#666", fontStyle: "italic" }}>
-        Make it easy to build accurate, geo-referenced tree inventories, one
-        plant at a time.
+      <Typography
+        variant="body2"
+        sx={{ mb: 2, color: "#666", fontStyle: "italic" }}
+      >
+        The goal is simple: make it easy to build accurate, geo-referenced tree
+        inventories, one plant at a time.
+      </Typography>
+      <Typography variant="body2" sx={{ mb: 2 }} color="text.secondary">
+        The name <em>vanam</em> comes from Sanskrit, meaning forest, and is also
+        the root of the Sinhala word <em>vanaya</em> (වනය) and the Tamil word{" "}
+        <em>vanam</em> (வනம்), both meaning forest.
+      </Typography>
+      <Typography variant="body2" color="text.secondary">
+        vanam runs entirely in the browser and is designed for field use. It
+        favours practicality over polish and data over decoration.
       </Typography>
     </Box>
   );
