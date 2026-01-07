@@ -351,20 +351,36 @@ const PictureCapture = () => {
                               ? result.species.commonNames[0]
                               : result.species.scientificName}
                           </Typography>
-                          <Typography variant="body2" sx={{ color: "#666", fontStyle: "italic" }}>
-                            {result.species.scientificName || result.species.scientificNameWithoutAuthor}
+                          <Typography
+                            variant="body2"
+                            sx={{ color: "#666", fontStyle: "italic" }}
+                          >
+                            {result.species.scientificName ||
+                              result.species.scientificNameWithoutAuthor}
                           </Typography>
                           {result.species.genus && (
-                            <Typography variant="body2" sx={{ color: "#888", mt: 0.5 }}>
-                              <strong>Genus:</strong> {result.species.genus.scientificName}
+                            <Typography
+                              variant="body2"
+                              sx={{ color: "#888", mt: 0.5 }}
+                            >
+                              <strong>Genus:</strong>{" "}
+                              {result.species.genus.scientificName}
                             </Typography>
                           )}
                           {result.species.family && (
                             <Typography variant="body2" sx={{ color: "#888" }}>
-                              <strong>Family:</strong> {result.species.family.scientificName}
+                              <strong>Family:</strong>{" "}
+                              {result.species.family.scientificName}
                             </Typography>
                           )}
-                          <Box sx={{ mt: 2, display: "flex", alignItems: "center", gap: 2 }}>
+                          <Box
+                            sx={{
+                              mt: 2,
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 2,
+                            }}
+                          >
                             <Gauge
                               width={100}
                               height={100}
@@ -373,11 +389,19 @@ const PictureCapture = () => {
                               valueMax={100}
                               sx={{
                                 [`& .MuiGauge-valueArc`]: {
-                                  fill: result.score > 0.8 ? "#4caf50" : result.score > 0.5 ? "#ff9800" : "#f44336"
-                                }
+                                  fill:
+                                    result.score > 0.8
+                                      ? "#4caf50"
+                                      : result.score > 0.5
+                                      ? "#ff9800"
+                                      : "#f44336",
+                                },
                               }}
                             />
-                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            <Typography
+                              variant="body2"
+                              sx={{ fontWeight: 600 }}
+                            >
                               {(result.score * 100).toFixed(1)}% Confidence
                             </Typography>
                           </Box>
