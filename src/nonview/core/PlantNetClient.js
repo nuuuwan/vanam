@@ -26,11 +26,14 @@ class PlantNetClient {
         project,
       };
 
-      const apiResponse = await fetch("/api/plantnet", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const apiResponse = await fetch(
+        "https://vanam-teal.vercel.app/api/plantnet",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (!apiResponse.ok) {
         const errorText = await apiResponse.text();
