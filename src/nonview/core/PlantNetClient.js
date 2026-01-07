@@ -15,9 +15,16 @@ class PlantNetClient {
       const response = await fetch(imageBase64);
       const blob = await response.blob();
 
+      // Determine the file extension and MIME type
+      const mimeType = blob.type || "image/jpeg";
+      const extension = mimeType.split("/")[1] || "jpg";
+
+      // Create a File object with proper type
+      const file = new File([blob], `plant.${extension}`, { type: mimeType });
+
       // Create FormData
       const formData = new FormData();
-      formData.append("images", blob, "plant.jpg");
+      formData.append("images", file);
       formData.append("organs", organs);
 
       const apiResponse = await fetch(
