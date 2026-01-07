@@ -33,11 +33,7 @@ const PlantResultItem = ({ result }) => {
           />
         )}
         <Box sx={{ flex: 1 }}>
-          <Typography
-            variant="subtitle1"
-            fontStyle="italic"
-            sx={{ mb: 1 }}
-          >
+          <Typography variant="subtitle1" fontStyle="italic" sx={{ mb: 1 }}>
             <Link
               href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
                 result.species.scientificNameWithoutAuthor ||

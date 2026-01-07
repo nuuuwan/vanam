@@ -8,11 +8,7 @@ const DatabaseLink = ({ label, href, displayText }) => {
         {label}
       </Typography>
       {href && displayText && (
-        <Link
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <Link href={href} target="_blank" rel="noopener noreferrer">
           {displayText}
         </Link>
       )}

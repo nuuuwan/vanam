@@ -16,12 +16,7 @@ const CommonNamesChips = ({ commonNames }) => {
       }}
     >
       {commonNames.map((name, idx) => (
-        <Chip
-          key={idx}
-          label={name}
-          size="small"
-          variant="outlined"
-        />
+        <Chip key={idx} label={name} size="small" variant="outlined" />
       ))}
     </Box>
   );

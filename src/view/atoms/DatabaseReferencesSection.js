@@ -108,11 +108,7 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
                   />
                 </Stack>
                 {iucn.category && (
-                  <Chip
-                    label={iucn.category}
-                    size="small"
-                    variant="outlined"
-                  />
+                  <Chip label={iucn.category} size="small" variant="outlined" />
                 )}
               </Stack>
             </CardContent>
