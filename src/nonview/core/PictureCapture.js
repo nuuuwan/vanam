@@ -68,10 +68,8 @@ class PictureCapture {
           latitude: gps.latitude,
           longitude: gps.longitude,
         };
-        console.log("GPS data set:", gpsData);
         return { success: true, gpsData };
       } else {
-        console.log("No GPS data found in image");
         return { success: true, gpsData: null };
       }
     } catch (err) {
@@ -122,7 +120,6 @@ class PictureCapture {
       });
 
       if (result.results && result.results.length > 0) {
-        console.debug("result.results", result.results);
         return { success: true, results: result.results };
       } else {
         return {
