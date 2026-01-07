@@ -123,7 +123,7 @@ class PictureCapture {
 
   async loadTestImage() {
     try {
-      const imagePath = `${process.env.PUBLIC_URL}/mesua-ferrea.png`;
+      const imagePath = `${process.env.PUBLIC_URL}/mesua-ferrea.jpeg`;
       const response = await fetch(imagePath);
       if (!response.ok) {
         throw new Error(`Failed to fetch test image (${response.status})`);
