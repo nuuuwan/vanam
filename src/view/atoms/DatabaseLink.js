@@ -10,8 +10,10 @@ const DatabaseLink = ({ label, href, displayText }) => {
       rel="noopener noreferrer"
       sx={{
         display: "block",
+        p: 0.5,
+        borderRadius: 1,
         textDecoration: "none",
-        cursor: "pointer",
+        color: "inherit",
       }}
     >
       <Typography variant="caption" color="text.secondary" display="block">
