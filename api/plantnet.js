@@ -27,8 +27,10 @@ export default async function handler(req, res) {
     }
     const buffer = Buffer.concat(chunks);
 
+    const { project = "kt" } = req.query;
+
     const plantnetRes = await fetch(
-      `https://my-api.plantnet.org/v2/identify/weurope?api-key=${process.env.PLANTNET_KEY}`,
+      `https://my-api.plantnet.org/v2/identify/${project}?api-key=${process.env.PLANTNET_KEY}`,
       {
         method: "POST",
         headers: {

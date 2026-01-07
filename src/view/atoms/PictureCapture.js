@@ -125,10 +125,11 @@ const PictureCapture = () => {
       setIsLoading(true);
       const result = await plantNetClient.current.identifyPlant(imageData, {
         organs: "auto",
-        project: "all",
+        project: "kt",
       });
 
       if (result.results && result.results.length > 0) {
+        console.debug("result.results", result.results);
         setPlantResults(result.results);
       } else {
         setError("No plants identified. Please try another image.");
