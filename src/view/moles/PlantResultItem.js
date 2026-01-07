@@ -6,6 +6,13 @@ import TaxonomySection from "../atoms/TaxonomySection";
 import DatabaseReferencesSection from "../atoms/DatabaseReferencesSection";
 
 const PlantResultItem = ({ result }) => {
+  const scorePercent = result.score * 100;
+  const getGaugeColor = (score) => {
+    if (score > 75) return "#4caf50"; // green
+    if (score > 50) return "#ff9800"; // orange
+    return "#f44336"; // red
+  };
+
   return (
     <Paper elevation={1} sx={{ p: 2, mb: 2, backgroundColor: "#f5f5f5" }}>
       <Stack direction="row" spacing={2} alignItems="flex-start">
@@ -66,13 +73,13 @@ const PlantResultItem = ({ result }) => {
         <Gauge
           width={100}
           height={100}
-          value={result.score * 100}
+          value={scorePercent}
           valueMin={0}
           valueMax={100}
           text={({ value }) => `${Math.round(value)}%\nConf.`}
           sx={{
             [`& .MuiGauge-valueArc`]: {
-              fill: "#666",
+              fill: getGaugeColor(scorePercent),
             },
           }}
         />
