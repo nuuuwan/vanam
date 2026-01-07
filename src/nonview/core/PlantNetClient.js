@@ -35,7 +35,7 @@ class PlantNetClient {
       formData.append("images", file);
       formData.append("organs", organs);
 
-      const params = new URLSearchParams({ project: options.project || "kt" });
+      const params = new URLSearchParams({ project: options.project || "all" });
       const apiResponse = await fetch(
         `https://vanam-teal.vercel.app/api/plantnet?${params.toString()}`,
         {

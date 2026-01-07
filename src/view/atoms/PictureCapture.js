@@ -125,7 +125,7 @@ const PictureCapture = () => {
       setIsLoading(true);
       const result = await plantNetClient.current.identifyPlant(imageData, {
         organs: "auto",
-        project: "kt",
+        project: "all",
       });
 
       if (result.results && result.results.length > 0) {
