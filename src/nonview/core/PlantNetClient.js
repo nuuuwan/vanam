@@ -11,12 +11,20 @@ class PlantNetClient {
     try {
       const { organs = "auto" } = options;
 
+      // Extract MIME type from base64 data URL
+      let mimeType = "image/jpeg";
+      if (imageBase64.startsWith("data:")) {
+        const matches = imageBase64.match(/^data:([^;]+);/);
+        if (matches && matches[1]) {
+          mimeType = matches[1];
+        }
+      }
+
       // Convert base64 to blob
       const response = await fetch(imageBase64);
       const blob = await response.blob();
 
-      // Determine the file extension and MIME type
-      const mimeType = blob.type || "image/jpeg";
+      // Determine the file extension
       const extension = mimeType.split("/")[1] || "jpg";
 
       // Create a File object with proper type
