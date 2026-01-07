@@ -8,7 +8,6 @@ import LocationInfo from "../atoms/LocationInfo";
 import CapturedImageDisplay from "../atoms/CapturedImageDisplay";
 import PlantResultsList from "./PlantResultsList";
 import CameraControls from "../atoms/CameraControls";
-import ResultsControls from "../atoms/ResultsControls";
 
 const PictureCaptureView = () => {
   const videoRef = useRef(null);
@@ -204,10 +203,19 @@ const PictureCaptureView = () => {
 
           {error && <Alert severity="error">{error}</Alert>}
 
-          <ResultsControls
-            onReset={() => {
+          <CameraControls
+            onStartCamera={() => {
               clearImage();
               setIsCameraActive(false);
+              startCamera();
+            }}
+            onUploadPhoto={(file) => {
+              clearImage();
+              uploadPhoto(file);
+            }}
+            onLoadTestImage={() => {
+              clearImage();
+              loadTestImage();
             }}
             isLoading={isLoading}
           />

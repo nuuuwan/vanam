@@ -30,21 +30,21 @@ const WelcomeSection = () => {
       >
         <ListItem>
           <ListItemIcon>
-            <LocationOnIcon color="primary" />
+            <LocationOnIcon color="secondary" />
           </ListItemIcon>
-          <ListItemText primary="GPS latitude and longitude" />
+          <ListItemText secondary="GPS latitude and longitude" />
         </ListItem>
         <ListItem>
           <ListItemIcon>
-            <PhotoCameraIcon color="primary" />
+            <PhotoCameraIcon color="secondary" />
           </ListItemIcon>
-          <ListItemText primary="Species identification via PlantNet" />
+          <ListItemText secondary="Species identification via PlantNet" />
         </ListItem>
         <ListItem>
           <ListItemIcon>
-            <ImageIcon color="primary" />
+            <ImageIcon color="secondary" />
           </ListItemIcon>
-          <ListItemText primary="Image and contextual metadata" />
+          <ListItemText secondary="Image and contextual metadata" />
         </ListItem>
       </List>
       <Typography
