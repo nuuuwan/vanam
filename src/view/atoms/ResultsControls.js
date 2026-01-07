@@ -8,7 +8,7 @@ const ResultsControls = ({ onReset, isLoading }) => {
     <BottomNavigator>
       <Tooltip title="Identify Another Plant">
         <IconButton
-          color="primary"
+          sx={{ color: "#080" }}
           onClick={onReset}
           disabled={isLoading}
           size="large"

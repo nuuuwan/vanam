@@ -9,7 +9,7 @@ const CameraControls = ({ onStartCamera, onLoadTestImage, isLoading }) => {
     <BottomNavigator>
       <Tooltip title="Open Camera">
         <IconButton
-          color="primary"
+          sx={{ color: "#080" }}
           onClick={onStartCamera}
           disabled={isLoading}
           size="large"
@@ -23,7 +23,7 @@ const CameraControls = ({ onStartCamera, onLoadTestImage, isLoading }) => {
       </Tooltip>
       <Tooltip title="Try Sample Image">
         <IconButton
-          color="primary"
+          color="secondary"
           onClick={onLoadTestImage}
           disabled={isLoading}
           size="large"
