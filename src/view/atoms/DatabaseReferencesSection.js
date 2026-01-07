@@ -1,15 +1,7 @@
 import React from "react";
-import {
-  Grid,
-  Card,
-  CardContent,
-  Box,
-  Typography,
-  Link,
-  Stack,
-  Chip,
-} from "@mui/material";
+import { Grid, Card, CardContent, Stack, Chip } from "@mui/material";
 import WarningIcon from "@mui/icons-material/Warning";
+import DatabaseLink from "./DatabaseLink";
 
 const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
   if (!gbif?.id && !powo?.id && !iucn) {
@@ -38,26 +30,11 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
                 "&:last-child": { pb: 1.5 },
               }}
             >
-              <Box>
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  display="block"
-                >
-                  GBIF
-                </Typography>
-                <Link
-                  href={`https://www.gbif.org/species/${gbif.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{
-                    fontSize: "0.875rem",
-                    fontWeight: 500,
-                  }}
-                >
-                  {gbif.id}
-                </Link>
-              </Box>
+              <DatabaseLink
+                label="GBIF"
+                href={`https://www.gbif.org/species/${gbif.id}`}
+                displayText={gbif.id}
+              />
             </CardContent>
           </Card>
         </Grid>
@@ -83,26 +60,11 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
                 "&:last-child": { pb: 1.5 },
               }}
             >
-              <Box>
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  display="block"
-                >
-                  POWO
-                </Typography>
-                <Link
-                  href={`https://powo.science.kew.org/taxon/${powo.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{
-                    fontSize: "0.875rem",
-                    fontWeight: 500,
-                  }}
-                >
-                  {powo.id.split(":").pop()}
-                </Link>
-              </Box>
+              <DatabaseLink
+                label="POWO"
+                href={`https://powo.science.kew.org/taxon/${powo.id}`}
+                displayText={powo.id.split(":").pop()}
+              />
             </CardContent>
           </Card>
         </Grid>
@@ -141,28 +103,15 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
                       fontSize: 20,
                     }}
                   />
-                  <Box>
-                    <Typography
-                      variant="caption"
-                      color="text.secondary"
-                      display="block"
-                    >
-                      IUCN Red List
-                    </Typography>
-                    {iucn.id && (
-                      <Link
-                        href={`https://www.iucnredlist.org/species/${iucn.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        sx={{
-                          fontSize: "0.875rem",
-                          fontWeight: 500,
-                        }}
-                      >
-                        {iucn.id}
-                      </Link>
-                    )}
-                  </Box>
+                  <DatabaseLink
+                    label="IUCN Red List"
+                    href={
+                      iucn.id
+                        ? `https://www.iucnredlist.org/species/${iucn.id}`
+                        : null
+                    }
+                    displayText={iucn.id}
+                  />
                 </Stack>
                 {iucn.category && (
                   <Chip

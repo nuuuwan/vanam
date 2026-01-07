@@ -1,5 +1,6 @@
 import React from "react";
-import { Grid, Card, CardContent, Box, Typography, Link } from "@mui/material";
+import { Grid, Card, CardContent } from "@mui/material";
+import DatabaseLink from "./DatabaseLink";
 
 const TaxonomySection = ({ genus, family }) => {
   if (!genus && !family) {
@@ -28,28 +29,13 @@ const TaxonomySection = ({ genus, family }) => {
                 "&:last-child": { pb: 1.5 },
               }}
             >
-              <Box>
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  display="block"
-                >
-                  Genus
-                </Typography>
-                <Link
-                  href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
-                    genus.scientificName
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{
-                    fontSize: "0.875rem",
-                    fontWeight: 500,
-                  }}
-                >
-                  {genus.scientificName}
-                </Link>
-              </Box>
+              <DatabaseLink
+                label="Genus"
+                href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
+                  genus.scientificName
+                )}`}
+                displayText={genus.scientificName}
+              />
             </CardContent>
           </Card>
         </Grid>
@@ -74,28 +60,13 @@ const TaxonomySection = ({ genus, family }) => {
                 "&:last-child": { pb: 1.5 },
               }}
             >
-              <Box>
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  display="block"
-                >
-                  Family
-                </Typography>
-                <Link
-                  href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
-                    family.scientificName
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{
-                    fontSize: "0.875rem",
-                    fontWeight: 500,
-                  }}
-                >
-                  {family.scientificName}
-                </Link>
-              </Box>
+              <DatabaseLink
+                label="Family"
+                href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
+                  family.scientificName
+                )}`}
+                displayText={family.scientificName}
+              />
             </CardContent>
           </Card>
         </Grid>
