@@ -7,7 +7,6 @@ import {
   CircularProgress,
   Stack,
   Alert,
-  Divider,
   IconButton,
   Tooltip,
   Chip,
@@ -188,7 +187,7 @@ const PictureCaptureView = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 3, maxWidth: 600, mx: "auto" }}>
+    <Box sx={{ maxWidth: 600, mx: "auto" }}>
       {error && <Alert severity="error">{error}</Alert>}
 
       {
@@ -271,7 +270,6 @@ const PictureCaptureView = () => {
                           secondary="Latitude and longitude extracted from photo metadata"
                         />
                       </ListItem>
-                      <Divider variant="inset" component="li" />
                       <ListItem>
                         <ListItemIcon>
                           <PhotoCameraIcon color="primary" />
@@ -281,7 +279,6 @@ const PictureCaptureView = () => {
                           secondary="Powered by PlantNet AI for accurate plant recognition"
                         />
                       </ListItem>
-                      <Divider variant="inset" component="li" />
                       <ListItem>
                         <ListItemIcon>
                           <ImageIcon color="primary" />
@@ -367,7 +364,6 @@ const PictureCaptureView = () => {
               )}
 
               <Box sx={{ mb: 3 }}>
-                <Divider sx={{ my: 2 }} />
                 <Typography variant="h6" sx={{ mb: 2 }}>
                   Location Information
                 </Typography>
@@ -397,7 +393,6 @@ const PictureCaptureView = () => {
 
               {plantResults && !isLoading && (
                 <Box sx={{ mb: 3 }}>
-                  <Divider sx={{ my: 2 }} />
                   <Typography variant="h6" sx={{ mb: 2 }}>
                     Plant Identification Results
                   </Typography>
@@ -646,7 +641,7 @@ const PictureCaptureView = () => {
           )}
         </>
       }
-    </Paper>
+    </Box>
   );
 };
 
