@@ -84,14 +84,6 @@ const PictureCapture = () => {
     }
   };
 
-  // eslint-disable-next-line no-unused-vars
-  const clearImage = () => {
-    setCapturedImage(null);
-    setPlantResults(null);
-    setError(null);
-    setGpsData(null);
-  };
-
   const extractGPSData = async (imageData) => {
     try {
       // Convert data URL to blob
