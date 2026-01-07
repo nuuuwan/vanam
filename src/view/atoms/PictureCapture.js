@@ -226,7 +226,7 @@ const PictureCapture = () => {
                       color="error"
                       onClick={stopCamera}
                     >
-                      Close Camera
+                      Cancel
                     </Button>
                   </Stack>
                 </Box>
