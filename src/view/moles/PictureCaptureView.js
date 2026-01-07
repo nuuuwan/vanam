@@ -15,10 +15,14 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Card,
+  CardContent,
+  Grid,
 } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ImageIcon from "@mui/icons-material/Image";
+import WarningIcon from "@mui/icons-material/Warning";
 import { Gauge } from "@mui/x-charts/Gauge";
 import PlantNetClient from "../../nonview/core/PlantNetClient";
 import BottomNavigator from "../atoms/BottomNavigator";
@@ -477,111 +481,286 @@ const PictureCaptureView = () => {
                                 </Box>
                               )}
 
-                            {result.species.genus && (
-                              <Typography
-                                variant="body2"
-                                sx={{ color: "#888", mt: 0.5 }}
-                              >
-                                <strong>Genus:</strong>{" "}
-                                <Link
-                                  href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
-                                    result.species.genus.scientificName
-                                  )}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {result.species.genus.scientificName}
-                                </Link>
-                              </Typography>
-                            )}
-
-                            {result.species.family && (
-                              <Typography
-                                variant="body2"
-                                sx={{ color: "#888" }}
-                              >
-                                <strong>Family:</strong>{" "}
-                                <Link
-                                  href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
-                                    result.species.family.scientificName
-                                  )}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {result.species.family.scientificName}
-                                </Link>
-                              </Typography>
-                            )}
-
-                            {/* GBIF Link */}
-                            {result.gbif && result.gbif.id && (
-                              <Typography
-                                variant="body2"
-                                sx={{ color: "#888", mt: 0.5 }}
-                              >
-                                <strong>GBIF:</strong>{" "}
-                                <Link
-                                  href={`https://www.gbif.org/species/${result.gbif.id}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {result.gbif.id}
-                                </Link>
-                              </Typography>
-                            )}
-
-                            {/* POWO Link */}
-                            {result.powo && result.powo.id && (
-                              <Typography
-                                variant="body2"
-                                sx={{ color: "#888", mt: 0.5 }}
-                              >
-                                <strong>POWO:</strong>{" "}
-                                <Link
-                                  href={`https://powo.science.kew.org/taxon/${result.powo.id}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {result.powo.id}
-                                </Link>
-                              </Typography>
-                            )}
-
-                            {/* IUCN Information */}
-                            {result.iucn && (
-                              <Typography
-                                variant="body2"
-                                sx={{ color: "#888", mt: 0.5 }}
-                              >
-                                <strong>IUCN:</strong>{" "}
-                                {result.iucn.id && (
-                                  <Link
-                                    href={`https://www.iucnredlist.org/species/${result.iucn.id}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    sx={{ mr: 1 }}
-                                  >
-                                    {result.iucn.id}
-                                  </Link>
+                            {/* Taxonomy Section */}
+                            {(result.species.genus ||
+                              result.species.family) && (
+                              <Grid container spacing={1} sx={{ mt: 1 }}>
+                                {result.species.genus && (
+                                  <Grid item xs={12} sm={6}>
+                                    <Card
+                                      variant="outlined"
+                                      sx={{
+                                        bgcolor: "#f5f5f5",
+                                        borderLeft: "4px solid #999",
+                                        transition: "transform 0.2s",
+                                        "&:hover": {
+                                          transform: "translateY(-2px)",
+                                          boxShadow: 2,
+                                        },
+                                      }}
+                                    >
+                                      <CardContent
+                                        sx={{
+                                          p: 1.5,
+                                          "&:last-child": { pb: 1.5 },
+                                        }}
+                                      >
+                                        <Box>
+                                          <Typography
+                                            variant="caption"
+                                            color="text.secondary"
+                                            display="block"
+                                          >
+                                            Genus
+                                          </Typography>
+                                          <Link
+                                            href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
+                                              result.species.genus
+                                                .scientificName
+                                            )}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            sx={{
+                                              fontSize: "0.875rem",
+                                              fontWeight: 500,
+                                            }}
+                                          >
+                                            {
+                                              result.species.genus
+                                                .scientificName
+                                            }
+                                          </Link>
+                                        </Box>
+                                      </CardContent>
+                                    </Card>
+                                  </Grid>
                                 )}
-                                {result.iucn.category && (
-                                  <Chip
-                                    label={result.iucn.category}
-                                    size="small"
-                                    color={
-                                      result.iucn.category === "CR" ||
-                                      result.iucn.category === "EN"
-                                        ? "error"
-                                        : result.iucn.category === "VU"
-                                        ? "warning"
-                                        : result.iucn.category === "NT"
-                                        ? "info"
-                                        : "success"
-                                    }
-                                    sx={{ fontSize: "0.7rem", height: "20px" }}
-                                  />
+                                {result.species.family && (
+                                  <Grid item xs={12} sm={6}>
+                                    <Card
+                                      variant="outlined"
+                                      sx={{
+                                        bgcolor: "#f5f5f5",
+                                        borderLeft: "4px solid #999",
+                                        transition: "transform 0.2s",
+                                        "&:hover": {
+                                          transform: "translateY(-2px)",
+                                          boxShadow: 2,
+                                        },
+                                      }}
+                                    >
+                                      <CardContent
+                                        sx={{
+                                          p: 1.5,
+                                          "&:last-child": { pb: 1.5 },
+                                        }}
+                                      >
+                                        <Box>
+                                          <Typography
+                                            variant="caption"
+                                            color="text.secondary"
+                                            display="block"
+                                          >
+                                            Family
+                                          </Typography>
+                                          <Link
+                                            href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
+                                              result.species.family
+                                                .scientificName
+                                            )}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            sx={{
+                                              fontSize: "0.875rem",
+                                              fontWeight: 500,
+                                            }}
+                                          >
+                                            {
+                                              result.species.family
+                                                .scientificName
+                                            }
+                                          </Link>
+                                        </Box>
+                                      </CardContent>
+                                    </Card>
+                                  </Grid>
                                 )}
-                              </Typography>
+                              </Grid>
+                            )}
+
+                            {/* Database References Grid */}
+                            {(result.gbif?.id ||
+                              result.powo?.id ||
+                              result.iucn) && (
+                              <Grid container spacing={1} sx={{ mt: 1 }}>
+                                {result.gbif && result.gbif.id && (
+                                  <Grid item xs={12} sm={6}>
+                                    <Card
+                                      variant="outlined"
+                                      sx={{
+                                        bgcolor: "#f5f5f5",
+                                        borderLeft: "4px solid #999",
+                                        transition: "transform 0.2s",
+                                        "&:hover": {
+                                          transform: "translateY(-2px)",
+                                          boxShadow: 2,
+                                        },
+                                      }}
+                                    >
+                                      <CardContent
+                                        sx={{
+                                          p: 1.5,
+                                          "&:last-child": { pb: 1.5 },
+                                        }}
+                                      >
+                                        <Box>
+                                          <Typography
+                                            variant="caption"
+                                            color="text.secondary"
+                                            display="block"
+                                          >
+                                            GBIF
+                                          </Typography>
+                                          <Link
+                                            href={`https://www.gbif.org/species/${result.gbif.id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            sx={{
+                                              fontSize: "0.875rem",
+                                              fontWeight: 500,
+                                            }}
+                                          >
+                                            {result.gbif.id}
+                                          </Link>
+                                        </Box>
+                                      </CardContent>
+                                    </Card>
+                                  </Grid>
+                                )}
+
+                                {result.powo && result.powo.id && (
+                                  <Grid item xs={12} sm={6}>
+                                    <Card
+                                      variant="outlined"
+                                      sx={{
+                                        bgcolor: "#f5f5f5",
+                                        borderLeft: "4px solid #999",
+                                        transition: "transform 0.2s",
+                                        "&:hover": {
+                                          transform: "translateY(-2px)",
+                                          boxShadow: 2,
+                                        },
+                                      }}
+                                    >
+                                      <CardContent
+                                        sx={{
+                                          p: 1.5,
+                                          "&:last-child": { pb: 1.5 },
+                                        }}
+                                      >
+                                        <Box>
+                                          <Typography
+                                            variant="caption"
+                                            color="text.secondary"
+                                            display="block"
+                                          >
+                                            POWO
+                                          </Typography>
+                                          <Link
+                                            href={`https://powo.science.kew.org/taxon/${result.powo.id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            sx={{
+                                              fontSize: "0.875rem",
+                                              fontWeight: 500,
+                                            }}
+                                          >
+                                            {result.powo.id.split(":").pop()}
+                                          </Link>
+                                        </Box>
+                                      </CardContent>
+                                    </Card>
+                                  </Grid>
+                                )}
+
+                                {result.iucn && (
+                                  <Grid item xs={12}>
+                                    <Card
+                                      variant="outlined"
+                                      sx={{
+                                        bgcolor: "#f5f5f5",
+                                        borderLeft: "4px solid #999",
+                                        transition: "transform 0.2s",
+                                        "&:hover": {
+                                          transform: "translateY(-2px)",
+                                          boxShadow: 2,
+                                        },
+                                      }}
+                                    >
+                                      <CardContent
+                                        sx={{
+                                          p: 1.5,
+                                          "&:last-child": { pb: 1.5 },
+                                        }}
+                                      >
+                                        <Stack
+                                          direction="row"
+                                          spacing={1}
+                                          alignItems="center"
+                                          justifyContent="space-between"
+                                        >
+                                          <Stack
+                                            direction="row"
+                                            spacing={1}
+                                            alignItems="center"
+                                          >
+                                            <WarningIcon
+                                              sx={{
+                                                color: "#666",
+                                                fontSize: 20,
+                                              }}
+                                            />
+                                            <Box>
+                                              <Typography
+                                                variant="caption"
+                                                color="text.secondary"
+                                                display="block"
+                                              >
+                                                IUCN Red List
+                                              </Typography>
+                                              {result.iucn.id && (
+                                                <Link
+                                                  href={`https://www.iucnredlist.org/species/${result.iucn.id}`}
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                                  sx={{
+                                                    fontSize: "0.875rem",
+                                                    fontWeight: 500,
+                                                  }}
+                                                >
+                                                  {result.iucn.id}
+                                                </Link>
+                                              )}
+                                            </Box>
+                                          </Stack>
+                                          {result.iucn.category && (
+                                            <Chip
+                                              label={result.iucn.category}
+                                              size="small"
+                                              variant="outlined"
+                                              sx={{
+                                                fontWeight: 600,
+                                                borderColor: "#666",
+                                                color: "#333",
+                                              }}
+                                            />
+                                          )}
+                                        </Stack>
+                                      </CardContent>
+                                    </Card>
+                                  </Grid>
+                                )}
+                              </Grid>
                             )}
                           </Box>
                           <Gauge
@@ -593,12 +772,7 @@ const PictureCaptureView = () => {
                             text={({ value }) => `${Math.round(value)}%\nConf.`}
                             sx={{
                               [`& .MuiGauge-valueArc`]: {
-                                fill:
-                                  result.score > 0.8
-                                    ? "#4caf50"
-                                    : result.score > 0.5
-                                    ? "#ff9800"
-                                    : "#f44336",
+                                fill: "#666",
                               },
                             }}
                           />
