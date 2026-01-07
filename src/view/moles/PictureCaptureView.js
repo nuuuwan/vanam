@@ -10,6 +10,8 @@ import {
   Divider,
   IconButton,
   Tooltip,
+  Chip,
+  Link,
 } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -331,84 +333,215 @@ const PictureCaptureView = () => {
                   <Typography variant="h6" sx={{ mb: 2 }}>
                     Plant Identification Results
                   </Typography>
-                  {plantResults.slice(0, 5).map((result, index) => (
-                    <Paper
-                      key={index}
-                      elevation={1}
-                      sx={{ p: 2, mb: 2, backgroundColor: "#f5f5f5" }}
-                    >
-                      <Stack
-                        direction="row"
-                        spacing={2}
-                        alignItems="flex-start"
+                  {plantResults
+                    .filter((result) => result.score >= 0.05)
+                    .slice(0, 5)
+                    .map((result, index) => (
+                      <Paper
+                        key={index}
+                        elevation={1}
+                        sx={{ p: 2, mb: 2, backgroundColor: "#f5f5f5" }}
                       >
-                        {result.images && result.images[0] && (
-                          <Box
-                            component="img"
-                            src={result.images[0].url}
-                            alt={result.species.commonNames[0]}
+                        <Stack
+                          direction="row"
+                          spacing={2}
+                          alignItems="flex-start"
+                        >
+                          {result.images && result.images[0] && (
+                            <Box
+                              component="img"
+                              src={result.images[0].url}
+                              alt={
+                                result.species.commonNames?.[0] ||
+                                result.species.scientificName
+                              }
+                              sx={{
+                                width: 80,
+                                height: 80,
+                                borderRadius: 1,
+                                objectFit: "cover",
+                              }}
+                            />
+                          )}
+                          <Box sx={{ flex: 1 }}>
+                            <Typography
+                              variant="subtitle1"
+                              sx={{
+                                fontWeight: 600,
+                                fontStyle: "italic",
+                                mb: 1,
+                              }}
+                            >
+                              <Link
+                                href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
+                                  result.species.scientificNameWithoutAuthor ||
+                                    result.species.scientificName
+                                )}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                sx={{
+                                  color: "inherit",
+                                  textDecoration: "none",
+                                }}
+                              >
+                                {result.species.scientificName ||
+                                  result.species.scientificNameWithoutAuthor}
+                              </Link>
+                            </Typography>
+
+                            {/* Common Names as Chips */}
+                            {result.species.commonNames &&
+                              result.species.commonNames.length > 0 && (
+                                <Box
+                                  sx={{
+                                    mb: 1,
+                                    display: "flex",
+                                    flexWrap: "wrap",
+                                    gap: 0.5,
+                                  }}
+                                >
+                                  {result.species.commonNames.map(
+                                    (name, idx) => (
+                                      <Chip
+                                        key={idx}
+                                        label={name}
+                                        size="small"
+                                        variant="outlined"
+                                        sx={{ fontSize: "0.75rem" }}
+                                      />
+                                    )
+                                  )}
+                                </Box>
+                              )}
+
+                            {result.species.genus && (
+                              <Typography
+                                variant="body2"
+                                sx={{ color: "#888", mt: 0.5 }}
+                              >
+                                <strong>Genus:</strong>{" "}
+                                <Link
+                                  href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
+                                    result.species.genus.scientificName
+                                  )}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {result.species.genus.scientificName}
+                                </Link>
+                              </Typography>
+                            )}
+
+                            {result.species.family && (
+                              <Typography
+                                variant="body2"
+                                sx={{ color: "#888" }}
+                              >
+                                <strong>Family:</strong>{" "}
+                                <Link
+                                  href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
+                                    result.species.family.scientificName
+                                  )}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {result.species.family.scientificName}
+                                </Link>
+                              </Typography>
+                            )}
+
+                            {/* GBIF Link */}
+                            {result.gbif && result.gbif.id && (
+                              <Typography
+                                variant="body2"
+                                sx={{ color: "#888", mt: 0.5 }}
+                              >
+                                <strong>GBIF:</strong>{" "}
+                                <Link
+                                  href={`https://www.gbif.org/species/${result.gbif.id}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {result.gbif.id}
+                                </Link>
+                              </Typography>
+                            )}
+
+                            {/* POWO Link */}
+                            {result.powo && result.powo.id && (
+                              <Typography
+                                variant="body2"
+                                sx={{ color: "#888", mt: 0.5 }}
+                              >
+                                <strong>POWO:</strong>{" "}
+                                <Link
+                                  href={`https://powo.science.kew.org/taxon/${result.powo.id}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {result.powo.id}
+                                </Link>
+                              </Typography>
+                            )}
+
+                            {/* IUCN Information */}
+                            {result.iucn && (
+                              <Typography
+                                variant="body2"
+                                sx={{ color: "#888", mt: 0.5 }}
+                              >
+                                <strong>IUCN:</strong>{" "}
+                                {result.iucn.id && (
+                                  <Link
+                                    href={`https://www.iucnredlist.org/species/${result.iucn.id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    sx={{ mr: 1 }}
+                                  >
+                                    {result.iucn.id}
+                                  </Link>
+                                )}
+                                {result.iucn.category && (
+                                  <Chip
+                                    label={result.iucn.category}
+                                    size="small"
+                                    color={
+                                      result.iucn.category === "CR" ||
+                                      result.iucn.category === "EN"
+                                        ? "error"
+                                        : result.iucn.category === "VU"
+                                        ? "warning"
+                                        : result.iucn.category === "NT"
+                                        ? "info"
+                                        : "success"
+                                    }
+                                    sx={{ fontSize: "0.7rem", height: "20px" }}
+                                  />
+                                )}
+                              </Typography>
+                            )}
+                          </Box>
+                          <Gauge
+                            width={100}
+                            height={100}
+                            value={result.score * 100}
+                            valueMin={0}
+                            valueMax={100}
+                            text={({ value }) => `${Math.round(value)}%\nConf.`}
                             sx={{
-                              width: 80,
-                              height: 80,
-                              borderRadius: 1,
-                              objectFit: "cover",
+                              [`& .MuiGauge-valueArc`]: {
+                                fill:
+                                  result.score > 0.8
+                                    ? "#4caf50"
+                                    : result.score > 0.5
+                                    ? "#ff9800"
+                                    : "#f44336",
+                              },
                             }}
                           />
-                        )}
-                        <Box sx={{ flex: 1 }}>
-                          <Typography
-                            variant="subtitle1"
-                            sx={{ fontWeight: 600 }}
-                          >
-                            {result.species.commonNames &&
-                            result.species.commonNames.length > 0
-                              ? result.species.commonNames[0]
-                              : result.species.scientificName}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: "#666", fontStyle: "italic" }}
-                          >
-                            {result.species.scientificName ||
-                              result.species.scientificNameWithoutAuthor}
-                          </Typography>
-                          {result.species.genus && (
-                            <Typography
-                              variant="body2"
-                              sx={{ color: "#888", mt: 0.5 }}
-                            >
-                              <strong>Genus:</strong>{" "}
-                              {result.species.genus.scientificName}
-                            </Typography>
-                          )}
-                          {result.species.family && (
-                            <Typography variant="body2" sx={{ color: "#888" }}>
-                              <strong>Family:</strong>{" "}
-                              {result.species.family.scientificName}
-                            </Typography>
-                          )}
-                        </Box>
-                        <Gauge
-                          width={100}
-                          height={100}
-                          value={result.score * 100}
-                          valueMin={0}
-                          valueMax={100}
-                          text={({ value }) => `${Math.round(value)}%\nConf.`}
-                          sx={{
-                            [`& .MuiGauge-valueArc`]: {
-                              fill:
-                                result.score > 0.8
-                                  ? "#4caf50"
-                                  : result.score > 0.5
-                                  ? "#ff9800"
-                                  : "#f44336",
-                            },
-                          }}
-                        />
-                      </Stack>
-                    </Paper>
-                  ))}
+                        </Stack>
+                      </Paper>
+                    ))}
                 </Box>
               )}
 
