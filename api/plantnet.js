@@ -15,21 +15,19 @@ export default async function handler(req, res) {
       {
         method: "POST",
         headers: {
-          // forward only what is safe
           "content-type": req.headers["content-type"],
         },
         body: req,
+        duplex: "half", // ← REQUIRED
       }
     );
 
     const text = await plantnetRes.text();
-
     res.status(plantnetRes.status).send(text);
   } catch (err) {
     res.status(500).json({
       error: "Proxy failure",
       message: err.message,
-      stack: err.stack,
     });
   }
 }
