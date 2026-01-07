@@ -81,7 +81,6 @@ const PictureCapture = () => {
     setPlantResults(null);
     try {
       const imagePath = `${process.env.PUBLIC_URL}/mesua-ferrea.png`;
-      console.debug({ imagePath });
       const response = await fetch(imagePath);
       if (!response.ok) {
         throw new Error(`Failed to fetch test image (${response.status})`);
