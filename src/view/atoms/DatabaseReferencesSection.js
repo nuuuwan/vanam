@@ -1,5 +1,6 @@
-import { Grid, Box, Chip } from "@mui/material";
+import { Grid, Box } from "@mui/material";
 import DatabaseLink from "./DatabaseLink";
+import IucnCategoryChip from "./IucnCategoryChip";
 
 const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
   if (!gbif?.id && !powo?.id && !iucn) {
@@ -40,9 +41,7 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
               }
               displayText={iucn.id}
             />
-            {iucn.category && (
-              <Chip label={iucn.category} size="small" variant="outlined" />
-            )}
+            <IucnCategoryChip category={iucn.category} />
           </Box>
         </Grid>
       )}
