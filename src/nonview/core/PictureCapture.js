@@ -30,6 +30,38 @@ class PictureCapture {
     }
   }
 
+  async getCurrentLocation() {
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) {
+        console.warn("Geolocation is not supported by this browser.");
+        resolve({ success: true, gpsData: null });
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const gpsData = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            altitude: position.coords.altitude,
+            accuracy: position.coords.accuracy,
+          };
+          console.log("Current location:", gpsData);
+          resolve({ success: true, gpsData });
+        },
+        (error) => {
+          console.warn("Error getting location:", error.message);
+          resolve({ success: true, gpsData: null });
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
+        }
+      );
+    });
+  }
+
   capturePhoto(videoElement, canvasElement) {
     if (!videoElement || !canvasElement) {
       return { success: false, error: "Missing video or canvas element" };
@@ -53,23 +85,34 @@ class PictureCapture {
     return { success: true, imageData };
   }
 
-  async extractGPSData(imageData) {
+  async extractGPSDataFromFile(file) {
     try {
-      // Convert data URL to blob
-      const response = await fetch(imageData);
-      const blob = await response.blob();
+      // Extract all EXIF data including GPS
+      const exifData = await exifr.parse(file, {
+        gps: true,
+        tiff: true,
+        xmp: false,
+        icc: false,
+        iptc: false,
+        jfif: false,
+      });
 
-      // Extract GPS data from EXIF
-      const gps = await exifr.gps(blob);
-      console.log("Extracted GPS data:", gps);
+      console.log("Extracted EXIF data:", exifData);
 
-      if (gps && gps.latitude && gps.longitude) {
+      if (
+        exifData &&
+        exifData.latitude !== undefined &&
+        exifData.longitude !== undefined
+      ) {
         const gpsData = {
-          latitude: gps.latitude,
-          longitude: gps.longitude,
+          latitude: exifData.latitude,
+          longitude: exifData.longitude,
+          altitude: exifData.GPSAltitude || null,
         };
+        console.log("GPS data found:", gpsData);
         return { success: true, gpsData };
       } else {
+        console.log("No GPS data in image");
         return { success: true, gpsData: null };
       }
     } catch (err) {
@@ -86,13 +129,21 @@ class PictureCapture {
         throw new Error(`Failed to fetch test image (${response.status})`);
       }
       const blob = await response.blob();
+
+      // Extract GPS data from the original blob before conversion
+      const gpsResult = await this.extractGPSDataFromFile(blob);
+
       // Ensure the blob has the correct MIME type
-      const typedBlob = new Blob([blob], { type: "image/png" });
+      const typedBlob = new Blob([blob], { type: blob.type || "image/png" });
 
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
-          resolve({ success: true, imageData: e.target?.result });
+          resolve({
+            success: true,
+            imageData: e.target?.result,
+            gpsData: gpsResult.gpsData || null,
+          });
         };
         reader.onerror = (error) => {
           reject(error);

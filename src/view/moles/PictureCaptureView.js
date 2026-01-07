@@ -72,7 +72,7 @@ const PictureCaptureView = () => {
     setIsCameraActive(false);
   };
 
-  const capturePhoto = () => {
+  const capturePhoto = async () => {
     const result = pictureCapture.current.capturePhoto(
       videoRef.current,
       canvasRef.current
@@ -82,8 +82,8 @@ const PictureCaptureView = () => {
       setCapturedImage(result.imageData);
       setStream(null);
       setIsCameraActive(false);
-      // Extract GPS data and identify plant after capturing
-      extractGPSData(result.imageData);
+      // Get current device location for camera captures
+      getCurrentLocation();
       identifyPlantFromImage(result.imageData);
     }
   };
@@ -95,8 +95,8 @@ const PictureCaptureView = () => {
     setGpsData(null);
   };
 
-  const extractGPSData = async (imageData) => {
-    const result = await pictureCapture.current.extractGPSData(imageData);
+  const getCurrentLocation = async () => {
+    const result = await pictureCapture.current.getCurrentLocation();
     setGpsData(result.gpsData);
   };
 
@@ -108,8 +108,8 @@ const PictureCaptureView = () => {
       const result = await pictureCapture.current.loadTestImage();
       if (result.success) {
         setCapturedImage(result.imageData);
-        // Extract GPS data and identify plant after loading
-        await extractGPSData(result.imageData);
+        // GPS data is now returned from loadTestImage
+        setGpsData(result.gpsData || null);
         await identifyPlantFromImage(result.imageData);
       } else {
         setError(result.error);
