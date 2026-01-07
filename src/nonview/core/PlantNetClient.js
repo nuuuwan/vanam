@@ -9,7 +9,7 @@ class PlantNetClient {
    */
   async identifyPlant(imageBase64, options = {}) {
     try {
-      const { organs = "auto", project = "all" } = options;
+      const { organs = "auto" } = options;
 
       // Convert base64 to blob
       const response = await fetch(imageBase64);
