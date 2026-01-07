@@ -84,6 +84,7 @@ const PictureCapture = () => {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const clearImage = () => {
     setCapturedImage(null);
     setPlantResults(null);

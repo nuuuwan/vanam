@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Container, Box } from "@mui/material";
-import PictureCapture from "./view/moles/PictureCapture";
+import PictureCaptureView from "./view/moles/PictureCaptureView";
 
 const theme = createTheme({
   palette: {
@@ -23,7 +23,7 @@ function App() {
       <CssBaseline />
       <Container maxWidth="lg">
         <Box sx={{ py: 4 }}>
-          <PictureCapture />
+          <PictureCaptureView />
         </Box>
       </Container>
     </ThemeProvider>
