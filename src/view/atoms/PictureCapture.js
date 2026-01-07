@@ -380,9 +380,7 @@ const PictureCapture = () => {
                           value={result.score * 100}
                           valueMin={0}
                           valueMax={100}
-                          text={({ value }) =>
-                            `${Math.round(value)}%\nConf.`
-                          }
+                          text={({ value }) => `${Math.round(value)}%\nConf.`}
                           sx={{
                             [`& .MuiGauge-valueArc`]: {
                               fill:
