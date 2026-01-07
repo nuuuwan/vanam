@@ -37,6 +37,22 @@ const PictureCaptureView = () => {
     }
   }, [isCameraActive, stream]);
 
+  // Update document title when plant is identified
+  useEffect(() => {
+    if (plantResults && plantResults.length > 0) {
+      const topResult = plantResults[0];
+      const scientificName = topResult.species.scientificName || 
+                            topResult.species.scientificNameWithoutAuthor;
+      const commonName = topResult.species.commonNames?.[0];
+      
+      document.title = commonName 
+        ? `${commonName} (${scientificName}) - Vanam`
+        : `${scientificName} - Vanam`;
+    } else {
+      document.title = "Vanam";
+    }
+  }, [plantResults]);
+
   const startCamera = async () => {
     setIsLoading(true);
     try {
