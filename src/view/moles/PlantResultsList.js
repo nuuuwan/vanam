@@ -9,9 +9,6 @@ const PlantResultsList = ({ results, isLoading }) => {
 
   return (
     <Box sx={{ mb: 3 }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Plant Identification Results
-      </Typography>
       {results
         .filter((result) => result.score >= 0.05)
         .slice(0, 5)
