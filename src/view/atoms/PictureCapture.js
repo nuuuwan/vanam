@@ -282,12 +282,12 @@ const PictureCapture = () => {
                 </Box>
               )}
 
-              {gpsData && (
-                <Box sx={{ mb: 3 }}>
-                  <Divider sx={{ my: 2 }} />
-                  <Typography variant="h6" sx={{ mb: 2 }}>
-                    Location Information
-                  </Typography>
+              <Box sx={{ mb: 3 }}>
+                <Divider sx={{ my: 2 }} />
+                <Typography variant="h6" sx={{ mb: 2 }}>
+                  Location Information
+                </Typography>
+                {gpsData ? (
                   <Paper
                     elevation={1}
                     sx={{ p: 2, backgroundColor: "#e3f2fd" }}
@@ -306,8 +306,10 @@ const PictureCapture = () => {
                       </Box>
                     </Stack>
                   </Paper>
-                </Box>
-              )}
+                ) : (
+                  <Alert severity="info">No GPS data found in this image</Alert>
+                )}
+              </Box>
 
               {plantResults && !isLoading && (
                 <Box sx={{ mb: 3 }}>
