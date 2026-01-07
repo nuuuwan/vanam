@@ -15,6 +15,13 @@ const theme = createTheme({
   typography: {
     fontFamily: '"Karla", "Roboto", "Helvetica", "Arial", sans-serif',
   },
+  components: {
+    MuiLink: {
+      defaultProps: {
+        underline: "none",
+      },
+    },
+  },
 });
 
 function App() {
