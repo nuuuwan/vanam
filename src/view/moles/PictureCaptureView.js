@@ -90,7 +90,6 @@ const PictureCaptureView = () => {
     }
   };
 
-  // eslint-disable-next-line no-unused-vars
   const clearImage = () => {
     setCapturedImage(null);
     setPlantResults(null);
@@ -742,11 +741,8 @@ const PictureCaptureView = () => {
                   <IconButton
                     color="primary"
                     onClick={() => {
-                      setCapturedImage(null);
+                      clearImage();
                       setIsCameraActive(false);
-                      setPlantResults(null);
-                      setError(null);
-                      setGpsData(null);
                     }}
                     disabled={isLoading}
                     size="large"
