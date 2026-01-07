@@ -121,6 +121,32 @@ class PictureCapture {
     }
   }
 
+  async loadFromFile(file) {
+    try {
+      // Extract GPS data from the file before conversion
+      const gpsResult = await this.extractGPSDataFromFile(file);
+
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          resolve({
+            success: true,
+            imageData: e.target?.result,
+            gpsData: gpsResult.gpsData || null,
+          });
+        };
+        reader.onerror = (error) => {
+          console.error("Error reading file:", error);
+          reject(error);
+        };
+        reader.readAsDataURL(file);
+      });
+    } catch (err) {
+      console.error("Failed to load file:", err);
+      return { success: false, error: "Failed to load file" };
+    }
+  }
+
   async loadTestImage() {
     try {
       const imagePath = `${process.env.PUBLIC_URL}/mesua-ferrea.jpeg`;

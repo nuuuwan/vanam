@@ -100,6 +100,27 @@ const PictureCaptureView = () => {
     setGpsData(result.gpsData);
   };
 
+  const uploadPhoto = async (file) => {
+    setIsLoading(true);
+    setError(null);
+    setPlantResults(null);
+    try {
+      const result = await pictureCapture.current.loadFromFile(file);
+      if (result.success) {
+        setCapturedImage(result.imageData);
+        setGpsData(result.gpsData || null);
+        await identifyPlantFromImage(result.imageData);
+      } else {
+        setError(result.error);
+        setIsLoading(false);
+      }
+    } catch (err) {
+      setError("Failed to load uploaded file");
+      console.error(err);
+      setIsLoading(false);
+    }
+  };
+
   const loadTestImage = async () => {
     setIsLoading(true);
     setError(null);
@@ -160,6 +181,7 @@ const PictureCaptureView = () => {
               <WelcomeSection />
               <CameraControls
                 onStartCamera={startCamera}
+                onUploadPhoto={uploadPhoto}
                 onLoadTestImage={loadTestImage}
                 isLoading={isLoading}
               />
