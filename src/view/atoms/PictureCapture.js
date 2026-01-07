@@ -373,39 +373,27 @@ const PictureCapture = () => {
                               {result.species.family.scientificName}
                             </Typography>
                           )}
-                          <Box
-                            sx={{
-                              mt: 2,
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 2,
-                            }}
-                          >
-                            <Gauge
-                              width={100}
-                              height={100}
-                              value={result.score * 100}
-                              valueMin={0}
-                              valueMax={100}
-                              sx={{
-                                [`& .MuiGauge-valueArc`]: {
-                                  fill:
-                                    result.score > 0.8
-                                      ? "#4caf50"
-                                      : result.score > 0.5
-                                      ? "#ff9800"
-                                      : "#f44336",
-                                },
-                              }}
-                            />
-                            <Typography
-                              variant="body2"
-                              sx={{ fontWeight: 600 }}
-                            >
-                              {(result.score * 100).toFixed(1)}% Confidence
-                            </Typography>
-                          </Box>
                         </Box>
+                        <Gauge
+                          width={100}
+                          height={100}
+                          value={result.score * 100}
+                          valueMin={0}
+                          valueMax={100}
+                          text={({ value }) =>
+                            `${Math.round(value)}%\nConf.`
+                          }
+                          sx={{
+                            [`& .MuiGauge-valueArc`]: {
+                              fill:
+                                result.score > 0.8
+                                  ? "#4caf50"
+                                  : result.score > 0.5
+                                  ? "#ff9800"
+                                  : "#f44336",
+                            },
+                          }}
+                        />
                       </Stack>
                     </Paper>
                   ))}
