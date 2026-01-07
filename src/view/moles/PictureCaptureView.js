@@ -24,9 +24,8 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ImageIcon from "@mui/icons-material/Image";
 import WarningIcon from "@mui/icons-material/Warning";
 import { Gauge } from "@mui/x-charts/Gauge";
-import PlantNetClient from "../../nonview/core/PlantNetClient";
+import PictureCapture from "../../nonview/core/PictureCapture";
 import BottomNavigator from "../atoms/BottomNavigator";
-import exifr from "exifr";
 
 const PictureCaptureView = () => {
   const videoRef = useRef(null);
@@ -38,11 +37,13 @@ const PictureCaptureView = () => {
   const [plantResults, setPlantResults] = useState(null);
   const [error, setError] = useState(null);
   const [gpsData, setGpsData] = useState(null);
-  const plantNetClient = useRef(new PlantNetClient());
+  const pictureCapture = useRef(new PictureCapture());
 
-  // Initialize client on mount
+  // Cleanup on unmount
   useEffect(() => {
-    // Client is always ready
+    return () => {
+      pictureCapture.current.cleanup();
+    };
   }, []);
 
   // Attach stream to video element when camera becomes active
@@ -55,45 +56,37 @@ const PictureCaptureView = () => {
   const startCamera = async () => {
     setIsLoading(true);
     try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" },
-      });
-      setStream(mediaStream);
-      setIsCameraActive(true);
-    } catch (error) {
-      console.error("Error accessing camera:", error);
-      alert("Unable to access camera. Please check permissions.");
+      const result = await pictureCapture.current.startCamera();
+      if (result.success) {
+        setStream(result.stream);
+        setIsCameraActive(true);
+      } else {
+        alert(result.error);
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   const stopCamera = () => {
-    if (stream) {
-      stream.getTracks().forEach((track) => track.stop());
-      setStream(null);
-    }
+    pictureCapture.current.stopCamera();
+    setStream(null);
     setIsCameraActive(false);
   };
 
   const capturePhoto = () => {
-    if (videoRef.current && canvasRef.current) {
-      const width = videoRef.current.videoWidth;
-      const height = videoRef.current.videoHeight;
+    const result = pictureCapture.current.capturePhoto(
+      videoRef.current,
+      canvasRef.current
+    );
 
-      if (width && height) {
-        const context = canvasRef.current.getContext("2d");
-        canvasRef.current.width = width;
-        canvasRef.current.height = height;
-        context.drawImage(videoRef.current, 0, 0, width, height);
-
-        const imageData = canvasRef.current.toDataURL("image/png");
-        setCapturedImage(imageData);
-        stopCamera();
-        // Extract GPS data and identify plant after capturing
-        extractGPSData(imageData);
-        identifyPlantFromImage(imageData);
-      }
+    if (result.success) {
+      setCapturedImage(result.imageData);
+      setStream(null);
+      setIsCameraActive(false);
+      // Extract GPS data and identify plant after capturing
+      extractGPSData(result.imageData);
+      identifyPlantFromImage(result.imageData);
     }
   };
 
@@ -106,32 +99,8 @@ const PictureCaptureView = () => {
   };
 
   const extractGPSData = async (imageData) => {
-    try {
-      // Convert data URL to blob
-      const response = await fetch(imageData);
-      const blob = await response.blob();
-
-      // Extract GPS data from EXIF
-      const gps = await exifr.gps(blob);
-      console.log("Extracted GPS data:", gps);
-
-      if (gps && gps.latitude && gps.longitude) {
-        setGpsData({
-          latitude: gps.latitude,
-          longitude: gps.longitude,
-        });
-        console.log("GPS data set:", {
-          latitude: gps.latitude,
-          longitude: gps.longitude,
-        });
-      } else {
-        setGpsData(null);
-        console.log("No GPS data found in image");
-      }
-    } catch (err) {
-      console.error("Error extracting GPS data:", err);
-      setGpsData(null);
-    }
+    const result = await pictureCapture.current.extractGPSData(imageData);
+    setGpsData(result.gpsData);
   };
 
   const loadTestImage = async () => {
@@ -139,22 +108,16 @@ const PictureCaptureView = () => {
     setError(null);
     setPlantResults(null);
     try {
-      const imagePath = `${process.env.PUBLIC_URL}/mesua-ferrea.png`;
-      const response = await fetch(imagePath);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch test image (${response.status})`);
-      }
-      const blob = await response.blob();
-      // Ensure the blob has the correct MIME type
-      const typedBlob = new Blob([blob], { type: "image/png" });
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        setCapturedImage(e.target?.result);
+      const result = await pictureCapture.current.loadTestImage();
+      if (result.success) {
+        setCapturedImage(result.imageData);
         // Extract GPS data and identify plant after loading
-        await extractGPSData(e.target?.result);
-        await identifyPlantFromImage(e.target?.result);
-      };
-      reader.readAsDataURL(typedBlob);
+        await extractGPSData(result.imageData);
+        await identifyPlantFromImage(result.imageData);
+      } else {
+        setError(result.error);
+        setIsLoading(false);
+      }
     } catch (err) {
       setError("Failed to load test image");
       console.error(err);
@@ -163,31 +126,21 @@ const PictureCaptureView = () => {
   };
 
   const identifyPlantFromImage = async (imageData) => {
-    if (!plantNetClient.current) {
-      setError("Client not initialized.");
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      const result = await plantNetClient.current.identifyPlant(imageData, {
+    setIsLoading(true);
+    const result = await pictureCapture.current.identifyPlantFromImage(
+      imageData,
+      {
         organs: "auto",
         project: "all",
-      });
-
-      if (result.results && result.results.length > 0) {
-        console.debug("result.results", result.results);
-        setPlantResults(result.results);
-      } else {
-        setError("No plants identified. Please try another image.");
       }
-    } catch (err) {
-      console.error("Error identifying plant:", err);
-      setError(`Error: ${err.message}`);
-    } finally {
-      setIsLoading(false);
+    );
+
+    if (result.success) {
+      setPlantResults(result.results);
+    } else {
+      setError(result.error);
     }
+    setIsLoading(false);
   };
 
   return (
