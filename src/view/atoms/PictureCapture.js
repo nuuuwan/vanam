@@ -189,7 +189,14 @@ const PictureCapture = () => {
         <>
           {!capturedImage ? (
             <Box>
-              {isCameraActive ? (
+              {isLoading && !isCameraActive ? (
+                <Box sx={{ textAlign: "center", py: 4 }}>
+                  <CircularProgress size={50} />
+                  <Typography variant="body1" sx={{ mt: 2, color: "#666" }}>
+                    Loading...
+                  </Typography>
+                </Box>
+              ) : isCameraActive ? (
                 <Box sx={{ mb: 2 }}>
                   <video
                     ref={videoRef}
@@ -266,6 +273,15 @@ const PictureCapture = () => {
                 }}
               />
 
+              {isLoading && (
+                <Box sx={{ mb: 3, textAlign: "center" }}>
+                  <CircularProgress size={40} />
+                  <Typography variant="body2" sx={{ mt: 2, color: "#666" }}>
+                    Identifying plant...
+                  </Typography>
+                </Box>
+              )}
+
               {gpsData && (
                 <Box sx={{ mb: 3 }}>
                   <Divider sx={{ my: 2 }} />
@@ -293,7 +309,7 @@ const PictureCapture = () => {
                 </Box>
               )}
 
-              {plantResults && (
+              {plantResults && !isLoading && (
                 <Box sx={{ mb: 3 }}>
                   <Divider sx={{ my: 2 }} />
                   <Typography variant="h6" sx={{ mb: 2 }}>
