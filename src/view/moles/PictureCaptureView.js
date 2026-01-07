@@ -248,12 +248,20 @@ const PictureCaptureView = () => {
                       Welcome to Vanam
                     </Typography>
                     <Typography variant="body1" sx={{ mb: 2, color: "#555" }}>
-                      A mobile-first web app for cataloguing trees. Point your phone at a plant, take a photo, and Vanam records it as a structured observation.
+                      A mobile-first web app for cataloguing trees. Point your
+                      phone at a plant, take a photo, and Vanam records it as a
+                      structured observation.
                     </Typography>
                     <Typography variant="body1" sx={{ mb: 3, color: "#555" }}>
                       Each observation captures:
                     </Typography>
-                    <List sx={{ bgcolor: "background.paper", borderRadius: 1, mb: 3 }}>
+                    <List
+                      sx={{
+                        bgcolor: "background.paper",
+                        borderRadius: 1,
+                        mb: 3,
+                      }}
+                    >
                       <ListItem>
                         <ListItemIcon>
                           <LocationOnIcon color="primary" />
@@ -284,8 +292,12 @@ const PictureCaptureView = () => {
                         />
                       </ListItem>
                     </List>
-                    <Typography variant="body2" sx={{ color: "#666", fontStyle: "italic" }}>
-                      Make it easy to build accurate, geo-referenced tree inventories, one plant at a time.
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "#666", fontStyle: "italic" }}
+                    >
+                      Make it easy to build accurate, geo-referenced tree
+                      inventories, one plant at a time.
                     </Typography>
                   </Box>
                   <BottomNavigator>
@@ -332,11 +344,16 @@ const PictureCaptureView = () => {
                 src={capturedImage}
                 alt="Captured"
                 sx={{
-                  width: "100%",
-                  borderRadius: 2,
+                  width: "100vw",
+                  position: "relative",
+                  left: "50%",
+                  right: "50%",
+                  marginLeft: "-50vw",
+                  marginRight: "-50vw",
+                  marginTop: "-24px",
                   mb: 2,
                   maxHeight: 400,
-                  objectFit: "contain",
+                  objectFit: "cover",
                 }}
               />
 
