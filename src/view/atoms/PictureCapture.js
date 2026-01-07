@@ -10,7 +10,6 @@ import {
   Divider,
 } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-import DeleteIcon from "@mui/icons-material/Delete";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { Gauge } from "@mui/x-charts/Gauge";
 import PlantNetClient from "../../nonview/core/PlantNetClient";
@@ -416,14 +415,6 @@ const PictureCapture = () => {
                   }}
                 >
                   Take Another Photo
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  startIcon={<DeleteIcon />}
-                  onClick={clearImage}
-                >
-                  Delete
                 </Button>
               </Stack>
             </Box>
