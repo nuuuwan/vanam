@@ -20,18 +20,11 @@ class PlantNetClient {
       formData.append("images", blob, "plant.jpg");
       formData.append("organs", organs);
 
-      const payload = {
-        images: imageBase64,
-        organs,
-        project,
-      };
-
       const apiResponse = await fetch(
         "https://vanam-teal.vercel.app/api/plantnet",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
+          body: formData,
         }
       );
 
