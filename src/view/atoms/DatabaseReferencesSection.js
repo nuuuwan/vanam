@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Card, CardContent, Stack, Chip } from "@mui/material";
+import { Grid, Box, Chip } from "@mui/material";
 import WarningIcon from "@mui/icons-material/Warning";
 import DatabaseLink from "./DatabaseLink";
 
@@ -12,107 +12,41 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
     <Grid container spacing={1} sx={{ mt: 1 }}>
       {gbif && gbif.id && (
         <Grid item xs={12} sm={6}>
-          <Card
-            variant="outlined"
-            sx={{
-              transition: "transform 0.2s",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: 2,
-              },
-            }}
-          >
-            <CardContent
-              sx={{
-                p: 1.5,
-                "&:last-child": { pb: 1.5 },
-              }}
-            >
-              <DatabaseLink
-                label="GBIF"
-                href={`https://www.gbif.org/species/${gbif.id}`}
-                displayText={gbif.id}
-              />
-            </CardContent>
-          </Card>
+          <DatabaseLink
+            label="GBIF"
+            href={`https://www.gbif.org/species/${gbif.id}`}
+            displayText={gbif.id}
+          />
         </Grid>
       )}
 
       {powo && powo.id && (
         <Grid item xs={12} sm={6}>
-          <Card
-            variant="outlined"
-            sx={{
-              transition: "transform 0.2s",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: 2,
-              },
-            }}
-          >
-            <CardContent
-              sx={{
-                p: 1.5,
-                "&:last-child": { pb: 1.5 },
-              }}
-            >
-              <DatabaseLink
-                label="POWO"
-                href={`https://powo.science.kew.org/taxon/${powo.id}`}
-                displayText={powo.id.split(":").pop()}
-              />
-            </CardContent>
-          </Card>
+          <DatabaseLink
+            label="POWO"
+            href={`https://powo.science.kew.org/taxon/${powo.id}`}
+            displayText={powo.id.split(":").pop()}
+          />
         </Grid>
       )}
 
       {iucn && (
         <Grid item xs={12}>
-          <Card
-            variant="outlined"
-            sx={{
-              transition: "transform 0.2s",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: 2,
-              },
-            }}
-          >
-            <CardContent
-              sx={{
-                p: 1.5,
-                "&:last-child": { pb: 1.5 },
-              }}
-            >
-              <Stack
-                direction="row"
-                spacing={1}
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Stack direction="row" spacing={1} alignItems="center">
-                  <WarningIcon
-                    color="action"
-                    sx={{
-                      fontSize: 20,
-                    }}
-                  />
-                  <DatabaseLink
-                    label="IUCN Red List"
-                    href={
-                      iucn.id
-                        ? `https://www.iucnredlist.org/species/${iucn.id}`
-                        : null
-                    }
-                    displayText={iucn.id}
-                  />
-                </Stack>
-                {iucn.category && (
-                  <Chip label={iucn.category} size="small" variant="outlined" />
-                )}
-              </Stack>
-            </CardContent>
-          </Card>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <WarningIcon color="action" sx={{ fontSize: 20 }} />
+            <DatabaseLink
+              label="IUCN Red List"
+              href={
+                iucn.id
+                  ? `https://www.iucnredlist.org/species/${iucn.id}`
+                  : null
+              }
+              displayText={iucn.id}
+            />
+            {iucn.category && (
+              <Chip label={iucn.category} size="small" variant="outlined" />
+            )}
+          </Box>
         </Grid>
       )}
     </Grid>
