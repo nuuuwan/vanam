@@ -9,7 +9,7 @@ const BottomNavigator = ({ children }) => {
         bottom: 0,
         left: 0,
         right: 0,
-        p: 2,
+        p: 1,
         zIndex: 1000,
       }}
     >
