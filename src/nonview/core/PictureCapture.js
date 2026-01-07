@@ -126,13 +126,21 @@ class PictureCapture {
       // Extract GPS data from the file before conversion
       const gpsResult = await this.extractGPSDataFromFile(file);
 
+      // If no GPS data in file, try to get current location from browser
+      let gpsData = gpsResult.gpsData;
+      if (!gpsData) {
+        console.log("No GPS in image EXIF, trying browser location...");
+        const locationResult = await this.getCurrentLocation();
+        gpsData = locationResult.gpsData;
+      }
+
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
           resolve({
             success: true,
             imageData: e.target?.result,
-            gpsData: gpsResult.gpsData || null,
+            gpsData: gpsData || null,
           });
         };
         reader.onerror = (error) => {
