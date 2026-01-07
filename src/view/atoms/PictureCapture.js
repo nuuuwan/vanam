@@ -80,10 +80,15 @@ const PictureCapture = () => {
     setError(null);
     setPlantResults(null);
     try {
-      const response = await fetch("/mesua-ferrea.jpg");
+      const imagePath = `${process.env.PUBLIC_URL}/mesua-ferrea.png`;
+      console.debug({ imagePath });
+      const response = await fetch(imagePath);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch test image (${response.status})`);
+      }
       const blob = await response.blob();
       // Ensure the blob has the correct MIME type
-      const typedBlob = new Blob([blob], { type: "image/jpeg" });
+      const typedBlob = new Blob([blob], { type: "image/png" });
       const reader = new FileReader();
       reader.onload = async (e) => {
         setCapturedImage(e.target?.result);
