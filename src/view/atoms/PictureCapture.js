@@ -8,11 +8,11 @@ import {
   Stack,
   Alert,
   Divider,
-  Chip,
 } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import DeleteIcon from "@mui/icons-material/Delete";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { Gauge } from "@mui/x-charts/Gauge";
 import PlantNetClient from "../../nonview/core/PlantNetClient";
 import exifr from "exifr";
 
@@ -349,20 +349,37 @@ const PictureCapture = () => {
                             {result.species.commonNames &&
                             result.species.commonNames.length > 0
                               ? result.species.commonNames[0]
-                              : result.species.scienceName}
+                              : result.species.scientificName}
                           </Typography>
-                          <Typography variant="body2" sx={{ color: "#666" }}>
-                            {result.species.scienceName}
+                          <Typography variant="body2" sx={{ color: "#666", fontStyle: "italic" }}>
+                            {result.species.scientificName || result.species.scientificNameWithoutAuthor}
                           </Typography>
-                          <Box sx={{ mt: 1 }}>
-                            <Chip
-                              label={`Confidence: ${(
-                                result.score * 100
-                              ).toFixed(1)}%`}
-                              size="small"
-                              color={result.score > 0.6 ? "success" : "warning"}
-                              variant="outlined"
+                          {result.species.genus && (
+                            <Typography variant="body2" sx={{ color: "#888", mt: 0.5 }}>
+                              <strong>Genus:</strong> {result.species.genus.scientificName}
+                            </Typography>
+                          )}
+                          {result.species.family && (
+                            <Typography variant="body2" sx={{ color: "#888" }}>
+                              <strong>Family:</strong> {result.species.family.scientificName}
+                            </Typography>
+                          )}
+                          <Box sx={{ mt: 2, display: "flex", alignItems: "center", gap: 2 }}>
+                            <Gauge
+                              width={100}
+                              height={100}
+                              value={result.score * 100}
+                              valueMin={0}
+                              valueMax={100}
+                              sx={{
+                                [`& .MuiGauge-valueArc`]: {
+                                  fill: result.score > 0.8 ? "#4caf50" : result.score > 0.5 ? "#ff9800" : "#f44336"
+                                }
+                              }}
                             />
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                              {(result.score * 100).toFixed(1)}% Confidence
+                            </Typography>
                           </Box>
                         </Box>
                       </Stack>
