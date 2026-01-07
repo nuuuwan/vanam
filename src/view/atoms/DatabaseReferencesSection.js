@@ -1,6 +1,4 @@
-import React from "react";
 import { Grid, Box, Chip } from "@mui/material";
-import WarningIcon from "@mui/icons-material/Warning";
 import DatabaseLink from "./DatabaseLink";
 
 const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
@@ -33,7 +31,6 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
       {iucn && (
         <Grid item xs={12}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <WarningIcon color="action" sx={{ fontSize: 20 }} />
             <DatabaseLink
               label="IUCN Red List"
               href={
