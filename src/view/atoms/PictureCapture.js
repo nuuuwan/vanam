@@ -18,6 +18,7 @@ const PictureCapture = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isCameraActive, setIsCameraActive] = useState(false);
+  const [stream, setStream] = useState(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [plantResults, setPlantResults] = useState(null);
@@ -29,16 +30,21 @@ const PictureCapture = () => {
     // Client is always ready
   }, []);
 
+  // Attach stream to video element when camera becomes active
+  useEffect(() => {
+    if (isCameraActive && videoRef.current && stream) {
+      videoRef.current.srcObject = stream;
+    }
+  }, [isCameraActive, stream]);
+
   const startCamera = async () => {
     setIsLoading(true);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user" },
       });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        setIsCameraActive(true);
-      }
+      setStream(mediaStream);
+      setIsCameraActive(true);
     } catch (error) {
       console.error("Error accessing camera:", error);
       alert("Unable to access camera. Please check permissions.");
@@ -48,24 +54,30 @@ const PictureCapture = () => {
   };
 
   const stopCamera = () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      const tracks = videoRef.current.srcObject.getTracks();
-      tracks.forEach((track) => track.stop());
-      setIsCameraActive(false);
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      setStream(null);
     }
+    setIsCameraActive(false);
   };
 
   const capturePhoto = () => {
     if (videoRef.current && canvasRef.current) {
-      const context = canvasRef.current.getContext("2d");
-      canvasRef.current.width = videoRef.current.videoWidth;
-      canvasRef.current.height = videoRef.current.videoHeight;
-      context.drawImage(videoRef.current, 0, 0);
-      const imageData = canvasRef.current.toDataURL("image/png");
-      setCapturedImage(imageData);
-      stopCamera();
-      // Auto-identify plant after capturing
-      identifyPlantFromImage(imageData);
+      const width = videoRef.current.videoWidth;
+      const height = videoRef.current.videoHeight;
+
+      if (width && height) {
+        const context = canvasRef.current.getContext("2d");
+        canvasRef.current.width = width;
+        canvasRef.current.height = height;
+        context.drawImage(videoRef.current, 0, 0, width, height);
+
+        const imageData = canvasRef.current.toDataURL("image/png");
+        setCapturedImage(imageData);
+        stopCamera();
+        // Auto-identify plant after capturing
+        identifyPlantFromImage(imageData);
+      }
     }
   };
 
