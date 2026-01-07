@@ -41,13 +41,11 @@ const PictureCaptureView = () => {
   useEffect(() => {
     if (plantResults && plantResults.length > 0) {
       const topResult = plantResults[0];
-      const scientificName = topResult.species.scientificName || 
-                            topResult.species.scientificNameWithoutAuthor;
-      const commonName = topResult.species.commonNames?.[0];
-      
-      document.title = commonName 
-        ? `${commonName} (${scientificName}) - Vanam`
-        : `${scientificName} - Vanam`;
+      const scientificName =
+        topResult.species.scientificName ||
+        topResult.species.scientificNameWithoutAuthor;
+
+      document.title = scientificName;
     } else {
       document.title = "Vanam";
     }
