@@ -400,24 +400,26 @@ const PictureCaptureView = () => {
 
               {error && <Alert severity="error">{error}</Alert>}
 
-              <Stack
-                direction="row"
-                spacing={2}
-                sx={{ justifyContent: "center" }}
-              >
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    setCapturedImage(null);
-                    setIsCameraActive(false);
-                    setPlantResults(null);
-                    setError(null);
-                    setGpsData(null);
-                  }}
+              {!isLoading && (
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  sx={{ justifyContent: "center" }}
                 >
-                  Identify Another Plant
-                </Button>
-              </Stack>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      setCapturedImage(null);
+                      setIsCameraActive(false);
+                      setPlantResults(null);
+                      setError(null);
+                      setGpsData(null);
+                    }}
+                  >
+                    Identify Another Plant
+                  </Button>
+                </Stack>
+              )}
             </Box>
           )}
         </>
