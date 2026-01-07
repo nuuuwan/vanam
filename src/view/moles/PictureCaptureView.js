@@ -24,8 +24,9 @@ const PictureCaptureView = () => {
 
   // Cleanup on unmount
   useEffect(() => {
+    const capture = pictureCapture.current;
     return () => {
-      pictureCapture.current.cleanup();
+      capture.cleanup();
     };
   }, []);
 
