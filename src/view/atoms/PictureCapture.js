@@ -82,13 +82,15 @@ const PictureCapture = () => {
     try {
       const response = await fetch("/mesua-ferrea.jpg");
       const blob = await response.blob();
+      // Ensure the blob has the correct MIME type
+      const typedBlob = new Blob([blob], { type: "image/jpeg" });
       const reader = new FileReader();
       reader.onload = async (e) => {
         setCapturedImage(e.target?.result);
         // Auto-identify plant after loading
         await identifyPlantFromImage(e.target?.result);
       };
-      reader.readAsDataURL(blob);
+      reader.readAsDataURL(typedBlob);
     } catch (err) {
       setError("Failed to load test image");
       console.error(err);
