@@ -8,11 +8,16 @@ import {
   Stack,
   Alert,
   Divider,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import ImageIcon from "@mui/icons-material/Image";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { Gauge } from "@mui/x-charts/Gauge";
 import PlantNetClient from "../../nonview/core/PlantNetClient";
+import BottomNavigator from "../atoms/BottomNavigator";
 import exifr from "exifr";
 
 const PictureCaptureView = () => {
@@ -126,7 +131,7 @@ const PictureCaptureView = () => {
     setError(null);
     setPlantResults(null);
     try {
-      const imagePath = `${process.env.PUBLIC_URL}/mesua-ferrea.png`;
+      const imagePath = "https://bs.plantnet.org/image/o/5eb93430f24f48c1b8f93a64e6f00ad5f1c8d4e5";
       const response = await fetch(imagePath);
       if (!response.ok) {
         throw new Error(`Failed to fetch test image (${response.status})`);
@@ -232,30 +237,38 @@ const PictureCaptureView = () => {
                   </Stack>
                 </Box>
               ) : (
-                <Stack spacing={2}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={
-                      isLoading ? (
-                        <CircularProgress size={24} />
+                <BottomNavigator>
+                  <Tooltip title="Open Camera">
+                    <IconButton
+                      color="primary"
+                      onClick={startCamera}
+                      disabled={isLoading}
+                      size="large"
+                      sx={{
+                        bgcolor: "primary.main",
+                        color: "white",
+                        "&:hover": { bgcolor: "primary.dark" },
+                        "&.Mui-disabled": { bgcolor: "action.disabledBackground" },
+                      }}
+                    >
+                      {isLoading ? (
+                        <CircularProgress size={24} color="inherit" />
                       ) : (
                         <PhotoCameraIcon />
-                      )
-                    }
-                    onClick={startCamera}
-                    disabled={isLoading}
-                  >
-                    Open Camera
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    onClick={loadTestImage}
-                    disabled={isLoading}
-                  >
-                    Try Sample Image
-                  </Button>
-                </Stack>
+                      )}
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Try Sample Image">
+                    <IconButton
+                      color="primary"
+                      onClick={loadTestImage}
+                      disabled={isLoading}
+                      size="large"
+                    >
+                      <ImageIcon />
+                    </IconButton>
+                  </Tooltip>
+                </BottomNavigator>
               )}
             </Box>
           ) : (
@@ -401,24 +414,28 @@ const PictureCaptureView = () => {
               {error && <Alert severity="error">{error}</Alert>}
 
               {!isLoading && (
-                <Stack
-                  direction="row"
-                  spacing={2}
-                  sx={{ justifyContent: "center" }}
-                >
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      setCapturedImage(null);
-                      setIsCameraActive(false);
-                      setPlantResults(null);
-                      setError(null);
-                      setGpsData(null);
-                    }}
-                  >
-                    Identify Another Plant
-                  </Button>
-                </Stack>
+                <BottomNavigator>
+                  <Tooltip title="Identify Another Plant">
+                    <IconButton
+                      color="primary"
+                      onClick={() => {
+                        setCapturedImage(null);
+                        setIsCameraActive(false);
+                        setPlantResults(null);
+                        setError(null);
+                        setGpsData(null);
+                      }}
+                      size="large"
+                      sx={{
+                        bgcolor: "primary.main",
+                        color: "white",
+                        "&:hover": { bgcolor: "primary.dark" },
+                      }}
+                    >
+                      <RestartAltIcon />
+                    </IconButton>
+                  </Tooltip>
+                </BottomNavigator>
               )}
             </Box>
           )}
