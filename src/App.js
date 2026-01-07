@@ -6,10 +6,10 @@ import PictureCaptureView from "./view/moles/PictureCaptureView";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#2e7d32",
+      main: "#000000",
     },
     secondary: {
-      main: "#66bb6a",
+      main: "#888888",
     },
   },
   typography: {

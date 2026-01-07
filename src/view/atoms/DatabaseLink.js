@@ -16,7 +16,7 @@ const DatabaseLink = ({ label, href, displayText }) => {
         color: "inherit",
       }}
     >
-      <Typography variant="caption" color="text.secondary" display="block">
+      <Typography variant="caption" color="secondary" display="block">
         {label}
       </Typography>
       <Typography variant="body2" color="primary">
