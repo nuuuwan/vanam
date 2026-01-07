@@ -29,9 +29,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container maxWidth="lg">
-        <Box sx={{ py: 4 }}>
-          <PictureCaptureView />
-        </Box>
+        <PictureCaptureView />
       </Container>
     </ThemeProvider>
   );

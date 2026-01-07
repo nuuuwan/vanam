@@ -127,7 +127,7 @@ const PictureCaptureView = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto" }}>
+    <Box sx={{ maxWidth: 600, mx: "auto", pb: 10 }}>
       {error && <Alert severity="error">{error}</Alert>}
 
       {!capturedImage ? (
@@ -142,14 +142,14 @@ const PictureCaptureView = () => {
               onCancel={stopCamera}
             />
           ) : (
-            <>
+            <Box sx={{ py: 4 }}>
               <WelcomeSection />
               <CameraControls
                 onStartCamera={startCamera}
                 onLoadTestImage={loadTestImage}
                 isLoading={isLoading}
               />
-            </>
+            </Box>
           )}
         </Box>
       ) : (
