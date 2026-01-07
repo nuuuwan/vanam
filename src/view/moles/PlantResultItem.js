@@ -66,19 +66,35 @@ const PlantResultItem = ({ result }) => {
             iucn={result.iucn}
           />
         </Box>
-        <Gauge
-          width={100}
-          height={100}
-          value={scorePercent}
-          valueMin={0}
-          valueMax={100}
-          text={({ value }) => `${Math.round(value)}%\nConf.`}
-          sx={{
-            [`& .MuiGauge-valueArc`]: {
-              fill: getGaugeColor(scorePercent),
-            },
-          }}
-        />
+        <Box sx={{ position: "relative", width: 100, height: 100 }}>
+          <Gauge
+            width={100}
+            height={100}
+            value={scorePercent}
+            valueMin={0}
+            valueMax={100}
+            text={({ value }) => `${Math.round(value)}%`}
+            sx={{
+              [`& .MuiGauge-valueArc`]: {
+                fill: getGaugeColor(scorePercent),
+              },
+            }}
+          />
+          <Typography
+            variant="caption"
+            sx={{
+              position: "absolute",
+              bottom: 28,
+              left: "50%",
+              transform: "translateX(-50%)",
+              fontSize: "0.5rem",
+              color: theme.palette.text.secondary,
+              fontWeight: 300,
+            }}
+          >
+            Conf.
+          </Typography>
+        </Box>
       </Stack>
     </Paper>
   );
