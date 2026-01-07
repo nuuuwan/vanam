@@ -219,14 +219,14 @@ const PictureCapture = () => {
                       startIcon={<PhotoCameraIcon />}
                       onClick={capturePhoto}
                     >
-                      Capture Photo
+                      Identify Plant
                     </Button>
                     <Button
                       variant="outlined"
                       color="error"
                       onClick={stopCamera}
                     >
-                      Cancel
+                      Close Camera
                     </Button>
                   </Stack>
                 </Box>
@@ -245,14 +245,14 @@ const PictureCapture = () => {
                     onClick={startCamera}
                     disabled={isLoading}
                   >
-                    Start Camera
+                    Open Camera
                   </Button>
                   <Button
                     variant="outlined"
                     onClick={loadTestImage}
                     disabled={isLoading}
                   >
-                    Load Test Image (Mesua-Ferrea)
+                    Try Sample Image
                   </Button>
                 </Stack>
               )}
@@ -414,7 +414,7 @@ const PictureCapture = () => {
                     setGpsData(null);
                   }}
                 >
-                  Take Another Photo
+                  Identify Another Plant
                 </Button>
               </Stack>
             </Box>
