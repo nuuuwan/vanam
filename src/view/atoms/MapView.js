@@ -59,7 +59,7 @@ const MapView = ({ gpsData, imageData }) => {
     >
       <MapContainer
         center={position}
-        zoom={16}
+        zoom={18}
         style={{ height: "100%", width: "100%" }}
         scrollWheelZoom={false}
       >

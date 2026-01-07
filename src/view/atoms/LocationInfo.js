@@ -4,8 +4,8 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 const LocationInfo = ({ gpsData }) => {
   const formatLatLng = (lat, lng) => {
-    const latAbs = Math.abs(lat).toFixed(4);
-    const lngAbs = Math.abs(lng).toFixed(4);
+    const latAbs = Math.abs(lat).toFixed(6);
+    const lngAbs = Math.abs(lng).toFixed(6);
     const latDir = lat >= 0 ? "N" : "S";
     const lngDir = lng >= 0 ? "E" : "W";
     return `${latAbs}${latDir}, ${lngAbs}${lngDir}`;
