@@ -5,7 +5,7 @@ import WelcomeSection from "../atoms/WelcomeSection";
 import CameraView from "../atoms/CameraView";
 import LoadingView from "../atoms/LoadingView";
 import LocationInfo from "../atoms/LocationInfo";
-import CapturedImageDisplay from "../atoms/CapturedImageDisplay";
+import MapView from "../atoms/MapView";
 import PlantResultsList from "./PlantResultsList";
 import CameraControls from "../atoms/CameraControls";
 
@@ -189,7 +189,7 @@ const PictureCaptureView = () => {
         </Box>
       ) : (
         <Box>
-          <CapturedImageDisplay imageData={capturedImage} />
+          <MapView gpsData={gpsData} imageData={capturedImage} />
 
           {isLoading && (
             <Box sx={{ mb: 3, textAlign: "center" }}>

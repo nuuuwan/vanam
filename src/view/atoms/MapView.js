@@ -69,7 +69,8 @@ const MapView = ({ gpsData, imageData }) => {
         />
         <Marker position={position} icon={customIcon}>
           <Popup>
-            Plant location: {gpsData.latitude.toFixed(6)}, {gpsData.longitude.toFixed(6)}
+            Plant location: {gpsData.latitude.toFixed(6)},{" "}
+            {gpsData.longitude.toFixed(6)}
           </Popup>
         </Marker>
       </MapContainer>
