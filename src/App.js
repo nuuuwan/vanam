@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Container, Box } from "@mui/material";
-import PictureCapture from "./view/atoms/PictureCapture";
+import PictureCapture from "./view/moles/PictureCapture";
 
 const theme = createTheme({
   palette: {
