@@ -20,6 +20,13 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Read the request body as a buffer
+    const chunks = [];
+    for await (const chunk of req) {
+      chunks.push(chunk);
+    }
+    const buffer = Buffer.concat(chunks);
+
     const plantnetRes = await fetch(
       `https://my-api.plantnet.org/v2/identify/weurope?api-key=${process.env.PLANTNET_KEY}`,
       {
@@ -27,8 +34,7 @@ export default async function handler(req, res) {
         headers: {
           "content-type": req.headers["content-type"],
         },
-        body: req,
-        duplex: "half", // ← REQUIRED
+        body: buffer,
       }
     );
 
