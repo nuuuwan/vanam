@@ -14,7 +14,6 @@ import {
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ImageIcon from "@mui/icons-material/Image";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { Gauge } from "@mui/x-charts/Gauge";
 import PlantNetClient from "../../nonview/core/PlantNetClient";
 import BottomNavigator from "../atoms/BottomNavigator";
@@ -131,7 +130,7 @@ const PictureCaptureView = () => {
     setError(null);
     setPlantResults(null);
     try {
-      const imagePath = "https://bs.plantnet.org/image/o/5eb93430f24f48c1b8f93a64e6f00ad5f1c8d4e5";
+      const imagePath = `${process.env.PUBLIC_URL}/mesua-ferrea.png`;
       const response = await fetch(imagePath);
       if (!response.ok) {
         throw new Error(`Failed to fetch test image (${response.status})`);
@@ -248,7 +247,9 @@ const PictureCaptureView = () => {
                         bgcolor: "primary.main",
                         color: "white",
                         "&:hover": { bgcolor: "primary.dark" },
-                        "&.Mui-disabled": { bgcolor: "action.disabledBackground" },
+                        "&.Mui-disabled": {
+                          bgcolor: "action.disabledBackground",
+                        },
                       }}
                     >
                       {isLoading ? (
@@ -413,30 +414,33 @@ const PictureCaptureView = () => {
 
               {error && <Alert severity="error">{error}</Alert>}
 
-              {!isLoading && (
-                <BottomNavigator>
-                  <Tooltip title="Identify Another Plant">
-                    <IconButton
-                      color="primary"
-                      onClick={() => {
-                        setCapturedImage(null);
-                        setIsCameraActive(false);
-                        setPlantResults(null);
-                        setError(null);
-                        setGpsData(null);
-                      }}
-                      size="large"
-                      sx={{
-                        bgcolor: "primary.main",
-                        color: "white",
-                        "&:hover": { bgcolor: "primary.dark" },
-                      }}
-                    >
-                      <RestartAltIcon />
-                    </IconButton>
-                  </Tooltip>
-                </BottomNavigator>
-              )}
+              <BottomNavigator>
+                <Tooltip title="Identify Another Plant">
+                  <IconButton
+                    color="primary"
+                    onClick={() => {
+                      setCapturedImage(null);
+                      setIsCameraActive(false);
+                      setPlantResults(null);
+                      setError(null);
+                      setGpsData(null);
+                    }}
+                    disabled={isLoading}
+                    size="large"
+                    sx={{
+                      bgcolor: "primary.main",
+                      color: "white",
+                      "&:hover": { bgcolor: "primary.dark" },
+                      "&.Mui-disabled": {
+                        bgcolor: "action.disabledBackground",
+                        color: "action.disabled",
+                      },
+                    }}
+                  >
+                    <PhotoCameraIcon />
+                  </IconButton>
+                </Tooltip>
+              </BottomNavigator>
             </Box>
           )}
         </>
