@@ -12,10 +12,6 @@ const DatabaseLink = ({ label, href, displayText }) => {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          sx={{
-            fontSize: "0.875rem",
-            fontWeight: 500,
-          }}
         >
           {displayText}
         </Link>

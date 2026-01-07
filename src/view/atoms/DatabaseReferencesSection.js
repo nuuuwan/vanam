@@ -15,8 +15,6 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
           <Card
             variant="outlined"
             sx={{
-              bgcolor: "#f5f5f5",
-              borderLeft: "4px solid #999",
               transition: "transform 0.2s",
               "&:hover": {
                 transform: "translateY(-2px)",
@@ -45,8 +43,6 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
           <Card
             variant="outlined"
             sx={{
-              bgcolor: "#f5f5f5",
-              borderLeft: "4px solid #999",
               transition: "transform 0.2s",
               "&:hover": {
                 transform: "translateY(-2px)",
@@ -75,8 +71,6 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
           <Card
             variant="outlined"
             sx={{
-              bgcolor: "#f5f5f5",
-              borderLeft: "4px solid #999",
               transition: "transform 0.2s",
               "&:hover": {
                 transform: "translateY(-2px)",
@@ -98,8 +92,8 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
               >
                 <Stack direction="row" spacing={1} alignItems="center">
                   <WarningIcon
+                    color="action"
                     sx={{
-                      color: "#666",
                       fontSize: 20,
                     }}
                   />
@@ -118,11 +112,6 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
                     label={iucn.category}
                     size="small"
                     variant="outlined"
-                    sx={{
-                      fontWeight: 600,
-                      borderColor: "#666",
-                      color: "#333",
-                    }}
                   />
                 )}
               </Stack>

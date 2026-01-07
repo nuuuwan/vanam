@@ -21,7 +21,6 @@ const CommonNamesChips = ({ commonNames }) => {
           label={name}
           size="small"
           variant="outlined"
-          sx={{ fontSize: "0.75rem" }}
         />
       ))}
     </Box>

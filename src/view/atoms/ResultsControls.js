@@ -12,15 +12,6 @@ const ResultsControls = ({ onReset, isLoading }) => {
           onClick={onReset}
           disabled={isLoading}
           size="large"
-          sx={{
-            bgcolor: "primary.main",
-            color: "white",
-            "&:hover": { bgcolor: "primary.dark" },
-            "&.Mui-disabled": {
-              bgcolor: "action.disabledBackground",
-              color: "action.disabled",
-            },
-          }}
         >
           <PhotoCameraIcon />
         </IconButton>

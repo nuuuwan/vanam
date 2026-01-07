@@ -14,8 +14,6 @@ const TaxonomySection = ({ genus, family }) => {
           <Card
             variant="outlined"
             sx={{
-              bgcolor: "#f5f5f5",
-              borderLeft: "4px solid #999",
               transition: "transform 0.2s",
               "&:hover": {
                 transform: "translateY(-2px)",
@@ -45,8 +43,6 @@ const TaxonomySection = ({ genus, family }) => {
           <Card
             variant="outlined"
             sx={{
-              bgcolor: "#f5f5f5",
-              borderLeft: "4px solid #999",
               transition: "transform 0.2s",
               "&:hover": {
                 transform: "translateY(-2px)",

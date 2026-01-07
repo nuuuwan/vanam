@@ -9,7 +9,7 @@ const LocationInfo = ({ gpsData }) => {
         Location Information
       </Typography>
       {gpsData ? (
-        <Paper elevation={1} sx={{ p: 2, backgroundColor: "#e3f2fd" }}>
+        <Paper elevation={1} sx={{ p: 2 }}>
           <Stack direction="row" spacing={1} alignItems="center">
             <LocationOnIcon color="primary" />
             <Box>

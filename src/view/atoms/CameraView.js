@@ -12,7 +12,6 @@ const CameraView = ({ videoRef, canvasRef, onCapture, onCancel }) => {
         style={{
           width: "100%",
           borderRadius: 8,
-          backgroundColor: "#000",
         }}
       />
       <canvas ref={canvasRef} style={{ display: "none" }} />

@@ -13,14 +13,6 @@ const CameraControls = ({ onStartCamera, onLoadTestImage, isLoading }) => {
           onClick={onStartCamera}
           disabled={isLoading}
           size="large"
-          sx={{
-            bgcolor: "primary.main",
-            color: "white",
-            "&:hover": { bgcolor: "primary.dark" },
-            "&.Mui-disabled": {
-              bgcolor: "action.disabledBackground",
-            },
-          }}
         >
           {isLoading ? (
             <CircularProgress size={24} color="inherit" />

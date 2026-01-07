@@ -1,20 +1,21 @@
 import React from "react";
-import { Paper, Stack, Box, Typography, Link } from "@mui/material";
+import { Paper, Stack, Box, Typography, Link, useTheme } from "@mui/material";
 import { Gauge } from "@mui/x-charts/Gauge";
 import CommonNamesChips from "../atoms/CommonNamesChips";
 import TaxonomySection from "../atoms/TaxonomySection";
 import DatabaseReferencesSection from "../atoms/DatabaseReferencesSection";
 
 const PlantResultItem = ({ result }) => {
+  const theme = useTheme();
   const scorePercent = result.score * 100;
   const getGaugeColor = (score) => {
-    if (score > 75) return "#4caf50"; // green
-    if (score > 50) return "#ff9800"; // orange
-    return "#f44336"; // red
+    if (score > 75) return theme.palette.success.main;
+    if (score > 50) return theme.palette.warning.main;
+    return theme.palette.error.main;
   };
 
   return (
-    <Paper elevation={1} sx={{ p: 2, mb: 2, backgroundColor: "#f5f5f5" }}>
+    <Paper elevation={1} sx={{ p: 2, mb: 2 }}>
       <Stack direction="row" spacing={2} alignItems="flex-start">
         {result.images && result.images[0] && (
           <Box
@@ -34,11 +35,8 @@ const PlantResultItem = ({ result }) => {
         <Box sx={{ flex: 1 }}>
           <Typography
             variant="subtitle1"
-            sx={{
-              fontWeight: 600,
-              fontStyle: "italic",
-              mb: 1,
-            }}
+            fontStyle="italic"
+            sx={{ mb: 1 }}
           >
             <Link
               href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
@@ -47,10 +45,7 @@ const PlantResultItem = ({ result }) => {
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              sx={{
-                color: "inherit",
-                textDecoration: "none",
-              }}
+              underline="none"
             >
               {result.species.scientificName ||
                 result.species.scientificNameWithoutAuthor}
