@@ -12,7 +12,9 @@ import {
 } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import DeleteIcon from "@mui/icons-material/Delete";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PlantNetClient from "../../nonview/core/PlantNetClient";
+import exifr from "exifr";
 
 const PictureCapture = () => {
   const videoRef = useRef(null);
@@ -23,6 +25,7 @@ const PictureCapture = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [plantResults, setPlantResults] = useState(null);
   const [error, setError] = useState(null);
+  const [gpsData, setGpsData] = useState(null);
   const plantNetClient = useRef(new PlantNetClient());
 
   // Initialize client on mount
@@ -75,7 +78,8 @@ const PictureCapture = () => {
         const imageData = canvasRef.current.toDataURL("image/png");
         setCapturedImage(imageData);
         stopCamera();
-        // Auto-identify plant after capturing
+        // Extract GPS data and identify plant after capturing
+        extractGPSData(imageData);
         identifyPlantFromImage(imageData);
       }
     }
@@ -85,6 +89,36 @@ const PictureCapture = () => {
     setCapturedImage(null);
     setPlantResults(null);
     setError(null);
+    setGpsData(null);
+  };
+
+  const extractGPSData = async (imageData) => {
+    try {
+      // Convert data URL to blob
+      const response = await fetch(imageData);
+      const blob = await response.blob();
+
+      // Extract GPS data from EXIF
+      const gps = await exifr.gps(blob);
+      console.log("Extracted GPS data:", gps);
+
+      if (gps && gps.latitude && gps.longitude) {
+        setGpsData({
+          latitude: gps.latitude,
+          longitude: gps.longitude,
+        });
+        console.log("GPS data set:", {
+          latitude: gps.latitude,
+          longitude: gps.longitude,
+        });
+      } else {
+        setGpsData(null);
+        console.log("No GPS data found in image");
+      }
+    } catch (err) {
+      console.error("Error extracting GPS data:", err);
+      setGpsData(null);
+    }
   };
 
   const loadTestImage = async () => {
@@ -103,7 +137,8 @@ const PictureCapture = () => {
       const reader = new FileReader();
       reader.onload = async (e) => {
         setCapturedImage(e.target?.result);
-        // Auto-identify plant after loading
+        // Extract GPS data and identify plant after loading
+        await extractGPSData(e.target?.result);
         await identifyPlantFromImage(e.target?.result);
       };
       reader.readAsDataURL(typedBlob);
@@ -231,6 +266,33 @@ const PictureCapture = () => {
                 }}
               />
 
+              {gpsData && (
+                <Box sx={{ mb: 3 }}>
+                  <Divider sx={{ my: 2 }} />
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    Location Information
+                  </Typography>
+                  <Paper
+                    elevation={1}
+                    sx={{ p: 2, backgroundColor: "#e3f2fd" }}
+                  >
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <LocationOnIcon color="primary" />
+                      <Box>
+                        <Typography variant="body1">
+                          <strong>Latitude:</strong>{" "}
+                          {gpsData.latitude.toFixed(6)}°
+                        </Typography>
+                        <Typography variant="body1">
+                          <strong>Longitude:</strong>{" "}
+                          {gpsData.longitude.toFixed(6)}°
+                        </Typography>
+                      </Box>
+                    </Stack>
+                  </Paper>
+                </Box>
+              )}
+
               {plantResults && (
                 <Box sx={{ mb: 3 }}>
                   <Divider sx={{ my: 2 }} />
@@ -305,6 +367,7 @@ const PictureCapture = () => {
                     setIsCameraActive(false);
                     setPlantResults(null);
                     setError(null);
+                    setGpsData(null);
                   }}
                 >
                   Take Another Photo
