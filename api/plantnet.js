@@ -10,21 +10,26 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(
+    const plantnetRes = await fetch(
       `https://my-api.plantnet.org/v2/identify/weurope?api-key=${process.env.PLANTNET_KEY}`,
       {
         method: "POST",
         headers: {
-          ...req.headers,
-          host: "my-api.plantnet.org",
+          // forward only what is safe
+          "content-type": req.headers["content-type"],
         },
         body: req,
       }
     );
 
-    const data = await response.json();
-    res.status(response.status).json(data);
+    const text = await plantnetRes.text();
+
+    res.status(plantnetRes.status).send(text);
   } catch (err) {
-    res.status(500).json({ error: "PlantNet request failed" });
+    res.status(500).json({
+      error: "Proxy failure",
+      message: err.message,
+      stack: err.stack,
+    });
   }
 }
