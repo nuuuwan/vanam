@@ -33,7 +33,11 @@ const PlantResultItem = ({ result }) => {
           />
         )}
         <Box sx={{ flex: 1 }}>
-          <Typography variant="subtitle1" fontStyle="italic" sx={{ mb: 1, color: getGaugeColor(scorePercent) }}>
+          <Typography
+            variant="subtitle1"
+            fontStyle="italic"
+            sx={{ mb: 1, color: getGaugeColor(scorePercent) }}
+          >
             <Link
               href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
                 result.species.scientificNameWithoutAuthor ||

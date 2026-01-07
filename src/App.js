@@ -13,7 +13,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Karla", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Urbanist", "Roboto", "Helvetica", "Arial", sans-serif',
   },
   components: {
     MuiLink: {
