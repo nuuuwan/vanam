@@ -4,7 +4,6 @@ import { Paper, Stack } from "@mui/material";
 const BottomNavigator = ({ children }) => {
   return (
     <Paper
-      elevation={3}
       sx={{
         position: "fixed",
         bottom: 0,

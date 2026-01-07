@@ -15,7 +15,7 @@ const PlantResultItem = ({ result }) => {
   };
 
   return (
-    <Paper elevation={1} sx={{ p: 2, mb: 2 }}>
+    <Paper elevation={5} sx={{ p: 2, mb: 2 }}>
       <Stack direction="row" spacing={2} alignItems="flex-start">
         {result.images && result.images[0] && (
           <Box
