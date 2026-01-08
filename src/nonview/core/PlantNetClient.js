@@ -1,5 +1,55 @@
 class PlantNetClient {
   /**
+   * Generate a simple hash from a string
+   * @param {string} str - String to hash
+   * @returns {string} Hash string
+   */
+  async hashString(str) {
+    // Use a portion of the image data to create a hash
+    const sample = str.substring(0, 1000); // Sample first 1000 chars for performance
+    let hash = 0;
+    for (let i = 0; i < sample.length; i++) {
+      const char = sample.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return hash.toString(36);
+  }
+
+  /**
+   * Get cached results from localStorage
+   * @param {string} cacheKey - Cache key
+   * @returns {Object|null} Cached results or null
+   */
+  getCachedResults(cacheKey) {
+    try {
+      const cached = localStorage.getItem(`plantnet_${cacheKey}`);
+      if (cached) {
+        const data = JSON.parse(cached);
+        console.log('Using cached PlantNet results');
+        return data;
+      }
+    } catch (error) {
+      console.error('Error reading cache:', error);
+    }
+    return null;
+  }
+
+  /**
+   * Save results to localStorage cache
+   * @param {string} cacheKey - Cache key
+   * @param {Object} results - Results to cache
+   */
+  setCachedResults(cacheKey, results) {
+    try {
+      localStorage.setItem(`plantnet_${cacheKey}`, JSON.stringify(results));
+      console.log('Cached PlantNet results');
+    } catch (error) {
+      console.error('Error saving to cache:', error);
+    }
+  }
+
+  /**
    * Identify a plant from a base64 encoded image
    * @param {string} imageBase64 - Base64 encoded image data
    * @param {Object} options - Optional parameters
@@ -10,6 +60,15 @@ class PlantNetClient {
   async identifyPlant(imageBase64, options = {}) {
     try {
       const { organs = "auto" } = options;
+
+      // Generate cache key from image and options
+      const cacheKey = await this.hashString(imageBase64 + organs + (options.project || 'all'));
+      
+      // Check cache first
+      const cachedResults = this.getCachedResults(cacheKey);
+      if (cachedResults) {
+        return cachedResults;
+      }
 
       // Extract MIME type from base64 data URL
       let mimeType = "image/jpeg";
@@ -51,7 +110,12 @@ class PlantNetClient {
         );
       }
 
-      return apiResponse.json();
+      const results = await apiResponse.json();
+      
+      // Cache the results
+      this.setCachedResults(cacheKey, results);
+      
+      return results;
     } catch (error) {
       console.error("Error identifying plant:", error);
       throw error;
