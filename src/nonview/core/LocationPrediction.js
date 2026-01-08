@@ -1,4 +1,4 @@
-export default class ImageLocation {
+export default class LocationPrediction {
   constructor(latitude, longitude, accuracy) {
     this.latitude = latitude;
     this.longitude = longitude;
