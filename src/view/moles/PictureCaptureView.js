@@ -84,8 +84,10 @@ const PictureCaptureView = () => {
       setStream(null);
       setIsCameraActive(false);
       // Get current device location for camera captures
-      getCurrentLocation();
-      identifyPlantFromImage(result.imageData);
+      const locationResult = await pictureCapture.current.getCurrentLocation();
+      const currentGpsData = locationResult.gpsData;
+      setGpsData(currentGpsData);
+      identifyPlantFromImage(result.imageData, currentGpsData);
     }
   };
 
@@ -110,8 +112,9 @@ const PictureCaptureView = () => {
       const result = await pictureCapture.current.loadFromFile(file);
       if (result.success) {
         setCapturedImage(result.imageData);
-        setGpsData(result.gpsData || null);
-        await identifyPlantFromImage(result.imageData);
+        const currentGpsData = result.gpsData || null;
+        setGpsData(currentGpsData);
+        await identifyPlantFromImage(result.imageData, currentGpsData);
       } else {
         setError(result.error);
         setIsLoading(false);
@@ -132,8 +135,9 @@ const PictureCaptureView = () => {
       if (result.success) {
         setCapturedImage(result.imageData);
         // GPS data is now returned from loadTestImage
-        setGpsData(result.gpsData || null);
-        await identifyPlantFromImage(result.imageData);
+        const currentGpsData = result.gpsData || null;
+        setGpsData(currentGpsData);
+        await identifyPlantFromImage(result.imageData, currentGpsData);
       } else {
         setError(result.error);
         setIsLoading(false);
@@ -145,7 +149,7 @@ const PictureCaptureView = () => {
     }
   };
 
-  const identifyPlantFromImage = async (imageData) => {
+  const identifyPlantFromImage = async (imageData, currentGpsData = null) => {
     setIsLoading(true);
     const result = await pictureCapture.current.identifyPlantFromImage(
       imageData,
@@ -173,8 +177,8 @@ const PictureCaptureView = () => {
         }));
 
       setPlantResults(filteredResults);
-      // Store results to Vercel Blob
-      storeResultsToBlob(filteredResults, imageData);
+      // Store results to Vercel Blob with GPS data passed directly
+      storeResultsToBlob(filteredResults, imageData, currentGpsData);
     } else {
       setError(result.error);
     }
@@ -216,7 +220,7 @@ const PictureCaptureView = () => {
     }
   };
 
-  const storeResultsToBlob = async (results, imageData) => {
+  const storeResultsToBlob = async (results, imageData, currentGpsData) => {
     // Check if already stored
     const storageKey = generateStorageKey(results);
     const cachedUrl = isAlreadyStored(storageKey);
@@ -232,7 +236,7 @@ const PictureCaptureView = () => {
     try {
       const dataToStore = {
         timestamp: new Date().toISOString(),
-        gpsData: gpsData,
+        gpsData: currentGpsData,
         results: results,
         // imageDataUrl: imageData,
       };
