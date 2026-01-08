@@ -168,16 +168,44 @@ const PictureCaptureView = () => {
         timestamp: new Date().toISOString(),
         gpsData: gpsData,
         results: results,
-        imageDataUrl: imageData,
+        // imageDataUrl: imageData,
       };
 
-      const response = await fetch("/api/store-results", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataToStore),
-      });
+      console.debug("dataToStore", dataToStore);
+
+      const response = await fetch(
+        "https://vanam-teal.vercel.app/api/store-results",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToStore),
+        }
+      );
+
+      const contentType = response.headers.get("content-type");
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(
+          "Failed to store results. Status:",
+          response.status,
+          "Response:",
+          errorText
+        );
+        return;
+      }
+
+      // Check if response is actually JSON
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("Non-JSON response received:", text);
+        console.log(
+          "Note: Vercel Blob storage may not be configured. Data was identified but not stored."
+        );
+        return;
+      }
 
       const result = await response.json();
       if (result.success) {
@@ -187,6 +215,9 @@ const PictureCaptureView = () => {
       }
     } catch (error) {
       console.error("Error storing results to blob:", error);
+      console.log(
+        "Note: This error won't affect plant identification, only data storage."
+      );
     }
   };
 
