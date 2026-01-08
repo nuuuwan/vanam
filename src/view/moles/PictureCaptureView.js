@@ -1,12 +1,14 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Box, Alert, CircularProgress, Typography, Link } from "@mui/material";
 import PictureCapture from "../../nonview/core/PictureCapture";
+import PlantPhoto from "../../nonview/core/PlantPhoto";
 import MenuButton from "../atoms/MenuButton";
 import WelcomeSection from "../atoms/WelcomeSection";
 import CameraView from "../atoms/CameraView";
 import LoadingView from "../atoms/LoadingView";
 import LocationInfo from "../atoms/LocationInfo";
 import MapView from "../atoms/MapView";
+import CapturedImageDisplay from "../atoms/CapturedImageDisplay";
 import PlantResultsList from "./PlantResultsList";
 import CameraControls from "../atoms/CameraControls";
 
@@ -17,12 +19,10 @@ const PictureCaptureView = () => {
   const [stream, setStream] = useState(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [plantResults, setPlantResults] = useState(null);
+  const [plantPhoto, setPlantPhoto] = useState(null);
   const [error, setError] = useState(null);
-  const [gpsData, setGpsData] = useState(null);
   const [isStoring, setIsStoring] = useState(false);
   const [blobUrl, setBlobUrl] = useState(null);
-  const [imageTimestamp, setImageTimestamp] = useState(null);
   const pictureCapture = useRef(new PictureCapture());
 
   // Cleanup on unmount
@@ -42,17 +42,13 @@ const PictureCaptureView = () => {
 
   // Update document title when plant is identified
   useEffect(() => {
-    if (plantResults && plantResults.length > 0) {
-      const topResult = plantResults[0];
-      const scientificName =
-        topResult.species.scientificName ||
-        topResult.species.scientificNameWithoutAuthor;
-
-      document.title = scientificName;
+    if (plantPhoto?.plantNetPredictions?.length > 0) {
+      const topResult = plantPhoto.plantNetPredictions[0];
+      document.title = topResult.species || "Vanam";
     } else {
       document.title = "Vanam";
     }
-  }, [plantResults]);
+  }, [plantPhoto]);
 
   const startCamera = async () => {
     setIsLoading(true);
@@ -85,35 +81,26 @@ const PictureCaptureView = () => {
       setCapturedImage(result.imageData);
       setStream(null);
       setIsCameraActive(false);
-      // Get current device location for camera captures
-      const locationResult = await pictureCapture.current.getCurrentLocation();
-      const currentGpsData = locationResult.gpsData;
-      setGpsData(currentGpsData);
-      identifyPlantFromImage(result.imageData, currentGpsData);
+      await identifyPlantFromImage(result.imageData);
     }
   };
 
   const clearImage = () => {
     setCapturedImage(null);
-    setPlantResults(null);
+    setPlantPhoto(null);
     setError(null);
-    setGpsData(null);
     setBlobUrl(null);
-    setImageTimestamp(null);
   };
 
   const uploadPhoto = async (file) => {
     setIsLoading(true);
     setError(null);
-    setPlantResults(null);
+    setPlantPhoto(null);
     try {
       const result = await pictureCapture.current.loadFromFile(file);
       if (result.success) {
         setCapturedImage(result.imageData);
-        const currentGpsData = result.gpsData || null;
-        setGpsData(currentGpsData);
-        setImageTimestamp(result.timestamp || null);
-        await identifyPlantFromImage(result.imageData, currentGpsData);
+        await identifyPlantFromImage(result.imageData);
       } else {
         setError(result.error);
         setIsLoading(false);
@@ -128,16 +115,12 @@ const PictureCaptureView = () => {
   const loadTestImage = async () => {
     setIsLoading(true);
     setError(null);
-    setPlantResults(null);
+    setPlantPhoto(null);
     try {
       const result = await pictureCapture.current.loadTestImage();
       if (result.success) {
         setCapturedImage(result.imageData);
-        // GPS data is now returned from loadTestImage
-        const currentGpsData = result.gpsData || null;
-        setGpsData(currentGpsData);
-        setImageTimestamp(result.timestamp || null);
-        await identifyPlantFromImage(result.imageData, currentGpsData);
+        await identifyPlantFromImage(result.imageData);
       } else {
         setError(result.error);
         setIsLoading(false);
@@ -149,52 +132,21 @@ const PictureCaptureView = () => {
     }
   };
 
-  const identifyPlantFromImage = async (imageData, currentGpsData = null) => {
+  const identifyPlantFromImage = async (imageData) => {
     setIsLoading(true);
-    const result = await pictureCapture.current.identifyPlantFromImage(
-      imageData,
-      {
-        organs: "auto",
-        project: "all",
-      }
-    );
-
-    if (result.success) {
-      // Filter and transform results to only include needed information
-      const filteredResults = result.results
-        .filter((r) => r.score >= 0.05)
-        .map((r) => ({
-          score: r.score,
-          species:
-            r.species?.scientificName || r.species?.scientificNameWithoutAuthor,
-          genus: r.species?.genus?.scientificName || r.species?.genus,
-          family: r.species?.family?.scientificName || r.species?.family,
-          commonNames: r.species?.commonNames || [],
-          gbif_id: r.gbif?.id,
-          powo_id: r.powo?.id,
-          iucn_id: r.iucn?.id,
-          iucn_category: r.iucn?.category,
-        }));
-
-      setPlantResults(filteredResults);
-      // Store results to Vercel Blob with GPS data passed directly
-      storeResultsToBlob(filteredResults, imageData, currentGpsData);
-    } else {
-      setError(result.error);
+    try {
+      const photo = await PlantPhoto.fromImage(imageData);
+      setPlantPhoto(photo);
+      storeResultsToBlob(photo);
+    } catch (err) {
+      setError(err.message || "Failed to identify plant");
+      console.error(err);
     }
     setIsLoading(false);
   };
 
-  const generateStorageKey = (results) => {
-    // Create a key from the results to identify unique identifications
-    const resultIds = results.map((r) => r.species + r.score).join("_");
-    let hash = 0;
-    for (let i = 0; i < resultIds.length; i++) {
-      const char = resultIds.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash = hash & hash;
-    }
-    return `blob_stored_${hash.toString(36)}`;
+  const generateStorageKey = (plantPhoto) => {
+    return `blob_stored_${plantPhoto.imageHash.substring(0, 16)}`;
   };
 
   const isAlreadyStored = (storageKey) => {
@@ -220,11 +172,13 @@ const PictureCaptureView = () => {
     }
   };
 
-  const storeResultsToBlob = async (results, imageData, currentGpsData) => {
-    // Check if already stored
-    const storageKey = generateStorageKey(results);
+  const storeResultsToBlob = async (plantPhoto) => {
+    const storageKey = generateStorageKey(plantPhoto);
     const cachedUrl = isAlreadyStored(storageKey);
     if (cachedUrl) {
+      console.log(
+        "Results already stored to Vercel Blob, skipping duplicate storage"
+      );
       setBlobUrl(cachedUrl);
       return;
     }
@@ -232,10 +186,25 @@ const PictureCaptureView = () => {
     setIsStoring(true);
     try {
       const dataToStore = {
-        timestamp: imageTimestamp || new Date().toISOString(),
-        gpsData: currentGpsData,
-        results: results,
-        // imageDataUrl: imageData,
+        timestamp: plantPhoto.utImageTaken,
+        gpsData: plantPhoto.imageLocation
+          ? {
+              latitude: plantPhoto.imageLocation.latitude,
+              longitude: plantPhoto.imageLocation.longitude,
+              accuracy: plantPhoto.imageLocation.accuracy,
+            }
+          : null,
+        results: plantPhoto.plantNetPredictions.map((p) => ({
+          score: p.confidence,
+          species: p.species,
+          genus: p.genus,
+          family: p.family,
+          commonNames: p.commonNames,
+          gbif_id: p.gbifId,
+          powo_id: p.powoId,
+          iucn_id: p.iucnId,
+          iucn_category: p.iucnCategory,
+        })),
       };
 
       const response = await fetch(
@@ -312,11 +281,48 @@ const PictureCaptureView = () => {
         </Box>
       ) : (
         <Box>
-          <MapView gpsData={gpsData} imageData={capturedImage} />
+          <MapView
+            gpsData={
+              plantPhoto?.imageLocation
+                ? {
+                    latitude: plantPhoto.imageLocation.latitude,
+                    longitude: plantPhoto.imageLocation.longitude,
+                    accuracy: plantPhoto.imageLocation.accuracy,
+                  }
+                : null
+            }
+            imageData={capturedImage}
+          />
 
-          <LocationInfo gpsData={gpsData} imageTimestamp={imageTimestamp} />
+          {!isLoading && (
+            <LocationInfo
+              gpsData={
+                plantPhoto?.imageLocation
+                  ? {
+                      latitude: plantPhoto.imageLocation.latitude,
+                      longitude: plantPhoto.imageLocation.longitude,
+                      accuracy: plantPhoto.imageLocation.accuracy,
+                    }
+                  : null
+              }
+              imageTimestamp={plantPhoto?.utImageTaken}
+            />
+          )}
 
-          <PlantResultsList results={plantResults} isLoading={isLoading} />
+          <PlantResultsList
+            results={plantPhoto?.plantNetPredictions?.map((p) => ({
+              score: p.confidence,
+              species: p.species,
+              genus: p.genus,
+              family: p.family,
+              commonNames: p.commonNames,
+              gbif_id: p.gbifId,
+              powo_id: p.powoId,
+              iucn_id: p.iucnId,
+              iucn_category: p.iucnCategory,
+            }))}
+            isLoading={isLoading}
+          />
 
           {isStoring && (
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
