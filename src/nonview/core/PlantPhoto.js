@@ -4,6 +4,10 @@ import PlantNetClient from "./PlantNetClient";
 import exifr from "exifr";
 
 export default class PlantPhoto {
+  static cachedPhotos = null;
+  static cacheTimestamp = null;
+  static CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+
   constructor(
     imageHash,
     imageData,
@@ -173,6 +177,8 @@ export default class PlantPhoto {
       const result = await response.json();
       if (result.success) {
         localStorage.setItem(storageKey, result.url);
+        // Invalidate cache since we added a new photo
+        PlantPhoto.clearCache();
         return { success: true, url: result.url, cached: false };
       } else {
         console.error("Failed to store results:", result.error);
@@ -184,8 +190,21 @@ export default class PlantPhoto {
     }
   }
 
-  static async listAll() {
+  static async listAll(forceRefresh = false) {
     console.debug("listAll");
+
+    // Check if we have valid cached data
+    const now = Date.now();
+    if (
+      !forceRefresh &&
+      PlantPhoto.cachedPhotos &&
+      PlantPhoto.cacheTimestamp &&
+      now - PlantPhoto.cacheTimestamp < PlantPhoto.CACHE_DURATION
+    ) {
+      console.debug("Returning cached photos");
+      return { success: true, photos: PlantPhoto.cachedPhotos, cached: true };
+    }
+
     try {
       const response = await fetch(
         "https://vanam-teal.vercel.app/api/list-results"
@@ -215,7 +234,12 @@ export default class PlantPhoto {
         const plantPhotos = result.photos.map((photoData) =>
           PlantPhoto.fromJSON(photoData)
         );
-        return { success: true, photos: plantPhotos };
+
+        // Cache the results
+        PlantPhoto.cachedPhotos = plantPhotos;
+        PlantPhoto.cacheTimestamp = now;
+
+        return { success: true, photos: plantPhotos, cached: false };
       } else {
         console.error("Failed to list results:", result.error);
         return { success: false, error: result.error };
@@ -224,5 +248,10 @@ export default class PlantPhoto {
       console.error("Error listing results from blob:", error);
       return { success: false, error: error.message };
     }
+  }
+
+  static clearCache() {
+    PlantPhoto.cachedPhotos = null;
+    PlantPhoto.cacheTimestamp = null;
   }
 }
