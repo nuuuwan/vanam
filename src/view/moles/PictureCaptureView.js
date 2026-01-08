@@ -101,11 +101,6 @@ const PictureCaptureView = () => {
     setImageTimestamp(null);
   };
 
-  const getCurrentLocation = async () => {
-    const result = await pictureCapture.current.getCurrentLocation();
-    setGpsData(result.gpsData);
-  };
-
   const uploadPhoto = async (file) => {
     setIsLoading(true);
     setError(null);

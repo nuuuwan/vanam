@@ -119,10 +119,11 @@ class PictureCapture {
       let timestamp = null;
       if (exifData) {
         // Try different timestamp fields in order of preference
-        timestamp = exifData.DateTimeOriginal || 
-                   exifData.DateTime || 
-                   exifData.CreateDate || 
-                   exifData.ModifyDate;
+        timestamp =
+          exifData.DateTimeOriginal ||
+          exifData.DateTime ||
+          exifData.CreateDate ||
+          exifData.ModifyDate;
         if (timestamp) {
           console.log("Timestamp found in EXIF:", timestamp);
         }
@@ -131,7 +132,12 @@ class PictureCapture {
       return { success: true, gpsData, timestamp };
     } catch (err) {
       console.error("Error extracting GPS data:", err);
-      return { success: false, error: err.message, gpsData: null, timestamp: null };
+      return {
+        success: false,
+        error: err.message,
+        gpsData: null,
+        timestamp: null,
+      };
     }
   }
 
