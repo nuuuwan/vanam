@@ -1,15 +1,12 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Box, Alert, CircularProgress, Typography, Link } from "@mui/material";
+import { Box } from "@mui/material";
 import PictureCapture from "../../nonview/core/PictureCapture";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
 import MenuButton from "../atoms/MenuButton";
 import WelcomeSection from "../atoms/WelcomeSection";
 import CameraView from "../atoms/CameraView";
 import LoadingView from "../atoms/LoadingView";
-import LocationInfo from "../atoms/LocationInfo";
-import MapView from "../atoms/MapView";
-import CapturedImageDisplay from "../atoms/CapturedImageDisplay";
-import PlantResultsList from "./PlantResultsList";
+import PlantPhotoView from "./PlantPhotoView";
 import CameraControls from "../atoms/CameraControls";
 
 const PictureCaptureView = () => {
@@ -281,75 +278,14 @@ const PictureCaptureView = () => {
         </Box>
       ) : (
         <Box>
-          <MapView
-            gpsData={
-              plantPhoto?.imageLocation
-                ? {
-                    latitude: plantPhoto.imageLocation.latitude,
-                    longitude: plantPhoto.imageLocation.longitude,
-                    accuracy: plantPhoto.imageLocation.accuracy,
-                  }
-                : null
-            }
+          <PlantPhotoView
+            plantPhoto={plantPhoto}
             imageData={capturedImage}
-          />
-
-          {!isLoading && (
-            <LocationInfo
-              gpsData={
-                plantPhoto?.imageLocation
-                  ? {
-                      latitude: plantPhoto.imageLocation.latitude,
-                      longitude: plantPhoto.imageLocation.longitude,
-                      accuracy: plantPhoto.imageLocation.accuracy,
-                    }
-                  : null
-              }
-              imageTimestamp={plantPhoto?.utImageTaken}
-            />
-          )}
-
-          <PlantResultsList
-            results={plantPhoto?.plantNetPredictions?.map((p) => ({
-              score: p.confidence,
-              species: p.species,
-              genus: p.genus,
-              family: p.family,
-              commonNames: p.commonNames,
-              gbif_id: p.gbifId,
-              powo_id: p.powoId,
-              iucn_id: p.iucnId,
-              iucn_category: p.iucnCategory,
-            }))}
             isLoading={isLoading}
+            isStoring={isStoring}
+            blobUrl={blobUrl}
+            error={error}
           />
-
-          {isStoring && (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
-              <CircularProgress size={20} />
-              <Typography variant="body2" color="text.secondary">
-                Storing results...
-              </Typography>
-            </Box>
-          )}
-
-          {blobUrl && (
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="caption" color="text.secondary">
-                Data stored:{" "}
-                <Link
-                  href={blobUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{ fontSize: "0.75rem" }}
-                >
-                  View JSON
-                </Link>
-              </Typography>
-            </Box>
-          )}
-
-          {error && <Alert severity="error">{error}</Alert>}
 
           <CameraControls
             onStartCamera={() => {

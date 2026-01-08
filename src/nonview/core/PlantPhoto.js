@@ -16,36 +16,15 @@ export default class PlantPhoto {
 
     const blob = await fetch(imageData).then((r) => r.blob());
 
+    const locationPrediction = await LocationPrediction.fromImageBlob(blob);
+
     const exifData = await exifr.parse(blob, {
-      gps: true,
       tiff: true,
       xmp: false,
       icc: false,
       iptc: false,
       jfif: false,
     });
-
-    let locationPrediction = null;
-    if (
-      exifData &&
-      exifData.latitude !== undefined &&
-      exifData.longitude !== undefined
-    ) {
-      locationPrediction = new LocationPrediction(
-        exifData.latitude,
-        exifData.longitude,
-        exifData.GPSAltitude || null
-      );
-    } else {
-      const browserLocation = await PlantPhoto.getBrowserLocation();
-      if (browserLocation) {
-        locationPrediction = new LocationPrediction(
-          browserLocation.latitude,
-          browserLocation.longitude,
-          browserLocation.accuracy
-        );
-      }
-    }
 
     const utImageTaken =
       exifData?.DateTimeOriginal ||
@@ -93,34 +72,5 @@ export default class PlantPhoto {
     const hashBuffer = await crypto.subtle.digest("SHA-256", data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-  }
-
-  static async getBrowserLocation() {
-    return new Promise((resolve) => {
-      if (!navigator.geolocation) {
-        console.warn("Geolocation is not supported by this browser.");
-        resolve(null);
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          resolve({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            accuracy: position.coords.accuracy,
-          });
-        },
-        (error) => {
-          console.warn("Error getting browser location:", error.message);
-          resolve(null);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0,
-        }
-      );
-    });
   }
 }
