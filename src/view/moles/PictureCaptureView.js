@@ -21,6 +21,7 @@ const PictureCaptureView = () => {
   const [gpsData, setGpsData] = useState(null);
   const [isStoring, setIsStoring] = useState(false);
   const [blobUrl, setBlobUrl] = useState(null);
+  const [imageTimestamp, setImageTimestamp] = useState(null);
   const pictureCapture = useRef(new PictureCapture());
 
   // Cleanup on unmount
@@ -97,6 +98,7 @@ const PictureCaptureView = () => {
     setError(null);
     setGpsData(null);
     setBlobUrl(null);
+    setImageTimestamp(null);
   };
 
   const getCurrentLocation = async () => {
@@ -114,6 +116,7 @@ const PictureCaptureView = () => {
         setCapturedImage(result.imageData);
         const currentGpsData = result.gpsData || null;
         setGpsData(currentGpsData);
+        setImageTimestamp(result.timestamp || null);
         await identifyPlantFromImage(result.imageData, currentGpsData);
       } else {
         setError(result.error);
@@ -137,6 +140,7 @@ const PictureCaptureView = () => {
         // GPS data is now returned from loadTestImage
         const currentGpsData = result.gpsData || null;
         setGpsData(currentGpsData);
+        setImageTimestamp(result.timestamp || null);
         await identifyPlantFromImage(result.imageData, currentGpsData);
       } else {
         setError(result.error);
@@ -235,7 +239,7 @@ const PictureCaptureView = () => {
     setIsStoring(true);
     try {
       const dataToStore = {
-        timestamp: new Date().toISOString(),
+        timestamp: imageTimestamp || new Date().toISOString(),
         gpsData: currentGpsData,
         results: results,
         // imageDataUrl: imageData,
@@ -323,7 +327,7 @@ const PictureCaptureView = () => {
         <Box>
           <MapView gpsData={gpsData} imageData={capturedImage} />
 
-          <LocationInfo gpsData={gpsData} />
+          <LocationInfo gpsData={gpsData} imageTimestamp={imageTimestamp} />
 
           <PlantResultsList results={plantResults} isLoading={isLoading} />
 

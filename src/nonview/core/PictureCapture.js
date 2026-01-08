@@ -99,25 +99,39 @@ class PictureCapture {
 
       console.log("Extracted EXIF data:", exifData);
 
+      let gpsData = null;
       if (
         exifData &&
         exifData.latitude !== undefined &&
         exifData.longitude !== undefined
       ) {
-        const gpsData = {
+        gpsData = {
           latitude: exifData.latitude,
           longitude: exifData.longitude,
           altitude: exifData.GPSAltitude || null,
         };
         console.log("GPS data found:", gpsData);
-        return { success: true, gpsData };
       } else {
         console.log("No GPS data in image");
-        return { success: true, gpsData: null };
       }
+
+      // Extract timestamp from EXIF
+      let timestamp = null;
+      if (exifData) {
+        // Try different timestamp fields in order of preference
+        timestamp = exifData.DateTimeOriginal || 
+                   exifData.DateTime || 
+                   exifData.CreateDate || 
+                   exifData.ModifyDate;
+        if (timestamp) {
+          console.log("Timestamp found in EXIF:", timestamp);
+        }
+      }
+
+      return { success: true, gpsData, timestamp };
     } catch (err) {
       console.error("Error extracting GPS data:", err);
-      return { success: false, error: err.message, gpsData: null };
+      return { success: false, error: err.message, gpsData: null, timestamp: null };
     }
   }
 
@@ -141,6 +155,7 @@ class PictureCapture {
             success: true,
             imageData: e.target?.result,
             gpsData: gpsData || null,
+            timestamp: gpsResult.timestamp || null,
           });
         };
         reader.onerror = (error) => {
@@ -177,6 +192,7 @@ class PictureCapture {
             success: true,
             imageData: e.target?.result,
             gpsData: gpsResult.gpsData || null,
+            timestamp: gpsResult.timestamp || null,
           });
         };
         reader.onerror = (error) => {
