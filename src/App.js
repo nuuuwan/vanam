@@ -1,12 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import {
-  Container,
-  BottomNavigation,
-  BottomNavigationAction,
-} from "@mui/material";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
+import { Container } from "@mui/material";
 import { useState } from "react";
 import PictureCaptureView from "./view/moles/PictureCaptureView";
 import PlantPhotoGallery from "./view/pages/PlantPhotoGallery";
@@ -39,26 +33,18 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container maxWidth="lg" sx={{ pb: 8 }}>
-        {currentView === 0 ? <PictureCaptureView /> : <PlantPhotoGallery />}
+        {currentView === 0 ? (
+          <PictureCaptureView
+            currentView={currentView}
+            onViewChange={setCurrentView}
+          />
+        ) : (
+          <PlantPhotoGallery
+            currentView={currentView}
+            onViewChange={setCurrentView}
+          />
+        )}
       </Container>
-
-      <BottomNavigation
-        value={currentView}
-        onChange={(event, newValue) => {
-          setCurrentView(newValue);
-        }}
-        showLabels
-        sx={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 1000,
-        }}
-      >
-        <BottomNavigationAction label="Camera" icon={<CameraAltIcon />} />
-        <BottomNavigationAction label="Gallery" icon={<PhotoLibraryIcon />} />
-      </BottomNavigation>
     </ThemeProvider>
   );
 }

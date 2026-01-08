@@ -10,8 +10,10 @@ import {
   Alert,
 } from "@mui/material";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
+import MenuButton from "../atoms/MenuButton";
+import CameraControls from "../atoms/CameraControls";
 
-const PlantPhotoGallery = () => {
+const PlantPhotoGallery = ({ currentView, onViewChange }) => {
   const [plantPhotos, setPlantPhotos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -69,6 +71,7 @@ const PlantPhotoGallery = () => {
 
   return (
     <Box sx={{ p: 2, pb: 10 }}>
+      <MenuButton />
       <Typography variant="h4" sx={{ mb: 3 }}>
         Plant Photo Gallery
       </Typography>
@@ -118,6 +121,15 @@ const PlantPhotoGallery = () => {
           ))}
         </Grid>
       )}
+
+      <CameraControls
+        onStartCamera={() => onViewChange(0)}
+        onUploadPhoto={() => onViewChange(0)}
+        onLoadTestImage={() => onViewChange(0)}
+        isLoading={false}
+        currentView={currentView}
+        onViewChange={onViewChange}
+      />
     </Box>
   );
 };

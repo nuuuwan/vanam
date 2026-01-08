@@ -9,7 +9,7 @@ import LoadingView from "../atoms/LoadingView";
 import PlantPhotoView from "./PlantPhotoView";
 import CameraControls from "../atoms/CameraControls";
 
-const PictureCaptureView = () => {
+const PictureCaptureView = ({ currentView, onViewChange }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isCameraActive, setIsCameraActive] = useState(false);
@@ -160,7 +160,7 @@ const PictureCaptureView = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto", pb: 10, position: "relative" }}>
+    <Box sx={{ maxWidth: 600, mx: "auto", pb: 2, position: "relative" }}>
       <MenuButton />
       {!capturedImage ? (
         <Box>
@@ -181,6 +181,8 @@ const PictureCaptureView = () => {
                 onUploadPhoto={uploadPhoto}
                 onLoadTestImage={loadTestImage}
                 isLoading={isLoading}
+                currentView={currentView}
+                onViewChange={onViewChange}
               />
             </Box>
           )}
@@ -211,6 +213,8 @@ const PictureCaptureView = () => {
               loadTestImage();
             }}
             isLoading={isLoading}
+            currentView={currentView}
+            onViewChange={onViewChange}
           />
         </Box>
       )}
