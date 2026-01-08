@@ -195,16 +195,22 @@ const PictureCaptureView = () => {
 
   const isAlreadyStored = (storageKey) => {
     try {
-      return localStorage.getItem(storageKey) === "true";
+      const storedData = localStorage.getItem(storageKey);
+      if (storedData && storedData !== "true") {
+        // Return the stored URL if it exists
+        return storedData;
+      }
+      return storedData === "true" ? true : false;
     } catch (error) {
       console.error("Error checking storage cache:", error);
       return false;
     }
   };
 
-  const markAsStored = (storageKey) => {
+  const markAsStored = (storageKey, url) => {
     try {
-      localStorage.setItem(storageKey, "true");
+      // Store the URL instead of just "true"
+      localStorage.setItem(storageKey, url);
     } catch (error) {
       console.error("Error marking as stored:", error);
     }
@@ -213,10 +219,12 @@ const PictureCaptureView = () => {
   const storeResultsToBlob = async (results, imageData) => {
     // Check if already stored
     const storageKey = generateStorageKey(results);
-    if (isAlreadyStored(storageKey)) {
+    const cachedUrl = isAlreadyStored(storageKey);
+    if (cachedUrl) {
       console.log(
         "Results already stored to Vercel Blob, skipping duplicate storage"
       );
+      setBlobUrl(cachedUrl);
       return;
     }
 
@@ -266,8 +274,8 @@ const PictureCaptureView = () => {
       const result = await response.json();
       if (result.success) {
         console.log("Results stored to Vercel Blob:", result.url);
-        // Mark as stored to prevent duplicates
-        markAsStored(storageKey);
+        // Mark as stored to prevent duplicates and store the URL
+        markAsStored(storageKey, result.url);
         setBlobUrl(result.url);
       } else {
         console.error("Failed to store results:", result.error);
