@@ -19,6 +19,16 @@ const LocationInfo = ({ gpsData }) => {
           <Box>
             <Typography variant="body1">
               {formatLatLng(gpsData.latitude, gpsData.longitude)}
+              {gpsData.accuracy && (
+                <Typography
+                  component="span"
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ ml: 1 }}
+                >
+                  (±{Math.round(gpsData.accuracy)}m)
+                </Typography>
+              )}
             </Typography>
           </Box>
         </Stack>
