@@ -1,32 +1,45 @@
 import { list } from "@vercel/blob";
 
 export const config = {
-  runtime: "nodejs",
+  maxDuration: 10,
 };
 
-export default async function handler(request) {
-  if (request.method !== "GET") {
-    return new Response(
-      JSON.stringify({ success: false, error: "Method not allowed" }),
-      {
-        status: 405,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
-        },
-      }
-    );
+export default async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // Handle preflight request
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  if (req.method !== "GET") {
+    return res
+      .status(405)
+      .json({ success: false, error: "Method not allowed" });
   }
 
   try {
-    const { blobs } = await list();
+    console.log("Starting to list blobs...");
+    const { blobs } = await list({
+      prefix: "plant-results/",
+    });
+    console.log(`Found ${blobs.length} blobs`);
+
+    // Filter only JSON files
+    const jsonBlobs = blobs.filter((blob) => blob.pathname.endsWith(".json"));
+    console.log(`Filtered to ${jsonBlobs.length} JSON blobs`);
 
     const photos = await Promise.all(
-      blobs.map(async (blob) => {
+      jsonBlobs.map(async (blob) => {
         try {
           const response = await fetch(blob.url);
+          if (!response.ok) {
+            console.error(`Failed to fetch ${blob.url}: ${response.status}`);
+            return null;
+          }
           const data = await response.json();
           return data;
         } catch (error) {
@@ -37,37 +50,18 @@ export default async function handler(request) {
     );
 
     const validPhotos = photos.filter((photo) => photo !== null);
+    console.log(`Returning ${validPhotos.length} valid photos`);
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        photos: validPhotos,
-        count: validPhotos.length,
-      }),
-      {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
-        },
-      }
-    );
+    return res.status(200).json({
+      success: true,
+      photos: validPhotos,
+      count: validPhotos.length,
+    });
   } catch (error) {
     console.error("Error listing blobs:", error);
-    return new Response(
-      JSON.stringify({
-        success: false,
-        error: error.message,
-      }),
-      {
-        status: 500,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
-    );
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
   }
 }
