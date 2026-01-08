@@ -162,8 +162,6 @@ const PictureCaptureView = () => {
 
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", pb: 10 }}>
-      {error && <Alert severity="error">{error}</Alert>}
-
       {!capturedImage ? (
         <Box>
           {isLoading && !isCameraActive ? (
