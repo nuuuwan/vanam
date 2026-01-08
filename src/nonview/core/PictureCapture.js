@@ -57,7 +57,7 @@ class PictureCapture {
           enableHighAccuracy: true,
           timeout: 10000,
           maximumAge: 0,
-        }
+        },
       );
     });
   }

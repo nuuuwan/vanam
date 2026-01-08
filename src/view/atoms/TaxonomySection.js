@@ -14,7 +14,7 @@ const TaxonomySection = ({ genus, family }) => {
           <DatabaseLink
             label="Genus"
             href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
-              genus.scientificName
+              genus.scientificName,
             )}`}
             displayText={genus.scientificName}
           />
@@ -25,7 +25,7 @@ const TaxonomySection = ({ genus, family }) => {
           <DatabaseLink
             label="Family"
             href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
-              family.scientificName
+              family.scientificName,
             )}`}
             displayText={family.scientificName}
           />
