@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Box, Alert } from "@mui/material";
+import { Box, Alert, CircularProgress, Typography } from "@mui/material";
 import PictureCapture from "../../nonview/core/PictureCapture";
 import WelcomeSection from "../atoms/WelcomeSection";
 import CameraView from "../atoms/CameraView";
@@ -19,6 +19,7 @@ const PictureCaptureView = () => {
   const [plantResults, setPlantResults] = useState(null);
   const [error, setError] = useState(null);
   const [gpsData, setGpsData] = useState(null);
+  const [isStoring, setIsStoring] = useState(false);
   const pictureCapture = useRef(new PictureCapture());
 
   // Cleanup on unmount
@@ -153,9 +154,25 @@ const PictureCaptureView = () => {
     );
 
     if (result.success) {
-      setPlantResults(result.results);
+      // Filter and transform results to only include needed information
+      const filteredResults = result.results
+        .filter((r) => r.score >= 0.05)
+        .map((r) => ({
+          score: r.score,
+          species:
+            r.species?.scientificName || r.species?.scientificNameWithoutAuthor,
+          genus: r.species?.genus?.scientificName || r.species?.genus,
+          family: r.species?.family?.scientificName || r.species?.family,
+          commonNames: r.species?.commonNames || [],
+          gbif_id: r.gbif?.id,
+          powo_id: r.powo?.id,
+          iucn_id: r.iucn?.id,
+          iucn_category: r.iucn?.category,
+        }));
+
+      setPlantResults(filteredResults);
       // Store results to Vercel Blob
-      storeResultsToBlob(result.results, imageData);
+      storeResultsToBlob(filteredResults, imageData);
     } else {
       setError(result.error);
     }
@@ -163,6 +180,7 @@ const PictureCaptureView = () => {
   };
 
   const storeResultsToBlob = async (results, imageData) => {
+    setIsStoring(true);
     try {
       const dataToStore = {
         timestamp: new Date().toISOString(),
@@ -170,8 +188,6 @@ const PictureCaptureView = () => {
         results: results,
         // imageDataUrl: imageData,
       };
-
-      console.debug("dataToStore", dataToStore);
 
       const response = await fetch(
         "https://vanam-teal.vercel.app/api/store-results",
@@ -218,6 +234,8 @@ const PictureCaptureView = () => {
       console.log(
         "Note: This error won't affect plant identification, only data storage."
       );
+    } finally {
+      setIsStoring(false);
     }
   };
 
@@ -253,6 +271,15 @@ const PictureCaptureView = () => {
           <LocationInfo gpsData={gpsData} />
 
           <PlantResultsList results={plantResults} isLoading={isLoading} />
+
+          {isStoring && (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+              <CircularProgress size={20} />
+              <Typography variant="body2" color="text.secondary">
+                Storing results...
+              </Typography>
+            </Box>
+          )}
 
           {error && <Alert severity="error">{error}</Alert>}
 

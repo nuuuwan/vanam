@@ -3,7 +3,7 @@ import DatabaseLink from "./DatabaseLink";
 import IucnCategoryChip from "./IucnCategoryChip";
 
 const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
-  if (!gbif?.id && !powo?.id && !iucn) {
+  if (!gbif?.id && !powo?.id && !iucn?.id && !iucn?.category) {
     return null;
   }
 
@@ -29,19 +29,17 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
         </Grid>
       )}
 
-      {iucn && (
+      {(iucn?.id || iucn?.category) && (
         <Grid item xs={12}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <DatabaseLink
-              label="IUCN Red List"
-              href={
-                iucn.id
-                  ? `https://www.iucnredlist.org/species/${iucn.id}`
-                  : null
-              }
-              displayText={iucn.id}
-            />
-            <IucnCategoryChip category={iucn.category} />
+            {iucn.id && (
+              <DatabaseLink
+                label="IUCN Red List"
+                href={`https://www.iucnredlist.org/species/${iucn.id}`}
+                displayText={iucn.id}
+              />
+            )}
+            {iucn.category && <IucnCategoryChip category={iucn.category} />}
           </Box>
         </Grid>
       )}

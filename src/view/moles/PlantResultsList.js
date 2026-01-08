@@ -9,12 +9,9 @@ const PlantResultsList = ({ results, isLoading }) => {
 
   return (
     <Box sx={{ mb: 3 }}>
-      {results
-        .filter((result) => result.score >= 0.05)
-        .slice(0, 5)
-        .map((result, index) => (
-          <PlantResultItem key={index} result={result} />
-        ))}
+      {results.slice(0, 5).map((result, index) => (
+        <PlantResultItem key={index} result={result} />
+      ))}
     </Box>
   );
 };
