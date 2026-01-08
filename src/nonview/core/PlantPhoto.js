@@ -4,7 +4,13 @@ import PlantNetClient from "./PlantNetClient";
 import exifr from "exifr";
 
 export default class PlantPhoto {
-  constructor(imageHash, imageData, imageLocation, utImageTaken, plantNetPredictions) {
+  constructor(
+    imageHash,
+    imageData,
+    imageLocation,
+    utImageTaken,
+    plantNetPredictions
+  ) {
     this.imageHash = imageHash;
     this.imageData = imageData;
     this.imageLocation = imageLocation;
@@ -73,7 +79,9 @@ export default class PlantPhoto {
     const data = encoder.encode(imageData);
     const hashBuffer = await crypto.subtle.digest("SHA-256", data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const fullHash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+    const fullHash = hashArray
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
     return fullHash.substring(0, 16);
   }
 
