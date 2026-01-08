@@ -71,7 +71,7 @@ const PictureCaptureView = () => {
   const capturePhoto = async () => {
     const result = pictureCapture.current.capturePhoto(
       videoRef.current,
-      canvasRef.current,
+      canvasRef.current
     );
 
     if (result.success) {
@@ -142,109 +142,18 @@ const PictureCaptureView = () => {
     setIsLoading(false);
   };
 
-  const generateStorageKey = (plantPhoto) => {
-    return `blob_stored_${plantPhoto.imageHash.substring(0, 16)}`;
-  };
-
-  const isAlreadyStored = (storageKey) => {
-    try {
-      const storedData = localStorage.getItem(storageKey);
-      if (storedData && storedData !== "true") {
-        // Return the stored URL if it exists
-        return storedData;
-      }
-      return storedData === "true" ? true : false;
-    } catch (error) {
-      console.error("Error checking storage cache:", error);
-      return false;
-    }
-  };
-
-  const markAsStored = (storageKey, url) => {
-    try {
-      // Store the URL instead of just "true"
-      localStorage.setItem(storageKey, url);
-    } catch (error) {
-      console.error("Error marking as stored:", error);
-    }
-  };
-
   const storeResultsToBlob = async (plantPhoto) => {
-    const storageKey = generateStorageKey(plantPhoto);
-    const cachedUrl = isAlreadyStored(storageKey);
-    if (cachedUrl) {
-      console.log(
-        "Results already stored to Vercel Blob, skipping duplicate storage",
-      );
-      setBlobUrl(cachedUrl);
-      return;
-    }
-
     setIsStoring(true);
     try {
-      const dataToStore = {
-        timestamp: plantPhoto.utImageTaken,
-        gpsData: plantPhoto.imageLocation
-          ? {
-              latitude: plantPhoto.imageLocation.latitude,
-              longitude: plantPhoto.imageLocation.longitude,
-              accuracy: plantPhoto.imageLocation.accuracy,
-            }
-          : null,
-        results: plantPhoto.plantNetPredictions.map((p) => ({
-          score: p.confidence,
-          species: p.species,
-          genus: p.genus,
-          family: p.family,
-          commonNames: p.commonNames,
-          gbif_id: p.gbifId,
-          powo_id: p.powoId,
-          iucn_id: p.iucnId,
-          iucn_category: p.iucnCategory,
-        })),
-      };
-
-      const response = await fetch(
-        "https://vanam-teal.vercel.app/api/store-results",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dataToStore),
-        },
-      );
-
-      const contentType = response.headers.get("content-type");
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(
-          "Failed to store results. Status:",
-          response.status,
-          "Response:",
-          errorText,
-        );
-        return;
-      }
-
-      // Check if response is actually JSON
-      if (!contentType || !contentType.includes("application/json")) {
-        const text = await response.text();
-        console.error("Non-JSON response received:", text);
-        return;
-      }
-
-      const result = await response.json();
+      const result = await plantPhoto.save();
       if (result.success) {
-        // Mark as stored to prevent duplicates and store the URL
-        markAsStored(storageKey, result.url);
         setBlobUrl(result.url);
-      } else {
-        console.error("Failed to store results:", result.error);
+        if (!result.cached) {
+          console.log("Results stored to Vercel Blob:", result.url);
+        }
       }
     } catch (error) {
-      console.error("Error storing results to blob:", error);
+      console.error("Error storing results:", error);
     } finally {
       setIsStoring(false);
     }

@@ -54,15 +54,15 @@ export default class PlantPhoto {
               r.gbif?.id,
               r.powo?.id,
               r.iucn?.id,
-              r.iucn?.category,
-            ),
+              r.iucn?.category
+            )
         ) || [];
 
     return new PlantPhoto(
       imageHash,
       locationPrediction,
       utImageTaken,
-      plantNetPredictions,
+      plantNetPredictions
     );
   }
 
@@ -72,5 +72,142 @@ export default class PlantPhoto {
     const hashBuffer = await crypto.subtle.digest("SHA-256", data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  toJSON() {
+    return {
+      imageHash: this.imageHash,
+      imageLocation: this.imageLocation,
+      utImageTaken: this.utImageTaken,
+      plantNetPredictions: this.plantNetPredictions,
+    };
+  }
+
+  static fromJSON(json) {
+    const imageLocation = json.imageLocation
+      ? new LocationPrediction(
+          json.imageLocation.latitude,
+          json.imageLocation.longitude,
+          json.imageLocation.accuracy
+        )
+      : null;
+
+    const plantNetPredictions =
+      json.plantNetPredictions?.map(
+        (p) =>
+          new PlantNetPrediction(
+            p.confidence,
+            p.species,
+            p.genus,
+            p.family,
+            p.commonNames,
+            p.gbifId,
+            p.powoId,
+            p.iucnId,
+            p.iucnCategory
+          )
+      ) || [];
+
+    return new PlantPhoto(
+      json.imageHash,
+      imageLocation,
+      json.utImageTaken,
+      plantNetPredictions
+    );
+  }
+
+  async save() {
+    const storageKey = `blob_stored_${this.imageHash.substring(0, 16)}`;
+
+    const cachedUrl = localStorage.getItem(storageKey);
+    if (cachedUrl && cachedUrl !== "true") {
+      console.log("Already stored to Vercel Blob:", cachedUrl);
+      return { success: true, url: cachedUrl, cached: true };
+    }
+
+    const dataToStore = this.toJSON();
+
+    try {
+      const response = await fetch(
+        "https://vanam-teal.vercel.app/api/store-results",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToStore),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(
+          "Failed to store results. Status:",
+          response.status,
+          "Response:",
+          errorText
+        );
+        return { success: false, error: `HTTP ${response.status}` };
+      }
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("Non-JSON response received:", text);
+        return { success: false, error: "Invalid response format" };
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        localStorage.setItem(storageKey, result.url);
+        return { success: true, url: result.url, cached: false };
+      } else {
+        console.error("Failed to store results:", result.error);
+        return { success: false, error: result.error };
+      }
+    } catch (error) {
+      console.error("Error storing results to blob:", error);
+      return { success: false, error: error.message };
+    }
+  }
+
+  static async listAll() {
+    try {
+      const response = await fetch(
+        "https://vanam-teal.vercel.app/api/list-results"
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(
+          "Failed to list results. Status:",
+          response.status,
+          "Response:",
+          errorText
+        );
+        return { success: false, error: `HTTP ${response.status}` };
+      }
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("Non-JSON response received:", text);
+        return { success: false, error: "Invalid response format" };
+      }
+
+      const result = await response.json();
+      if (result.success && result.photos) {
+        const plantPhotos = result.photos.map((photoData) =>
+          PlantPhoto.fromJSON(photoData)
+        );
+        return { success: true, photos: plantPhotos };
+      } else {
+        console.error("Failed to list results:", result.error);
+        return { success: false, error: result.error };
+      }
+    } catch (error) {
+      console.error("Error listing results from blob:", error);
+      return { success: false, error: error.message };
+    }
   }
 }
