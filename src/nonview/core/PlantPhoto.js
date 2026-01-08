@@ -4,8 +4,9 @@ import PlantNetClient from "./PlantNetClient";
 import exifr from "exifr";
 
 export default class PlantPhoto {
-  constructor(imageHash, imageLocation, utImageTaken, plantNetPredictions) {
+  constructor(imageHash, imageData, imageLocation, utImageTaken, plantNetPredictions) {
     this.imageHash = imageHash;
+    this.imageData = imageData;
     this.imageLocation = imageLocation;
     this.utImageTaken = utImageTaken;
     this.plantNetPredictions = plantNetPredictions;
@@ -60,6 +61,7 @@ export default class PlantPhoto {
 
     return new PlantPhoto(
       imageHash,
+      imageData,
       locationPrediction,
       utImageTaken,
       plantNetPredictions
@@ -71,12 +73,14 @@ export default class PlantPhoto {
     const data = encoder.encode(imageData);
     const hashBuffer = await crypto.subtle.digest("SHA-256", data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+    const fullHash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+    return fullHash.substring(0, 16);
   }
 
   toJSON() {
     return {
       imageHash: this.imageHash,
+      imageData: this.imageData,
       imageLocation: this.imageLocation,
       utImageTaken: this.utImageTaken,
       plantNetPredictions: this.plantNetPredictions,
@@ -110,6 +114,7 @@ export default class PlantPhoto {
 
     return new PlantPhoto(
       json.imageHash,
+      json.imageData,
       imageLocation,
       json.utImageTaken,
       plantNetPredictions
@@ -117,7 +122,7 @@ export default class PlantPhoto {
   }
 
   async save() {
-    const storageKey = `blob_stored_${this.imageHash.substring(0, 16)}`;
+    const storageKey = `blob_stored_${this.imageHash}`;
 
     const cachedUrl = localStorage.getItem(storageKey);
     if (cachedUrl && cachedUrl !== "true") {

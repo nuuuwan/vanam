@@ -18,14 +18,7 @@ export default async function handler(req, res) {
   try {
     const data = req.body;
 
-    // Create a unique filename based on timestamp and location if available
-    const timestamp = new Date().toISOString();
-    const location = data.gpsData
-      ? `_${data.gpsData.latitude.toFixed(4)}_${data.gpsData.longitude.toFixed(
-          4
-        )}`
-      : "";
-    const filename = `plant-results/${timestamp}${location}.json`;
+    const filename = `plant-results/${data.imageHash}.json`;
 
     // Store the data to Vercel Blob
     const blob = await put(filename, JSON.stringify(data, null, 2), {
