@@ -59,9 +59,11 @@ const MapView = ({ gpsData, imageData }) => {
     >
       <MapContainer
         center={position}
-        zoom={18}
+        zoom={19}
         style={{ height: "100%", width: "100%" }}
-        scrollWheelZoom={false}
+        maxZoom={18}
+        minZoom={12}
+        zoomControl={false}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
