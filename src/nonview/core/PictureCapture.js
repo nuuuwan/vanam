@@ -49,13 +49,37 @@ class PictureCapture {
           resolve({ success: true, gpsData });
         },
         (error) => {
-          console.warn("Error getting location:", error.message);
-          resolve({ success: true, gpsData: null });
+          console.warn("Error getting location:", error.message, error.code);
+          // Try again with lower accuracy for Safari/iOS compatibility
+          if (error.code === 3) { // TIMEOUT
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                const gpsData = {
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+                  altitude: position.coords.altitude,
+                  accuracy: position.coords.accuracy,
+                };
+                resolve({ success: true, gpsData });
+              },
+              (err) => {
+                console.warn("Retry failed:", err.message);
+                resolve({ success: true, gpsData: null });
+              },
+              {
+                enableHighAccuracy: false,
+                timeout: 30000,
+                maximumAge: 300000, // 5 minutes
+              },
+            );
+          } else {
+            resolve({ success: true, gpsData: null });
+          }
         },
         {
           enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0,
+          timeout: 20000,
+          maximumAge: 60000, // 1 minute
         },
       );
     });
