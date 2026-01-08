@@ -1,10 +1,10 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import PlantResultItem from "./PlantResultItem";
 
 const PlantResultsList = ({ results, isLoading }) => {
   if (!results || isLoading) {
-    return null;
+    return <CircularProgress size={40} />;
   }
 
   return (

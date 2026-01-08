@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Box, Alert, CircularProgress } from "@mui/material";
+import { Box, Alert } from "@mui/material";
 import PictureCapture from "../../nonview/core/PictureCapture";
 import WelcomeSection from "../atoms/WelcomeSection";
 import CameraView from "../atoms/CameraView";
@@ -190,12 +190,6 @@ const PictureCaptureView = () => {
       ) : (
         <Box>
           <MapView gpsData={gpsData} imageData={capturedImage} />
-
-          {isLoading && (
-            <Box sx={{ mb: 3, textAlign: "center" }}>
-              <CircularProgress size={40} />
-            </Box>
-          )}
 
           <LocationInfo gpsData={gpsData} />
 

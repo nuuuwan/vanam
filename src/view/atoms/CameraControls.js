@@ -1,5 +1,5 @@
 import React from "react";
-import { IconButton, Tooltip, CircularProgress } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import ImageIcon from "@mui/icons-material/Image";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
@@ -35,11 +35,7 @@ const CameraControls = ({
           disabled={isLoading}
           size="large"
         >
-          {isLoading ? (
-            <CircularProgress size={24} color="inherit" />
-          ) : (
-            <PhotoCameraIcon />
-          )}
+          <PhotoCameraIcon />
         </IconButton>
       </Tooltip>
       <Tooltip title="Upload Photo">
