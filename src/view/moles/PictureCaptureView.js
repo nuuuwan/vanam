@@ -116,12 +116,14 @@ const PictureCaptureView = () => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
       setPlantPhoto(photo);
-      storeResultsToBlob(photo);
+      await storeResultsToBlob(photo);
+      // Navigate to the detail page after photo is created and stored
+      navigate(`/${photo.imageHash}`);
     } catch (err) {
       setError(err.message || "Failed to identify plant");
       console.error(err);
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const storeResultsToBlob = async (plantPhoto) => {
