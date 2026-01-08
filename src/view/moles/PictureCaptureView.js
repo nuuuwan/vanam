@@ -71,7 +71,7 @@ const PictureCaptureView = () => {
   const capturePhoto = async () => {
     const result = pictureCapture.current.capturePhoto(
       videoRef.current,
-      canvasRef.current
+      canvasRef.current,
     );
 
     if (result.success) {
@@ -174,7 +174,7 @@ const PictureCaptureView = () => {
     const cachedUrl = isAlreadyStored(storageKey);
     if (cachedUrl) {
       console.log(
-        "Results already stored to Vercel Blob, skipping duplicate storage"
+        "Results already stored to Vercel Blob, skipping duplicate storage",
       );
       setBlobUrl(cachedUrl);
       return;
@@ -212,7 +212,7 @@ const PictureCaptureView = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(dataToStore),
-        }
+        },
       );
 
       const contentType = response.headers.get("content-type");
@@ -223,7 +223,7 @@ const PictureCaptureView = () => {
           "Failed to store results. Status:",
           response.status,
           "Response:",
-          errorText
+          errorText,
         );
         return;
       }

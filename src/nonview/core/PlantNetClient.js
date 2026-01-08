@@ -61,7 +61,7 @@ class PlantNetClient {
 
       // Generate cache key from image and options
       const cacheKey = await this.hashString(
-        imageBase64 + organs + (options.project || "all")
+        imageBase64 + organs + (options.project || "all"),
       );
 
       // Check cache first
@@ -100,13 +100,13 @@ class PlantNetClient {
         {
           method: "POST",
           body: formData,
-        }
+        },
       );
 
       if (!apiResponse.ok) {
         const errorText = await apiResponse.text();
         throw new Error(
-          `PlantNet API error (${apiResponse.status}): ${errorText}`
+          `PlantNet API error (${apiResponse.status}): ${errorText}`,
         );
       }
 

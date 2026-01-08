@@ -8,7 +8,7 @@ export default class PlantNetPrediction {
     gbifId,
     powoId,
     iucnId,
-    iucnCategory
+    iucnCategory,
   ) {
     this.confidence = confidence;
     this.species = species;

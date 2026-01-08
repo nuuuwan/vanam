@@ -54,15 +54,15 @@ export default class PlantPhoto {
               r.gbif?.id,
               r.powo?.id,
               r.iucn?.id,
-              r.iucn?.category
-            )
+              r.iucn?.category,
+            ),
         ) || [];
 
     return new PlantPhoto(
       imageHash,
       locationPrediction,
       utImageTaken,
-      plantNetPredictions
+      plantNetPredictions,
     );
   }
 
