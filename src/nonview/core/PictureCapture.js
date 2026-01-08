@@ -166,42 +166,6 @@ class PictureCapture {
     }
   }
 
-  async loadTestImage() {
-    try {
-      const imagePath = `${process.env.PUBLIC_URL}/mesua-ferrea.jpeg`;
-      const response = await fetch(imagePath);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch test image (${response.status})`);
-      }
-      const blob = await response.blob();
-
-      // Extract GPS data from the original blob before conversion
-      const gpsResult = await this.extractGPSDataFromFile(blob);
-
-      // Ensure the blob has the correct MIME type
-      const typedBlob = new Blob([blob], { type: blob.type || "image/png" });
-
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          resolve({
-            success: true,
-            imageData: e.target?.result,
-            gpsData: gpsResult.gpsData || null,
-            timestamp: gpsResult.timestamp || null,
-          });
-        };
-        reader.onerror = (error) => {
-          reject(error);
-        };
-        reader.readAsDataURL(typedBlob);
-      });
-    } catch (err) {
-      console.error("Failed to load test image:", err);
-      return { success: false, error: "Failed to load test image" };
-    }
-  }
-
   async identifyPlantFromImage(imageData, options = {}) {
     if (!this.plantNetClient) {
       return {

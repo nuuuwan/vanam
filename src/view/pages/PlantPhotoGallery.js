@@ -125,7 +125,6 @@ const PlantPhotoGallery = ({ currentView, onViewChange }) => {
       <CameraControls
         onStartCamera={() => onViewChange(0)}
         onUploadPhoto={() => onViewChange(0)}
-        onLoadTestImage={() => onViewChange(0)}
         isLoading={false}
         currentView={currentView}
         onViewChange={onViewChange}

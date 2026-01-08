@@ -109,26 +109,6 @@ const PictureCaptureView = ({ currentView, onViewChange }) => {
     }
   };
 
-  const loadTestImage = async () => {
-    setIsLoading(true);
-    setError(null);
-    setPlantPhoto(null);
-    try {
-      const result = await pictureCapture.current.loadTestImage();
-      if (result.success) {
-        setCapturedImage(result.imageData);
-        await identifyPlantFromImage(result.imageData);
-      } else {
-        setError(result.error);
-        setIsLoading(false);
-      }
-    } catch (err) {
-      setError("Failed to load test image");
-      console.error(err);
-      setIsLoading(false);
-    }
-  };
-
   const identifyPlantFromImage = async (imageData) => {
     setIsLoading(true);
     try {
@@ -179,7 +159,6 @@ const PictureCaptureView = ({ currentView, onViewChange }) => {
               <CameraControls
                 onStartCamera={startCamera}
                 onUploadPhoto={uploadPhoto}
-                onLoadTestImage={loadTestImage}
                 isLoading={isLoading}
                 currentView={currentView}
                 onViewChange={onViewChange}
@@ -207,10 +186,6 @@ const PictureCaptureView = ({ currentView, onViewChange }) => {
             onUploadPhoto={(file) => {
               clearImage();
               uploadPhoto(file);
-            }}
-            onLoadTestImage={() => {
-              clearImage();
-              loadTestImage();
             }}
             isLoading={isLoading}
             currentView={currentView}

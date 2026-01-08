@@ -1,14 +1,12 @@
 import React from "react";
 import { IconButton, Tooltip } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-import ImageIcon from "@mui/icons-material/Image";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import BottomNavigator from "../atoms/BottomNavigator";
 
 const CameraControls = ({
   onStartCamera,
-  onLoadTestImage,
   onUploadPhoto,
   isLoading,
   currentView,
@@ -49,16 +47,6 @@ const CameraControls = ({
           size="large"
         >
           <UploadFileIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Try Sample Image">
-        <IconButton
-          color="secondary"
-          onClick={onLoadTestImage}
-          disabled={isLoading}
-          size="large"
-        >
-          <ImageIcon />
         </IconButton>
       </Tooltip>
       <Tooltip title="Gallery View">
