@@ -72,8 +72,8 @@ const MapView = ({ gpsData, imageData }) => {
             center={position}
             radius={gpsData.accuracy}
             pathOptions={{
-              color: '#2196f3',
-              fillColor: '#2196f3',
+              color: "#2196f3",
+              fillColor: "#2196f3",
               fillOpacity: 0.2,
               weight: 2,
             }}
