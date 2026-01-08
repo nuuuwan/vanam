@@ -1,9 +1,10 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Container } from "@mui/material";
-import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PictureCaptureView from "./view/moles/PictureCaptureView";
 import PlantPhotoGallery from "./view/pages/PlantPhotoGallery";
+import PlantPhotoDetail from "./view/pages/PlantPhotoDetail";
 
 const theme = createTheme({
   palette: {
@@ -27,24 +28,18 @@ const theme = createTheme({
 });
 
 function App() {
-  const [currentView, setCurrentView] = useState(0);
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Container maxWidth="lg" sx={{ pb: 8 }}>
-        {currentView === 0 ? (
-          <PictureCaptureView
-            currentView={currentView}
-            onViewChange={setCurrentView}
-          />
-        ) : (
-          <PlantPhotoGallery
-            currentView={currentView}
-            onViewChange={setCurrentView}
-          />
-        )}
-      </Container>
+      <BrowserRouter basename="/vanam">
+        <Container maxWidth="lg" sx={{ pb: 8 }}>
+          <Routes>
+            <Route path="/" element={<PictureCaptureView />} />
+            <Route path="/gallery" element={<PlantPhotoGallery />} />
+            <Route path="/:imageHash" element={<PlantPhotoDetail />} />
+          </Routes>
+        </Container>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }

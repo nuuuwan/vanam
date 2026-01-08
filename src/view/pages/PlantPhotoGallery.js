@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -13,7 +14,8 @@ import PlantPhoto from "../../nonview/core/PlantPhoto";
 import MenuButton from "../atoms/MenuButton";
 import CameraControls from "../atoms/CameraControls";
 
-const PlantPhotoGallery = ({ currentView, onViewChange }) => {
+const PlantPhotoGallery = () => {
+  const navigate = useNavigate();
   const [plantPhotos, setPlantPhotos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -84,7 +86,10 @@ const PlantPhotoGallery = ({ currentView, onViewChange }) => {
         <Grid container spacing={2}>
           {plantPhotos.map((photo) => (
             <Grid item xs={12} sm={6} md={4} key={photo.imageHash}>
-              <Card>
+              <Card
+                sx={{ cursor: "pointer" }}
+                onClick={() => navigate(`/${photo.imageHash}`)}
+              >
                 {photo.imageData && (
                   <CardMedia
                     component="img"
@@ -123,11 +128,13 @@ const PlantPhotoGallery = ({ currentView, onViewChange }) => {
       )}
 
       <CameraControls
-        onStartCamera={() => onViewChange(0)}
-        onUploadPhoto={() => onViewChange(0)}
+        onStartCamera={() => navigate("/")}
+        onUploadPhoto={() => navigate("/")}
         isLoading={false}
-        currentView={currentView}
-        onViewChange={onViewChange}
+        currentView={1}
+        onViewChange={(view) => {
+          if (view === 0) navigate("/");
+        }}
       />
     </Box>
   );

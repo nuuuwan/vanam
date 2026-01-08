@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import PictureCapture from "../../nonview/core/PictureCapture";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
@@ -9,7 +10,8 @@ import LoadingView from "../atoms/LoadingView";
 import PlantPhotoView from "./PlantPhotoView";
 import CameraControls from "../atoms/CameraControls";
 
-const PictureCaptureView = ({ currentView, onViewChange }) => {
+const PictureCaptureView = () => {
+  const navigate = useNavigate();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isCameraActive, setIsCameraActive] = useState(false);
@@ -160,8 +162,10 @@ const PictureCaptureView = ({ currentView, onViewChange }) => {
                 onStartCamera={startCamera}
                 onUploadPhoto={uploadPhoto}
                 isLoading={isLoading}
-                currentView={currentView}
-                onViewChange={onViewChange}
+                currentView={0}
+                onViewChange={(view) => {
+                  if (view === 1) navigate("/gallery");
+                }}
               />
             </Box>
           )}
@@ -188,8 +192,10 @@ const PictureCaptureView = ({ currentView, onViewChange }) => {
               uploadPhoto(file);
             }}
             isLoading={isLoading}
-            currentView={currentView}
-            onViewChange={onViewChange}
+            currentView={0}
+            onViewChange={(view) => {
+              if (view === 1) navigate("/gallery");
+            }}
           />
         </Box>
       )}
