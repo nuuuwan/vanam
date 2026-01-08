@@ -154,10 +154,40 @@ const PictureCaptureView = () => {
 
     if (result.success) {
       setPlantResults(result.results);
+      // Store results to Vercel Blob
+      storeResultsToBlob(result.results, imageData);
     } else {
       setError(result.error);
     }
     setIsLoading(false);
+  };
+
+  const storeResultsToBlob = async (results, imageData) => {
+    try {
+      const dataToStore = {
+        timestamp: new Date().toISOString(),
+        gpsData: gpsData,
+        results: results,
+        imageDataUrl: imageData,
+      };
+
+      const response = await fetch("/api/store-results", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToStore),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        console.log("Results stored to Vercel Blob:", result.url);
+      } else {
+        console.error("Failed to store results:", result.error);
+      }
+    } catch (error) {
+      console.error("Error storing results to blob:", error);
+    }
   };
 
   return (
