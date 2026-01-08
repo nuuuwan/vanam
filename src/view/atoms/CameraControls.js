@@ -1,9 +1,8 @@
 import React from "react";
-import { IconButton, Tooltip, Divider } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import ImageIcon from "@mui/icons-material/Image";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import BottomNavigator from "../atoms/BottomNavigator";
 
