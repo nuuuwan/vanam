@@ -1,19 +1,19 @@
 class PlantNetClient {
   /**
-   * Generate a simple hash from a string
+   * Generate a SHA-256 hash from a string
    * @param {string} str - String to hash
-   * @returns {string} Hash string
+   * @returns {Promise<string>} Hash string
    */
   async hashString(str) {
-    // Use a portion of the image data to create a hash
-    const sample = str.substring(0, 1000); // Sample first 1000 chars for performance
-    let hash = 0;
-    for (let i = 0; i < sample.length; i++) {
-      const char = sample.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash.toString(36);
+    // Use Web Crypto API for proper hashing
+    const encoder = new TextEncoder();
+    const data = encoder.encode(str);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+    return hashHex;
   }
 
   /**
@@ -26,11 +26,11 @@ class PlantNetClient {
       const cached = localStorage.getItem(`plantnet_${cacheKey}`);
       if (cached) {
         const data = JSON.parse(cached);
-        console.log('Using cached PlantNet results');
+        console.log("Using cached PlantNet results");
         return data;
       }
     } catch (error) {
-      console.error('Error reading cache:', error);
+      console.error("Error reading cache:", error);
     }
     return null;
   }
@@ -43,9 +43,9 @@ class PlantNetClient {
   setCachedResults(cacheKey, results) {
     try {
       localStorage.setItem(`plantnet_${cacheKey}`, JSON.stringify(results));
-      console.log('Cached PlantNet results');
+      console.log("Cached PlantNet results");
     } catch (error) {
-      console.error('Error saving to cache:', error);
+      console.error("Error saving to cache:", error);
     }
   }
 
@@ -62,8 +62,11 @@ class PlantNetClient {
       const { organs = "auto" } = options;
 
       // Generate cache key from image and options
-      const cacheKey = await this.hashString(imageBase64 + organs + (options.project || 'all'));
-      
+      const cacheKey = await this.hashString(
+        imageBase64 + organs + (options.project || "all")
+      );
+      console.debug("cacheKey", cacheKey);
+
       // Check cache first
       const cachedResults = this.getCachedResults(cacheKey);
       if (cachedResults) {
@@ -111,10 +114,10 @@ class PlantNetClient {
       }
 
       const results = await apiResponse.json();
-      
+
       // Cache the results
       this.setCachedResults(cacheKey, results);
-      
+
       return results;
     } catch (error) {
       console.error("Error identifying plant:", error);

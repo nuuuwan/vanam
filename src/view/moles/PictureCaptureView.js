@@ -179,7 +179,45 @@ const PictureCaptureView = () => {
     setIsLoading(false);
   };
 
+  const generateStorageKey = (results) => {
+    // Create a key from the results to identify unique identifications
+    const resultIds = results.map((r) => r.species + r.score).join("_");
+    let hash = 0;
+    for (let i = 0; i < resultIds.length; i++) {
+      const char = resultIds.charCodeAt(i);
+      hash = (hash << 5) - hash + char;
+      hash = hash & hash;
+    }
+    return `blob_stored_${hash.toString(36)}`;
+  };
+
+  const isAlreadyStored = (storageKey) => {
+    try {
+      return localStorage.getItem(storageKey) === "true";
+    } catch (error) {
+      console.error("Error checking storage cache:", error);
+      return false;
+    }
+  };
+
+  const markAsStored = (storageKey) => {
+    try {
+      localStorage.setItem(storageKey, "true");
+    } catch (error) {
+      console.error("Error marking as stored:", error);
+    }
+  };
+
   const storeResultsToBlob = async (results, imageData) => {
+    // Check if already stored
+    const storageKey = generateStorageKey(results);
+    if (isAlreadyStored(storageKey)) {
+      console.log(
+        "Results already stored to Vercel Blob, skipping duplicate storage"
+      );
+      return;
+    }
+
     setIsStoring(true);
     try {
       const dataToStore = {
@@ -226,6 +264,8 @@ const PictureCaptureView = () => {
       const result = await response.json();
       if (result.success) {
         console.log("Results stored to Vercel Blob:", result.url);
+        // Mark as stored to prevent duplicates
+        markAsStored(storageKey);
       } else {
         console.error("Failed to store results:", result.error);
       }
