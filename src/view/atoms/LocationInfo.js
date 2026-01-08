@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Paper, Stack, Alert } from "@mui/material";
+import { Box, Typography, Stack, Alert } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 const LocationInfo = ({ gpsData }) => {
@@ -14,16 +14,14 @@ const LocationInfo = ({ gpsData }) => {
   return (
     <Box sx={{ mb: 3 }}>
       {gpsData ? (
-        <Paper elevation={1} sx={{ p: 2 }}>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <LocationOnIcon color="primary" />
-            <Box>
-              <Typography variant="body1">
-                {formatLatLng(gpsData.latitude, gpsData.longitude)}
-              </Typography>
-            </Box>
-          </Stack>
-        </Paper>
+        <Stack direction="row" spacing={1} alignItems="center">
+          <LocationOnIcon color="primary" />
+          <Box>
+            <Typography variant="body1">
+              {formatLatLng(gpsData.latitude, gpsData.longitude)}
+            </Typography>
+          </Box>
+        </Stack>
       ) : (
         <Alert severity="info">No GPS data found in this image</Alert>
       )}
