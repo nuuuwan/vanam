@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Box, Alert, CircularProgress, Typography } from "@mui/material";
+import { Box, Alert, CircularProgress, Typography, Link } from "@mui/material";
 import PictureCapture from "../../nonview/core/PictureCapture";
 import WelcomeSection from "../atoms/WelcomeSection";
 import CameraView from "../atoms/CameraView";
@@ -20,6 +20,7 @@ const PictureCaptureView = () => {
   const [error, setError] = useState(null);
   const [gpsData, setGpsData] = useState(null);
   const [isStoring, setIsStoring] = useState(false);
+  const [blobUrl, setBlobUrl] = useState(null);
   const pictureCapture = useRef(new PictureCapture());
 
   // Cleanup on unmount
@@ -93,6 +94,7 @@ const PictureCaptureView = () => {
     setPlantResults(null);
     setError(null);
     setGpsData(null);
+    setBlobUrl(null);
   };
 
   const getCurrentLocation = async () => {
@@ -266,6 +268,7 @@ const PictureCaptureView = () => {
         console.log("Results stored to Vercel Blob:", result.url);
         // Mark as stored to prevent duplicates
         markAsStored(storageKey);
+        setBlobUrl(result.url);
       } else {
         console.error("Failed to store results:", result.error);
       }
@@ -317,6 +320,22 @@ const PictureCaptureView = () => {
               <CircularProgress size={20} />
               <Typography variant="body2" color="text.secondary">
                 Storing results...
+              </Typography>
+            </Box>
+          )}
+
+          {blobUrl && (
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="caption" color="text.secondary">
+                Data stored:{" "}
+                <Link
+                  href={blobUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{ fontSize: "0.75rem" }}
+                >
+                  View JSON
+                </Link>
               </Typography>
             </Box>
           )}
