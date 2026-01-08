@@ -21,22 +21,27 @@ export default class LocationPrediction {
             new LocationPrediction(
               position.coords.latitude,
               position.coords.longitude,
-              position.coords.accuracy,
-            ),
+              position.coords.accuracy
+            )
           );
         },
         (error) => {
-          console.warn("Error getting browser location:", error.message, error.code);
+          console.warn(
+            "Error getting browser location:",
+            error.message,
+            error.code
+          );
           // Try again with lower accuracy for Safari/iOS compatibility
-          if (error.code === 3) { // TIMEOUT
+          if (error.code === 3) {
+            // TIMEOUT
             navigator.geolocation.getCurrentPosition(
               (position) => {
                 resolve(
                   new LocationPrediction(
                     position.coords.latitude,
                     position.coords.longitude,
-                    position.coords.accuracy,
-                  ),
+                    position.coords.accuracy
+                  )
                 );
               },
               (err) => {
@@ -47,7 +52,7 @@ export default class LocationPrediction {
                 enableHighAccuracy: false,
                 timeout: 30000,
                 maximumAge: 300000, // 5 minutes
-              },
+              }
             );
           } else {
             resolve(null);
@@ -57,7 +62,7 @@ export default class LocationPrediction {
           enableHighAccuracy: true,
           timeout: 20000,
           maximumAge: 60000, // 1 minute
-        },
+        }
       );
     });
   }
@@ -80,7 +85,7 @@ export default class LocationPrediction {
       return new LocationPrediction(
         exifData.latitude,
         exifData.longitude,
-        exifData.GPSAltitude || null,
+        exifData.GPSAltitude || null
       );
     }
 

@@ -51,7 +51,8 @@ class PictureCapture {
         (error) => {
           console.warn("Error getting location:", error.message, error.code);
           // Try again with lower accuracy for Safari/iOS compatibility
-          if (error.code === 3) { // TIMEOUT
+          if (error.code === 3) {
+            // TIMEOUT
             navigator.geolocation.getCurrentPosition(
               (position) => {
                 const gpsData = {
@@ -70,7 +71,7 @@ class PictureCapture {
                 enableHighAccuracy: false,
                 timeout: 30000,
                 maximumAge: 300000, // 5 minutes
-              },
+              }
             );
           } else {
             resolve({ success: true, gpsData: null });
@@ -80,7 +81,7 @@ class PictureCapture {
           enableHighAccuracy: true,
           timeout: 20000,
           maximumAge: 60000, // 1 minute
-        },
+        }
       );
     });
   }
