@@ -46,7 +46,6 @@ class PictureCapture {
             altitude: position.coords.altitude,
             accuracy: position.coords.accuracy,
           };
-          console.log("Current location:", gpsData);
           resolve({ success: true, gpsData });
         },
         (error) => {
@@ -57,7 +56,7 @@ class PictureCapture {
           enableHighAccuracy: true,
           timeout: 10000,
           maximumAge: 0,
-        },
+        }
       );
     });
   }
@@ -97,8 +96,6 @@ class PictureCapture {
         jfif: false,
       });
 
-      console.log("Extracted EXIF data:", exifData);
-
       let gpsData = null;
       if (
         exifData &&
@@ -110,9 +107,6 @@ class PictureCapture {
           longitude: exifData.longitude,
           altitude: exifData.GPSAltitude || null,
         };
-        console.log("GPS data found:", gpsData);
-      } else {
-        console.log("No GPS data in image");
       }
 
       // Extract timestamp from EXIF
@@ -124,9 +118,6 @@ class PictureCapture {
           exifData.DateTime ||
           exifData.CreateDate ||
           exifData.ModifyDate;
-        if (timestamp) {
-          console.log("Timestamp found in EXIF:", timestamp);
-        }
       }
 
       return { success: true, gpsData, timestamp };
@@ -149,7 +140,6 @@ class PictureCapture {
       // If no GPS data in file, try to get current location from browser
       let gpsData = gpsResult.gpsData;
       if (!gpsData) {
-        console.log("No GPS in image EXIF, trying browser location...");
         const locationResult = await this.getCurrentLocation();
         gpsData = locationResult.gpsData;
       }

@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Box, Alert, CircularProgress, Typography, Link } from "@mui/material";
 import PictureCapture from "../../nonview/core/PictureCapture";
+import MenuButton from "../atoms/MenuButton";
 import WelcomeSection from "../atoms/WelcomeSection";
 import CameraView from "../atoms/CameraView";
 import LoadingView from "../atoms/LoadingView";
@@ -77,7 +78,7 @@ const PictureCaptureView = () => {
   const capturePhoto = async () => {
     const result = pictureCapture.current.capturePhoto(
       videoRef.current,
-      canvasRef.current,
+      canvasRef.current
     );
 
     if (result.success) {
@@ -155,7 +156,7 @@ const PictureCaptureView = () => {
       {
         organs: "auto",
         project: "all",
-      },
+      }
     );
 
     if (result.success) {
@@ -224,9 +225,6 @@ const PictureCaptureView = () => {
     const storageKey = generateStorageKey(results);
     const cachedUrl = isAlreadyStored(storageKey);
     if (cachedUrl) {
-      console.log(
-        "Results already stored to Vercel Blob, skipping duplicate storage",
-      );
       setBlobUrl(cachedUrl);
       return;
     }
@@ -248,7 +246,7 @@ const PictureCaptureView = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(dataToStore),
-        },
+        }
       );
 
       const contentType = response.headers.get("content-type");
@@ -259,7 +257,7 @@ const PictureCaptureView = () => {
           "Failed to store results. Status:",
           response.status,
           "Response:",
-          errorText,
+          errorText
         );
         return;
       }
@@ -268,15 +266,11 @@ const PictureCaptureView = () => {
       if (!contentType || !contentType.includes("application/json")) {
         const text = await response.text();
         console.error("Non-JSON response received:", text);
-        console.log(
-          "Note: Vercel Blob storage may not be configured. Data was identified but not stored.",
-        );
         return;
       }
 
       const result = await response.json();
       if (result.success) {
-        console.log("Results stored to Vercel Blob:", result.url);
         // Mark as stored to prevent duplicates and store the URL
         markAsStored(storageKey, result.url);
         setBlobUrl(result.url);
@@ -285,16 +279,14 @@ const PictureCaptureView = () => {
       }
     } catch (error) {
       console.error("Error storing results to blob:", error);
-      console.log(
-        "Note: This error won't affect plant identification, only data storage.",
-      );
     } finally {
       setIsStoring(false);
     }
   };
 
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto", pb: 10 }}>
+    <Box sx={{ maxWidth: 600, mx: "auto", pb: 10, position: "relative" }}>
+      <MenuButton />
       {!capturedImage ? (
         <Box>
           {isLoading && !isCameraActive ? (

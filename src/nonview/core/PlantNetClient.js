@@ -26,7 +26,6 @@ class PlantNetClient {
       const cached = localStorage.getItem(`plantnet_${cacheKey}`);
       if (cached) {
         const data = JSON.parse(cached);
-        console.log("Using cached PlantNet results");
         return data;
       }
     } catch (error) {
@@ -43,7 +42,6 @@ class PlantNetClient {
   setCachedResults(cacheKey, results) {
     try {
       localStorage.setItem(`plantnet_${cacheKey}`, JSON.stringify(results));
-      console.log("Cached PlantNet results");
     } catch (error) {
       console.error("Error saving to cache:", error);
     }
@@ -63,9 +61,8 @@ class PlantNetClient {
 
       // Generate cache key from image and options
       const cacheKey = await this.hashString(
-        imageBase64 + organs + (options.project || "all"),
+        imageBase64 + organs + (options.project || "all")
       );
-      console.debug("cacheKey", cacheKey);
 
       // Check cache first
       const cachedResults = this.getCachedResults(cacheKey);
@@ -103,13 +100,13 @@ class PlantNetClient {
         {
           method: "POST",
           body: formData,
-        },
+        }
       );
 
       if (!apiResponse.ok) {
         const errorText = await apiResponse.text();
         throw new Error(
-          `PlantNet API error (${apiResponse.status}): ${errorText}`,
+          `PlantNet API error (${apiResponse.status}): ${errorText}`
         );
       }
 
