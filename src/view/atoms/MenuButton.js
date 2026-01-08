@@ -5,12 +5,16 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
+  Typography,
+  Divider,
+  Box,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import BugReportIcon from "@mui/icons-material/BugReport";
 import InfoIcon from "@mui/icons-material/Info";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
+import VERSION from "../../nonview/cons/VERSION";
 
 const MenuButton = () => {
   const [menuAnchor, setMenuAnchor] = useState(null);
@@ -99,6 +103,12 @@ const MenuButton = () => {
           </ListItemIcon>
           <ListItemText>Clear Cache</ListItemText>
         </MenuItem>
+        <Divider />
+        <Box sx={{ px: 2, py: 1 }}>
+          <Typography variant="caption" color="text.secondary">
+            Version: {VERSION.DATETIME_STR}
+          </Typography>
+        </Box>
       </Menu>
     </>
   );
