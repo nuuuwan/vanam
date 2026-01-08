@@ -185,10 +185,12 @@ export default class PlantPhoto {
   }
 
   static async listAll() {
+    console.debug("listAll");
     try {
       const response = await fetch(
         "https://vanam-teal.vercel.app/api/list-results"
       );
+      console.debug("response", response);
 
       if (!response.ok) {
         const errorText = await response.text();
