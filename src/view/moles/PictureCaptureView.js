@@ -244,7 +244,7 @@ const PictureCaptureView = () => {
       {!capturedImage ? (
         <Box>
           {isLoading && !isCameraActive ? (
-            <LoadingView />
+            <LoadingView message="Identifying plant..." />
           ) : isCameraActive ? (
             <CameraView
               videoRef={videoRef}
