@@ -1,5 +1,5 @@
 import React from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import { Box } from "@mui/material";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -67,10 +67,28 @@ const MapView = ({ gpsData, imageData }) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        {gpsData.accuracy && (
+          <Circle
+            center={position}
+            radius={gpsData.accuracy}
+            pathOptions={{
+              color: '#2196f3',
+              fillColor: '#2196f3',
+              fillOpacity: 0.2,
+              weight: 2,
+            }}
+          />
+        )}
         <Marker position={position} icon={customIcon}>
           <Popup>
             Plant location: {gpsData.latitude.toFixed(6)},{" "}
             {gpsData.longitude.toFixed(6)}
+            {gpsData.accuracy && (
+              <>
+                <br />
+                Accuracy: ±{Math.round(gpsData.accuracy)}m
+              </>
+            )}
           </Popup>
         </Marker>
       </MapContainer>
