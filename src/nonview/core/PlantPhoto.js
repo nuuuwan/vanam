@@ -138,7 +138,6 @@ export default class PlantPhoto {
 
     const cachedUrl = localStorage.getItem(storageKey);
     if (cachedUrl && cachedUrl !== "true") {
-      console.log("Already stored to Vercel Blob:", cachedUrl);
       return { success: true, url: cachedUrl, cached: true };
     }
 

@@ -22,15 +22,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    console.log("Starting to list blobs...");
     const { blobs } = await list({
       prefix: "plant-results/",
     });
-    console.log(`Found ${blobs.length} blobs`);
 
     // Filter only JSON files
     const jsonBlobs = blobs.filter((blob) => blob.pathname.endsWith(".json"));
-    console.log(`Filtered to ${jsonBlobs.length} JSON blobs`);
 
     const photos = await Promise.all(
       jsonBlobs.map(async (blob) => {
@@ -50,7 +47,6 @@ export default async function handler(req, res) {
     );
 
     const validPhotos = photos.filter((photo) => photo !== null);
-    console.log(`Returning ${validPhotos.length} valid photos`);
 
     return res.status(200).json({
       success: true,

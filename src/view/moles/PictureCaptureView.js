@@ -132,9 +132,6 @@ const PictureCaptureView = () => {
       const result = await plantPhoto.save();
       if (result.success) {
         setBlobUrl(result.url);
-        if (!result.cached) {
-          console.log("Results stored to Vercel Blob:", result.url);
-        }
       }
     } catch (error) {
       console.error("Error storing results:", error);
