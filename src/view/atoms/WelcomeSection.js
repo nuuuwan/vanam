@@ -67,7 +67,7 @@ const WelcomeSection = ({ onStartCamera, onUploadPhoto, isLoading }) => {
         <em>vanam</em> (වනම්), both meaning forest.
       </Typography>
 
-      <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
+      <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
         <Button
           variant="contained"
           color="primary"
@@ -76,7 +76,7 @@ const WelcomeSection = ({ onStartCamera, onUploadPhoto, isLoading }) => {
           disabled={isLoading}
           fullWidth
         >
-          Take Plant Photo
+          Camera
         </Button>
         <Button
           variant="outlined"
@@ -86,7 +86,7 @@ const WelcomeSection = ({ onStartCamera, onUploadPhoto, isLoading }) => {
           disabled={isLoading}
           fullWidth
         >
-          Upload Photos
+          Upload
         </Button>
       </Box>
       <input
