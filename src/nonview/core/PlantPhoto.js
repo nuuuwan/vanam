@@ -198,7 +198,6 @@ export default class PlantPhoto {
       PlantPhoto.cacheTimestamp &&
       now - PlantPhoto.cacheTimestamp < PlantPhoto.CACHE_DURATION
     ) {
-      console.debug("Returning cached photos");
       return { success: true, photos: PlantPhoto.cachedPhotos, cached: true };
     }
 
