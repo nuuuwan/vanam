@@ -46,6 +46,10 @@ const PlantPhotoListItem = ({ photo }) => {
       parts.push(photo.deviceIPAddress);
     }
 
+    if (photo.userId) {
+      parts.push(`User: ${photo.userId.substring(0, 8)}`);
+    }
+
     return parts.length > 0 ? parts.join(" • ") : "Saved successfully";
   };
 

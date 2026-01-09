@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography, Stack, Alert } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 
-const LocationInfo = ({ gpsData, imageTimestamp, deviceIPAddress }) => {
+const LocationInfo = ({ gpsData, imageTimestamp, deviceIPAddress, userId }) => {
   const formatLatLng = (lat, lng) => {
     const latAbs = Math.abs(lat).toFixed(6);
     const lngAbs = Math.abs(lng).toFixed(6);
@@ -67,6 +67,12 @@ const LocationInfo = ({ gpsData, imageTimestamp, deviceIPAddress }) => {
             {deviceIPAddress && (
               <Typography variant="caption" color="text.secondary">
                 IP: {deviceIPAddress}
+              </Typography>
+            )}
+            {userId && (
+              <Typography variant="caption" color="text.secondary">
+                User ID: {userId.substring(0, 8)}...
+                {userId.substring(userId.length - 4)}
               </Typography>
             )}
           </Stack>
