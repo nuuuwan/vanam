@@ -18,11 +18,9 @@ export default async function handler(req, res) {
   try {
     const data = req.body;
 
-    // Separate image data from metadata
-    const imageData = {
-      imageHash: data.imageHash,
-      imageData: data.imageData,
-    };
+    // Extract base64 image data and convert to buffer
+    const base64Data = data.imageData.replace(/^data:image\/\w+;base64,/, "");
+    const imageBuffer = Buffer.from(base64Data, "base64");
 
     const metadata = {
       imageHash: data.imageHash,
@@ -31,18 +29,14 @@ export default async function handler(req, res) {
       plantNetPredictions: data.plantNetPredictions,
     };
 
-    const imageFilename = `plant-images/${data.imageHash}.json`;
+    const imageFilename = `plant-images/${data.imageHash}.png`;
     const metadataFilename = `plant-metadata/${data.imageHash}.json`;
 
-    // Store the image data to Vercel Blob
-    const imageBlob = await put(
-      imageFilename,
-      JSON.stringify(imageData, null, 2),
-      {
-        access: "public",
-        contentType: "application/json",
-      }
-    );
+    // Store the image as PNG to Vercel Blob
+    const imageBlob = await put(imageFilename, imageBuffer, {
+      access: "public",
+      contentType: "image/png",
+    });
 
     // Store the metadata to Vercel Blob
     const metadataBlob = await put(

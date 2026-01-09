@@ -21,37 +21,36 @@ export default async function handler(req, res) {
       .json({ success: false, error: "Method not allowed" });
   }
 
+  const { hash } = req.query;
+
+  if (!hash) {
+    return res.status(400).json({ success: false, error: "Hash is required" });
+  }
+
   try {
-    // List image files
-    const { blobs: imageBlobs } = await list({
-      prefix: "plant-images/",
+    // Try to find the image file with the given hash
+    const { blobs } = await list({
+      prefix: `plant-images/${hash}.png`,
     });
 
-    // Filter only PNG files
-    const pngImageBlobs = imageBlobs.filter((blob) =>
-      blob.pathname.endsWith(".png")
-    );
+    if (blobs.length === 0) {
+      return res.status(404).json({ success: false, error: "Photo not found" });
+    }
 
-    // Return image URLs and hashes
-    const photos = pngImageBlobs.map((blob) => {
-      // Extract hash from filename (e.g., "plant-images/abc123.png" -> "abc123")
-      const hash = blob.pathname.replace("plant-images/", "").replace(".png", "");
-      return {
-        imageHash: hash,
-        imageData: blob.url,
-      };
-    });
-
+    // Return the image URL
+    const blob = blobs[0];
     return res.status(200).json({
       success: true,
-      photos: photos,
-      count: photos.length,
+      photo: {
+        imageHash: hash,
+        imageData: blob.url,
+      },
     });
   } catch (error) {
-    console.error("Error listing photos:", error);
+    console.error("Error fetching photo:", error);
     return res.status(500).json({
       success: false,
-      error: error.message,
+      error: error.message || "Failed to fetch photo",
     });
   }
 }
