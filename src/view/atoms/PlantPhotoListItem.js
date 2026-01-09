@@ -17,11 +17,7 @@ const PlantPhotoListItem = ({ photo }) => {
     <>
       {photo.imageData && (
         <ListItemAvatar>
-          <Avatar
-            src={photo.imageData}
-            alt={photo.species || photo.name}
-            variant="rounded"
-          />
+          <Avatar src={photo.imageData} alt={photo.species || photo.name} />
         </ListItemAvatar>
       )}
       <ListItemText
