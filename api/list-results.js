@@ -22,17 +22,48 @@ export default async function handler(req, res) {
   }
 
   try {
-    // List metadata files
+    // Check for old format (plant-results/) for backward compatibility
+    const { blobs: oldFormatBlobs } = await list({
+      prefix: "plant-results/",
+    });
+
+    // List metadata files (new format)
     const { blobs: metadataBlobs } = await list({
       prefix: "plant-metadata/",
     });
 
-    // List image files
+    // List image files (new format)
     const { blobs: imageBlobs } = await list({
       prefix: "plant-images/",
     });
 
-    // Filter only JSON files
+    const allPhotos = [];
+
+    // Process old format files
+    const jsonOldFormatBlobs = oldFormatBlobs.filter((blob) =>
+      blob.pathname.endsWith(".json")
+    );
+    
+    const oldFormatPhotos = await Promise.all(
+      jsonOldFormatBlobs.map(async (blob) => {
+        try {
+          const response = await fetch(blob.url);
+          if (!response.ok) {
+            console.error(`Failed to fetch ${blob.url}: ${response.status}`);
+            return null;
+          }
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error(`Error fetching old format blob ${blob.url}:`, error);
+          return null;
+        }
+      })
+    );
+
+    allPhotos.push(...oldFormatPhotos.filter((photo) => photo !== null));
+
+    // Process new format files
     const jsonMetadataBlobs = metadataBlobs.filter((blob) =>
       blob.pathname.endsWith(".json")
     );
@@ -53,13 +84,13 @@ export default async function handler(req, res) {
           const data = await response.json();
           imageDataMap.set(data.imageHash, data.imageData);
         } catch (error) {
-          console.error(`Error fetching blob ${blob.url}:`, error);
+          console.error(`Error fetching image blob ${blob.url}:`, error);
         }
       })
     );
 
     // Fetch metadata and combine with image data
-    const photos = await Promise.all(
+    const newFormatPhotos = await Promise.all(
       jsonMetadataBlobs.map(async (blob) => {
         try {
           const response = await fetch(blob.url);
@@ -74,13 +105,15 @@ export default async function handler(req, res) {
             imageData: imageDataMap.get(metadata.imageHash) || null,
           };
         } catch (error) {
-          console.error(`Error fetching blob ${blob.url}:`, error);
+          console.error(`Error fetching metadata blob ${blob.url}:`, error);
           return null;
         }
       })
     );
 
-    const validPhotos = photos.filter((photo) => photo !== null);
+    allPhotos.push(...newFormatPhotos.filter((photo) => photo !== null));
+
+    const validPhotos = allPhotos;
 
     return res.status(200).json({
       success: true,
