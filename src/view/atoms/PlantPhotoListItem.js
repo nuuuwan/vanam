@@ -23,6 +23,7 @@ const PlantPhotoListItem = ({ photo }) => {
   };
 
   const getSecondaryText = () => {
+    console.debug(photo);
     if (photo.status === "error") {
       return photo.error || "Processing failed";
     }
@@ -42,12 +43,8 @@ const PlantPhotoListItem = ({ photo }) => {
       parts.push(formatLocation(photo.imageLocation));
     }
 
-    if (photo.deviceIPAddress) {
-      parts.push(photo.deviceIPAddress);
-    }
-
     if (photo.userId) {
-      parts.push(`User: ${photo.userId.substring(0, 8)}`);
+      parts.push(photo.userId);
     }
 
     return parts.length > 0 ? parts.join(" • ") : "Saved successfully";
