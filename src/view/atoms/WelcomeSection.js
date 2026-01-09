@@ -30,12 +30,9 @@ const WelcomeSection = ({ onStartCamera, onUploadPhoto, isLoading }) => {
   };
   return (
     <Stack direction="column" gap={2} sx={{ mb: 4 }}>
-      <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
-        Welcome to Vanam
-      </Typography>
       <Typography variant="body1" sx={{ mb: 2 }}>
-        A web app for cataloguing trees. Point your phone at a plant, take a
-        photo, and vanam records it as a structured observation with:
+        Vanam is a web app for cataloguing trees. Point your phone at a plant,
+        take a photo, and vanam records it as a structured observation with:
       </Typography>
       <List sx={{ bgcolor: "background.paper" }}>
         <ListItem>
