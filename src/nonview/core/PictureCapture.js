@@ -21,7 +21,7 @@ class PictureCapture {
     imageDataUrl,
     maxWidth = 256,
     maxHeight = 256,
-    quality = 0.8
+    quality = 0.8,
   ) {
     return new Promise((resolve) => {
       const img = new Image();
@@ -141,11 +141,11 @@ class PictureCapture {
             "- Position unavailable:",
             error.code === 2,
             "- Timeout:",
-            error.code === 3
+            error.code === 3,
           );
           resolve({ success: true, gpsData: null });
         },
-        options
+        options,
       );
     });
   }
@@ -241,7 +241,7 @@ class PictureCapture {
         reader.onload = async (e) => {
           // Compress the image before resolving
           const compressedImageData = await this.compressImage(
-            e.target?.result
+            e.target?.result,
           );
           resolve({
             success: true,
