@@ -1,13 +1,25 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box } from "@mui/material";
+import {
+  Box,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Button,
+  Alert,
+  LinearProgress,
+} from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ErrorIcon from "@mui/icons-material/Error";
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import PictureCapture from "../../nonview/core/PictureCapture";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
 import MenuButton from "../atoms/MenuButton";
 import WelcomeSection from "../atoms/WelcomeSection";
 import CameraView from "../atoms/CameraView";
 import LoadingView from "../atoms/LoadingView";
-import PlantPhotoView from "./PlantPhotoView";
 import CameraControls from "../atoms/CameraControls";
 
 const PictureCaptureView = () => {
@@ -16,12 +28,12 @@ const PictureCaptureView = () => {
   const canvasRef = useRef(null);
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [stream, setStream] = useState(null);
-  const [capturedImage, setCapturedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [plantPhoto, setPlantPhoto] = useState(null);
-  const [error, setError] = useState(null);
-  const [isStoring, setIsStoring] = useState(false);
-  const [blobUrl, setBlobUrl] = useState(null);
+  const [currentFileIndex, setCurrentFileIndex] = useState(0);
+  const [totalFiles, setTotalFiles] = useState(0);
+  const [processedPhotos, setProcessedPhotos] = useState([]);
+  const [isComplete, setIsComplete] = useState(false);
   const pictureCapture = useRef(new PictureCapture());
 
   // Cleanup on unmount
@@ -77,109 +89,130 @@ const PictureCaptureView = () => {
     );
 
     if (result.success) {
-      setCapturedImage(result.imageData);
       setStream(null);
       setIsCameraActive(false);
-      await identifyPlantFromImage(result.imageData);
+      setTotalFiles(1);
+      setCurrentFileIndex(1);
+      setProcessedPhotos([]);
+      setIsComplete(false);
+      await identifyPlantFromImage(result.imageData, "Camera photo", 0);
+      setIsComplete(true);
     }
   };
 
   const clearImage = () => {
-    setCapturedImage(null);
     setPlantPhoto(null);
-    setError(null);
-    setBlobUrl(null);
   };
 
   const uploadPhoto = async (files) => {
     // Handle both single file and array of files
     const fileArray = Array.isArray(files) ? files : [files];
+    setTotalFiles(fileArray.length);
+    setProcessedPhotos([]);
+    setIsComplete(false);
 
     // Process files sequentially
     for (let i = 0; i < fileArray.length; i++) {
       const file = fileArray[i];
-      setIsLoading(true);
-      setError(null);
+      setCurrentFileIndex(i + 1);
       setPlantPhoto(null);
 
       try {
         const result = await pictureCapture.current.loadFromFile(file);
         if (result.success) {
-          setCapturedImage(result.imageData);
-          await identifyPlantFromImage(
-            result.imageData,
-            i === fileArray.length - 1
-          );
+          await identifyPlantFromImage(result.imageData, file.name, i);
           // Small delay between processing multiple files
           if (i < fileArray.length - 1) {
-            await new Promise((resolve) => setTimeout(resolve, 2000));
+            await new Promise((resolve) => setTimeout(resolve, 1000));
             // Clear the previous image before loading next one
             clearImage();
           }
         } else {
-          setError(result.error);
-          setIsLoading(false);
+          setProcessedPhotos((prev) => [
+            ...prev,
+            {
+              name: file.name,
+              status: "error",
+              error: "Failed to load file",
+            },
+          ]);
         }
       } catch (err) {
-        setError(`Failed to load uploaded file: ${file.name}`);
         console.error(err);
-        setIsLoading(false);
+        setProcessedPhotos((prev) => [
+          ...prev,
+          {
+            name: file.name,
+            status: "error",
+            error: err.message,
+          },
+        ]);
       }
     }
+
+    // Mark as complete instead of navigating
+    setIsComplete(true);
   };
 
-  const identifyPlantFromImage = async (imageData, shouldNavigate = true) => {
+  const identifyPlantFromImage = async (
+    imageData,
+    fileName = "photo",
+    index = 0
+  ) => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
       setPlantPhoto(photo);
-      setIsLoading(false);
+
+      const hasPlant =
+        photo.plantNetPredictions && photo.plantNetPredictions.length > 0;
+      const hasLocation = photo.imageLocation;
+
+      // Add to processed photos list
+      const photoInfo = {
+        name: fileName,
+        status: hasPlant && hasLocation ? "success" : "warning",
+        species: hasPlant
+          ? photo.plantNetPredictions[0].species
+          : "No plant identified",
+        hasLocation: hasLocation,
+        hash: photo.imageHash,
+        timestamp: new Date(),
+      };
+
+      setProcessedPhotos((prev) => [...prev, photoInfo]);
+
       // Only save to blob if plant is identified and location is available
-      if (
-        photo.plantNetPredictions &&
-        photo.plantNetPredictions.length > 0 &&
-        photo.imageLocation
-      ) {
+      if (hasPlant && hasLocation) {
         await storeResultsToBlob(photo);
-        // Only navigate on the last image or when explicitly requested
-        if (shouldNavigate) {
-          navigate(`/${photo.imageHash}`);
-        }
       }
     } catch (err) {
-      setError(err.message || "Failed to identify plant");
       console.error(err);
-      setIsLoading(false);
+      setProcessedPhotos((prev) => [
+        ...prev,
+        {
+          name: fileName,
+          status: "error",
+          error: err.message,
+        },
+      ]);
     }
   };
 
   const storeResultsToBlob = async (plantPhoto) => {
-    setIsStoring(true);
     try {
-      const result = await plantPhoto.save();
-      if (result.success) {
-        setBlobUrl(result.url);
-      }
+      await plantPhoto.save();
     } catch (error) {
       console.error("Error storing results:", error);
-    } finally {
-      setIsStoring(false);
     }
   };
 
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", pb: 2, position: "relative" }}>
       <MenuButton />
-      {!capturedImage ? (
+      {!isCameraActive ? (
         <Box>
-          {isLoading && !isCameraActive ? (
+          {isLoading && processedPhotos.length === 0 ? (
             <LoadingView message="Opening camera..." />
-          ) : isCameraActive ? (
-            <CameraView
-              videoRef={videoRef}
-              canvasRef={canvasRef}
-              onCapture={capturePhoto}
-              onCancel={stopCamera}
-            />
           ) : (
             <Box sx={{ py: 4 }}>
               <WelcomeSection
@@ -187,6 +220,83 @@ const PictureCaptureView = () => {
                 onUploadPhoto={uploadPhoto}
                 isLoading={isLoading}
               />
+
+              {processedPhotos.length > 0 && (
+                <Box sx={{ mt: 3, mb: 3 }}>
+                  {isComplete && (
+                    <Alert severity="success" sx={{ mb: 2 }}>
+                      Processing complete!{" "}
+                      {
+                        processedPhotos.filter((p) => p.status === "success")
+                          .length
+                      }{" "}
+                      photo(s) saved.
+                    </Alert>
+                  )}
+                  {!isComplete && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 1 }}
+                      >
+                        Processing {processedPhotos.length} of {totalFiles}{" "}
+                        photo{totalFiles !== 1 ? "s" : ""}...
+                      </Typography>
+                      <LinearProgress
+                        variant="determinate"
+                        value={(processedPhotos.length / totalFiles) * 100}
+                      />
+                    </Box>
+                  )}
+                  <List>
+                    {processedPhotos.map((photo, index) => (
+                      <ListItem
+                        key={index}
+                        button={photo.status === "success"}
+                        onClick={() => {
+                          if (photo.status === "success" && photo.hash) {
+                            navigate(`/${photo.hash}`);
+                          }
+                        }}
+                        sx={{
+                          cursor:
+                            photo.status === "success" ? "pointer" : "default",
+                        }}
+                      >
+                        <ListItemIcon>
+                          {photo.status === "success" ? (
+                            <CheckCircleIcon color="success" />
+                          ) : photo.status === "error" ? (
+                            <ErrorIcon color="error" />
+                          ) : photo.status === "warning" ? (
+                            <ErrorIcon color="warning" />
+                          ) : (
+                            <HourglassEmptyIcon />
+                          )}
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={photo.species || photo.name}
+                          secondary={
+                            photo.status === "success"
+                              ? photo.timestamp
+                                ? photo.timestamp.toLocaleTimeString()
+                                : "Saved successfully"
+                              : photo.status === "warning"
+                              ? `${
+                                  !photo.hasLocation
+                                    ? "No location data"
+                                    : "Not saved"
+                                }`
+                              : photo.error || "Processing failed"
+                          }
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Box>
+              )}
+
               <CameraControls
                 isLoading={isLoading}
                 currentView={0}
@@ -198,25 +308,12 @@ const PictureCaptureView = () => {
           )}
         </Box>
       ) : (
-        <Box>
-          <PlantPhotoView
-            plantPhoto={plantPhoto}
-            imageData={capturedImage}
-            isLoading={isLoading}
-            isStoring={isStoring}
-            blobUrl={blobUrl}
-            error={error}
-          />
-
-          <CameraControls
-            isLoading={isLoading}
-            currentView={-1}
-            onViewChange={(view) => {
-              if (view === 0) navigate("/add");
-              if (view === 1) navigate("/gallery");
-            }}
-          />
-        </Box>
+        <CameraView
+          videoRef={videoRef}
+          canvasRef={canvasRef}
+          onCapture={capturePhoto}
+          onCancel={stopCamera}
+        />
       )}
     </Box>
   );
