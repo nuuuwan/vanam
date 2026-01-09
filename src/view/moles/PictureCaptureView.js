@@ -236,13 +236,16 @@ const PictureCaptureView = () => {
 
               {locationStatus === "retrieved" && retrievedGpsData && (
                 <Alert severity="success" sx={{ mb: 2 }}>
-                  GPS location retrieved: {retrievedGpsData.latitude.toFixed(6)}°, {retrievedGpsData.longitude.toFixed(6)}°
-                  {retrievedGpsData.accuracy && ` (±${Math.round(retrievedGpsData.accuracy)}m)`}
+                  GPS location retrieved: {retrievedGpsData.latitude.toFixed(6)}
+                  °, {retrievedGpsData.longitude.toFixed(6)}°
+                  {retrievedGpsData.accuracy &&
+                    ` (±${Math.round(retrievedGpsData.accuracy)}m)`}
                 </Alert>
               )}
               {locationStatus === "unavailable" && (
                 <Alert severity="warning" sx={{ mb: 2 }}>
-                  GPS location unavailable. Photos will be saved without location data.
+                  GPS location unavailable. Photos will be saved without
+                  location data.
                 </Alert>
               )}
 
