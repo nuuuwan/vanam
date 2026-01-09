@@ -21,6 +21,8 @@ const PictureCaptureView = () => {
   const [totalFiles, setTotalFiles] = useState(0);
   const [processedPhotos, setProcessedPhotos] = useState([]);
   const [isComplete, setIsComplete] = useState(false);
+  const [locationStatus, setLocationStatus] = useState(null);
+  const [retrievedGpsData, setRetrievedGpsData] = useState(null);
   const pictureCapture = useRef(new PictureCapture());
 
   // Cleanup on unmount
@@ -50,9 +52,17 @@ const PictureCaptureView = () => {
 
   const startCamera = async () => {
     setIsLoading(true);
+    setLocationStatus("requesting");
     try {
       // Request location permission immediately (iOS requires user gesture)
-      await pictureCapture.current.getCurrentLocation();
+      const locationResult = await pictureCapture.current.getCurrentLocation();
+      if (locationResult.success && locationResult.gpsData) {
+        setLocationStatus("retrieved");
+        setRetrievedGpsData(locationResult.gpsData);
+      } else {
+        setLocationStatus("unavailable");
+        setRetrievedGpsData(null);
+      }
 
       const result = await pictureCapture.current.startCamera();
       if (result.success) {
@@ -102,9 +112,17 @@ const PictureCaptureView = () => {
     setTotalFiles(fileArray.length);
     setProcessedPhotos([]);
     setIsComplete(false);
+    setLocationStatus("requesting");
 
     // Request location permission immediately (iOS requires user gesture)
-    await pictureCapture.current.getCurrentLocation();
+    const locationResult = await pictureCapture.current.getCurrentLocation();
+    if (locationResult.success && locationResult.gpsData) {
+      setLocationStatus("retrieved");
+      setRetrievedGpsData(locationResult.gpsData);
+    } else {
+      setLocationStatus("unavailable");
+      setRetrievedGpsData(null);
+    }
 
     // Process files sequentially
     for (let i = 0; i < fileArray.length; i++) {
@@ -215,6 +233,18 @@ const PictureCaptureView = () => {
                 onUploadPhoto={uploadPhoto}
                 isLoading={isLoading}
               />
+
+              {locationStatus === "retrieved" && retrievedGpsData && (
+                <Alert severity="success" sx={{ mb: 2 }}>
+                  GPS location retrieved: {retrievedGpsData.latitude.toFixed(6)}°, {retrievedGpsData.longitude.toFixed(6)}°
+                  {retrievedGpsData.accuracy && ` (±${Math.round(retrievedGpsData.accuracy)}m)`}
+                </Alert>
+              )}
+              {locationStatus === "unavailable" && (
+                <Alert severity="warning" sx={{ mb: 2 }}>
+                  GPS location unavailable. Photos will be saved without location data.
+                </Alert>
+              )}
 
               {totalFiles > 0 && (
                 <Box sx={{ mt: 3, mb: 3 }}>

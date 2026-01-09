@@ -41,10 +41,12 @@ const LocationInfo = ({ gpsData, imageTimestamp }) => {
   return (
     <Box sx={{ mb: 3 }}>
       {gpsData ? (
-        <Stack direction="row" spacing={1} alignItems="center">
-          <LocationOnIcon color="primary" />
-          <Box>
-            <Typography variant="body1">
+        <Alert severity="success" icon={<LocationOnIcon />} sx={{ mb: 1 }}>
+          <Stack spacing={0.5}>
+            <Typography variant="body2" fontWeight="bold">
+              Location Retrieved
+            </Typography>
+            <Typography variant="body2">
               {formatLatLng(gpsData.latitude, gpsData.longitude)}
               {gpsData.accuracy && (
                 <Typography
@@ -62,8 +64,8 @@ const LocationInfo = ({ gpsData, imageTimestamp }) => {
                 {formatTimestamp(imageTimestamp)} ({getTimeAgo(imageTimestamp)})
               </Typography>
             )}
-          </Box>
-        </Stack>
+          </Stack>
+        </Alert>
       ) : (
         <Alert severity="info">No GPS data found in this image</Alert>
       )}
