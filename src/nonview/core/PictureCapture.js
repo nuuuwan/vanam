@@ -21,7 +21,7 @@ class PictureCapture {
     imageDataUrl,
     maxWidth = 256,
     maxHeight = 256,
-    quality = 0.8,
+    quality = 0.8
   ) {
     return new Promise((resolve) => {
       const img = new Image();
@@ -89,7 +89,14 @@ class PictureCapture {
     }
   }
 
-  async getCurrentLocation() {
+  async getCurrentLocation(providedLocation = null) {
+    // If location is provided as parameter, use it
+    if (providedLocation) {
+      this.cachedLocation = providedLocation;
+      this.locationTimestamp = Date.now();
+      return { success: true, gpsData: providedLocation };
+    }
+
     // Check if we have a recent cached location (less than 5 minutes old)
     const now = Date.now();
     if (
@@ -101,76 +108,8 @@ class PictureCapture {
       return { success: true, gpsData: this.cachedLocation };
     }
 
-    return new Promise((resolve) => {
-      if (!navigator.geolocation) {
-        console.warn("Geolocation is not supported by this browser.");
-        resolve({ success: true, gpsData: null });
-        return;
-      }
-
-      // Use more permissive settings for iOS compatibility
-      const options = {
-        enableHighAccuracy: false, // iOS can be slow with high accuracy
-        timeout: 60000, // 60 seconds - iOS can be slow
-        maximumAge: 600000, // 10 minutes - allow cached location
-      };
-
-      console.log("Requesting location from browser...");
-      console.log("User agent:", navigator.userAgent);
-      console.log("HTTPS:", window.location.protocol === "https:");
-      console.log("Geolocation available:", !!navigator.geolocation);
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          console.log("✓ Location received:", position.coords);
-          const gpsData = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            altitude: position.coords.altitude,
-            accuracy: position.coords.accuracy,
-          };
-          // Cache the location
-          this.cachedLocation = gpsData;
-          this.locationTimestamp = Date.now();
-          resolve({ success: true, gpsData });
-        },
-        (error) => {
-          let errorMessage = "Location error: ";
-          switch (error.code) {
-            case 1:
-              errorMessage +=
-                "Permission denied. Please enable location services for this site in Settings.";
-              console.error(
-                "✗ Permission denied. User rejected location request or location services disabled.",
-              );
-              break;
-            case 2:
-              errorMessage += "Position unavailable. GPS signal not available.";
-              console.error(
-                "✗ Position unavailable. GPS/network location unavailable.",
-              );
-              break;
-            case 3:
-              errorMessage +=
-                "Request timeout. Location took too long to retrieve.";
-              console.error("✗ Timeout after 60 seconds.");
-              break;
-            default:
-              errorMessage += error.message;
-              console.error("✗ Unknown error:", error.message);
-          }
-          console.error(
-            "Error details:",
-            "code:",
-            error.code,
-            "message:",
-            error.message,
-          );
-          resolve({ success: false, gpsData: null, error: errorMessage });
-        },
-        options,
-      );
-    });
+    // No location available
+    return { success: true, gpsData: null };
   }
 
   async capturePhoto(videoElement, canvasElement) {
@@ -264,7 +203,7 @@ class PictureCapture {
         reader.onload = async (e) => {
           // Compress the image before resolving
           const compressedImageData = await this.compressImage(
-            e.target?.result,
+            e.target?.result
           );
           resolve({
             success: true,
