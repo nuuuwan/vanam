@@ -180,14 +180,33 @@ export default class PlantPhoto {
       );
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error(
-          "Failed to store results. Status:",
-          response.status,
-          "Response:",
-          errorText,
-        );
-        return { success: false, error: `HTTP ${response.status}` };
+        // Try to parse JSON error response first
+        try {
+          const errorData = await response.json();
+          console.error(
+            "Failed to store results. Status:",
+            response.status,
+            "Response:",
+            errorData,
+          );
+          // Return meaningful error message from server
+          return {
+            success: false,
+            error: errorData.error || `HTTP ${response.status}`,
+            message: errorData.message || `Request failed with status ${response.status}`,
+            isDuplicate: errorData.error === "duplicate",
+          };
+        } catch (jsonError) {
+          // Fallback to text if not JSON
+          const errorText = await response.text();
+          console.error(
+            "Failed to store results. Status:",
+            response.status,
+            "Response:",
+            errorText,
+          );
+          return { success: false, error: `HTTP ${response.status}` };
+        }
       }
 
       const contentType = response.headers.get("content-type");
