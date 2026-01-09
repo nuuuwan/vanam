@@ -150,7 +150,7 @@ const MenuButton = ({ inAppBar = false }) => {
               wordBreak: "break-all",
             }}
           >
-            {userId}
+            {userId.substring(0, 8)}
           </Typography>
         </Box>
         <Divider />
