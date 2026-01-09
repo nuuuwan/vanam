@@ -229,8 +229,8 @@ const PictureCaptureView = () => {
                         color="text.secondary"
                         sx={{ mb: 1 }}
                       >
-                        Processing {processedPhotos.length} of {totalFiles}{" "}
-                        photo{totalFiles !== 1 ? "s" : ""}...
+                        Processed {processedPhotos.length} of {totalFiles} photo
+                        {totalFiles !== 1 ? "s" : ""}...
                       </Typography>
                       <LinearProgress
                         variant="determinate"
