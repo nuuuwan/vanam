@@ -51,6 +51,9 @@ const PictureCaptureView = () => {
   const startCamera = async () => {
     setIsLoading(true);
     try {
+      // Request location permission immediately (iOS requires user gesture)
+      await pictureCapture.current.getCurrentLocation();
+      
       const result = await pictureCapture.current.startCamera();
       if (result.success) {
         setStream(result.stream);
@@ -99,6 +102,9 @@ const PictureCaptureView = () => {
     setTotalFiles(fileArray.length);
     setProcessedPhotos([]);
     setIsComplete(false);
+
+    // Request location permission immediately (iOS requires user gesture)
+    await pictureCapture.current.getCurrentLocation();
 
     // Process files sequentially
     for (let i = 0; i < fileArray.length; i++) {

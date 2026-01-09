@@ -5,6 +5,8 @@ class PictureCapture {
   constructor() {
     this.plantNetClient = new PlantNetClient();
     this.stream = null;
+    this.cachedLocation = null;
+    this.locationTimestamp = null;
   }
 
   /**
@@ -88,6 +90,17 @@ class PictureCapture {
   }
 
   async getCurrentLocation() {
+    // Check if we have a recent cached location (less than 5 minutes old)
+    const now = Date.now();
+    if (
+      this.cachedLocation &&
+      this.locationTimestamp &&
+      now - this.locationTimestamp < 300000 // 5 minutes
+    ) {
+      console.log("Using cached location");
+      return { success: true, gpsData: this.cachedLocation };
+    }
+
     return new Promise((resolve) => {
       if (!navigator.geolocation) {
         console.warn("Geolocation is not supported by this browser.");
@@ -102,27 +115,33 @@ class PictureCapture {
         maximumAge: 600000, // 10 minutes - allow cached location
       };
 
+      console.log("Requesting location from browser...");
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          console.log("Location received:", position.coords);
           const gpsData = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
             altitude: position.coords.altitude,
             accuracy: position.coords.accuracy,
           };
+          // Cache the location
+          this.cachedLocation = gpsData;
+          this.locationTimestamp = Date.now();
           resolve({ success: true, gpsData });
         },
         (error) => {
-          console.warn(
+          console.error(
             "Error getting location:",
             error.message,
+            "code:",
             error.code,
             "- Permission denied:",
             error.code === 1,
             "- Position unavailable:",
             error.code === 2,
             "- Timeout:",
-            error.code === 3
+            error.code === 3,
           );
           resolve({ success: true, gpsData: null });
         },
@@ -210,11 +229,11 @@ class PictureCapture {
       // Extract GPS data from the file before conversion
       const gpsResult = await this.extractGPSDataFromFile(file);
 
-      // If no GPS data in file, try to get current location from browser
+      // If no GPS data in file, use cached location (already requested on button click)
       let gpsData = gpsResult.gpsData;
-      if (!gpsData) {
-        const locationResult = await this.getCurrentLocation();
-        gpsData = locationResult.gpsData;
+      if (!gpsData && this.cachedLocation) {
+        console.log("Using cached location for uploaded file");
+        gpsData = this.cachedLocation;
       }
 
       return new Promise((resolve, reject) => {
