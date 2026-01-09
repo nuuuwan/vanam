@@ -43,7 +43,7 @@ export default async function handler(req, res) {
     const jsonOldFormatBlobs = oldFormatBlobs.filter((blob) =>
       blob.pathname.endsWith(".json")
     );
-    
+
     const oldFormatPhotos = await Promise.all(
       jsonOldFormatBlobs.map(async (blob) => {
         try {
