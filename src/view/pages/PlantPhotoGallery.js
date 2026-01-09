@@ -37,6 +37,7 @@ const PlantPhotoGallery = () => {
           imageData: photo.imageData,
           imageLocation: photo.imageLocation,
           deviceIPAddress: photo.deviceIPAddress,
+          userId: photo.userId,
         }));
         setPlantPhotos(formattedPhotos);
       } else {
