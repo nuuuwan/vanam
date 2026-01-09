@@ -193,7 +193,9 @@ export default class PlantPhoto {
           return {
             success: false,
             error: errorData.error || `HTTP ${response.status}`,
-            message: errorData.message || `Request failed with status ${response.status}`,
+            message:
+              errorData.message ||
+              `Request failed with status ${response.status}`,
             isDuplicate: errorData.error === "duplicate",
           };
         } catch (jsonError) {
