@@ -78,11 +78,13 @@ const PictureCaptureView = () => {
     if (result.success) {
       setStream(null);
       setIsCameraActive(false);
+      setIsLoading(true);
       setTotalFiles(1);
       setProcessedPhotos([]);
       setIsComplete(false);
       await identifyPlantFromImage(result.imageData, "Camera photo", 0);
       setIsComplete(true);
+      setIsLoading(false);
     }
   };
 
@@ -93,6 +95,7 @@ const PictureCaptureView = () => {
   const uploadPhoto = async (files) => {
     // Handle both single file and array of files
     const fileArray = Array.isArray(files) ? files : [files];
+    setIsLoading(true);
     setTotalFiles(fileArray.length);
     setProcessedPhotos([]);
     setIsComplete(false);
@@ -137,6 +140,7 @@ const PictureCaptureView = () => {
 
     // Mark as complete instead of navigating
     setIsComplete(true);
+    setIsLoading(false);
   };
 
   const identifyPlantFromImage = async (
@@ -206,7 +210,7 @@ const PictureCaptureView = () => {
                 isLoading={isLoading}
               />
 
-              {processedPhotos.length > 0 && (
+              {totalFiles > 0 && (
                 <Box sx={{ mt: 3, mb: 3 }}>
                   {isComplete && (
                     <Alert severity="success" sx={{ mb: 2 }}>
@@ -234,11 +238,13 @@ const PictureCaptureView = () => {
                       />
                     </Box>
                   )}
-                  <List>
-                    {processedPhotos.map((photo, index) => (
-                      <PlantPhotoListItem key={index} photo={photo} />
-                    ))}
-                  </List>
+                  {processedPhotos.length > 0 && (
+                    <List>
+                      {processedPhotos.map((photo, index) => (
+                        <PlantPhotoListItem key={index} photo={photo} />
+                      ))}
+                    </List>
+                  )}
                 </Box>
               )}
 
