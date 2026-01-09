@@ -1,9 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ListItem, ListItemText, ListItemIcon } from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ErrorIcon from "@mui/icons-material/Error";
-import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
+import {
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+} from "@mui/material";
 
 const PlantPhotoListItem = ({ photo }) => {
   const navigate = useNavigate();
@@ -20,17 +22,15 @@ const PlantPhotoListItem = ({ photo }) => {
         cursor: photo.status === "success" ? "pointer" : "default",
       }}
     >
-      <ListItemIcon>
-        {photo.status === "success" ? (
-          <CheckCircleIcon color="success" />
-        ) : photo.status === "error" ? (
-          <ErrorIcon color="error" />
-        ) : photo.status === "warning" ? (
-          <ErrorIcon color="warning" />
-        ) : (
-          <HourglassEmptyIcon />
-        )}
-      </ListItemIcon>
+      {photo.imageData && (
+        <ListItemAvatar>
+          <Avatar
+            src={photo.imageData}
+            alt={photo.species || photo.name}
+            variant="rounded"
+          />
+        </ListItemAvatar>
+      )}
       <ListItemText
         primary={photo.species || photo.name}
         secondary={

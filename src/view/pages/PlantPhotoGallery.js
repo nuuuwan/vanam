@@ -35,6 +35,7 @@ const PlantPhotoGallery = () => {
           hash: photo.imageHash,
           hasLocation: photo.imageLocation != null,
           timestamp: new Date(photo.utImageTaken),
+          imageData: photo.imageData,
         }));
         setPlantPhotos(formattedPhotos);
       } else {
