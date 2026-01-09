@@ -117,9 +117,13 @@ const PictureCaptureView = () => {
       const photo = await PlantPhoto.fromImage(imageData);
       setPlantPhoto(photo);
       setIsLoading(false);
-      await storeResultsToBlob(photo);
-      // Only navigate if we have plant predictions
-      if (photo.plantNetPredictions && photo.plantNetPredictions.length > 0) {
+      // Only save to blob if plant is identified and location is available
+      if (
+        photo.plantNetPredictions &&
+        photo.plantNetPredictions.length > 0 &&
+        photo.imageLocation
+      ) {
+        await storeResultsToBlob(photo);
         navigate(`/${photo.imageHash}`);
       }
     } catch (err) {
