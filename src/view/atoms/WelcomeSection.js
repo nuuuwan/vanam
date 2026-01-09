@@ -1,17 +1,6 @@
 import React from "react";
-import {
-  Stack,
-  Typography,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Button,
-  Box,
-} from "@mui/material";
+import { Stack, Typography, Button, Box } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import ImageIcon from "@mui/icons-material/Image";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 
 const WelcomeSection = ({ onStartCamera, onUploadPhoto, isLoading }) => {
