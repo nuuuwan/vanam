@@ -1,6 +1,7 @@
 import LocationPrediction from "./LocationPrediction";
 import PlantNetPrediction from "./PlantNetPrediction";
 import PlantNetClient from "./PlantNetClient";
+import UserIdentity from "./UserIdentity";
 import exifr from "exifr";
 
 export default class PlantPhoto {
@@ -14,7 +15,8 @@ export default class PlantPhoto {
     imageLocation,
     utImageTaken,
     plantNetPredictions,
-    deviceIPAddress
+    deviceIPAddress,
+    userId
   ) {
     this.imageHash = imageHash;
     this.imageData = imageData;
@@ -22,6 +24,7 @@ export default class PlantPhoto {
     this.utImageTaken = utImageTaken;
     this.plantNetPredictions = plantNetPredictions;
     this.deviceIPAddress = deviceIPAddress;
+    this.userId = userId;
   }
 
   static async fromImage(imageData) {
@@ -81,13 +84,17 @@ export default class PlantPhoto {
       console.error("Failed to fetch IP address:", error);
     }
 
+    // Get user ID
+    const userId = UserIdentity.getInstance().getUserId();
+
     return new PlantPhoto(
       imageHash,
       imageData,
       locationPrediction,
       utImageTaken,
       plantNetPredictions,
-      deviceIPAddress
+      deviceIPAddress,
+      userId
     );
   }
 
@@ -110,6 +117,7 @@ export default class PlantPhoto {
       utImageTaken: this.utImageTaken,
       plantNetPredictions: this.plantNetPredictions,
       deviceIPAddress: this.deviceIPAddress,
+      userId: this.userId,
     };
   }
 
@@ -144,7 +152,8 @@ export default class PlantPhoto {
       imageLocation,
       json.utImageTaken,
       plantNetPredictions,
-      json.deviceIPAddress
+      json.deviceIPAddress,
+      json.userId
     );
   }
 

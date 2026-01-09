@@ -42,6 +42,7 @@ export default async function handler(req, res) {
       utImageTaken: data.utImageTaken,
       plantNetPredictions: data.plantNetPredictions,
       deviceIPAddress: data.deviceIPAddress,
+      userId: data.userId,
     };
 
     const imageFilename = `plant-images/${data.imageHash}.png`;

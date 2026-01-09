@@ -9,7 +9,7 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
-import React, { useState, createContext, useContext } from "react";
+import React, { useState, createContext, useContext, useEffect } from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import PictureCaptureView from "./view/moles/PictureCaptureView";
@@ -17,6 +17,7 @@ import PlantPhotoGallery from "./view/pages/PlantPhotoGallery";
 import PlantPhotoDetail from "./view/pages/PlantPhotoDetail";
 import AppBarComponent from "./view/atoms/AppBarComponent";
 import BottomNavigator from "./view/atoms/BottomNavigator";
+import UserIdentity from "./nonview/core/UserIdentity";
 
 // Create a context for the app bar title
 export const AppBarTitleContext = createContext();
@@ -106,6 +107,11 @@ const AppLayout = () => {
 };
 
 function App() {
+  // Initialize user identity on app startup
+  useEffect(() => {
+    UserIdentity.getInstance();
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
