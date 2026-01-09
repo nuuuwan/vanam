@@ -35,7 +35,9 @@ export default async function handler(req, res) {
     // Return image URLs and hashes
     const photos = pngImageBlobs.map((blob) => {
       // Extract hash from filename (e.g., "plant-images/abc123.png" -> "abc123")
-      const hash = blob.pathname.replace("plant-images/", "").replace(".png", "");
+      const hash = blob.pathname
+        .replace("plant-images/", "")
+        .replace(".png", "");
       return {
         imageHash: hash,
         imageData: blob.url,
