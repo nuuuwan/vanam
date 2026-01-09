@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ListItem,
+  ListItemButton,
   ListItemText,
   ListItemAvatar,
   Avatar,
@@ -10,18 +11,10 @@ import {
 const PlantPhotoListItem = ({ photo }) => {
   const navigate = useNavigate();
 
-  return (
-    <ListItem
-      button={photo.status === "success"}
-      onClick={() => {
-        if (photo.status === "success" && photo.hash) {
-          navigate(`/${photo.hash}`);
-        }
-      }}
-      sx={{
-        cursor: photo.status === "success" ? "pointer" : "default",
-      }}
-    >
+  const isClickable = photo.status === "success";
+
+  const content = (
+    <>
       {photo.imageData && (
         <ListItemAvatar>
           <Avatar
@@ -43,8 +36,26 @@ const PlantPhotoListItem = ({ photo }) => {
             : photo.error || "Processing failed"
         }
       />
-    </ListItem>
+    </>
   );
+
+  if (isClickable) {
+    return (
+      <ListItem disablePadding>
+        <ListItemButton
+          onClick={() => {
+            if (photo.hash) {
+              navigate(`/${photo.hash}`);
+            }
+          }}
+        >
+          {content}
+        </ListItemButton>
+      </ListItem>
+    );
+  }
+
+  return <ListItem>{content}</ListItem>;
 };
 
 export default PlantPhotoListItem;
