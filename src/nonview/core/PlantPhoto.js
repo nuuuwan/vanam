@@ -228,43 +228,29 @@ export default class PlantPhoto {
         return { success: false, error: metadataResult.error };
       }
 
-      // Fetch photos
-      const photosResponse = await fetch(
-        "https://vanam-teal.vercel.app/api/list-photos",
-      );
-      console.debug("photos response", photosResponse);
+      // Fetch individual photo images using get-photo API
+      const plantPhotos = await Promise.all(
+        metadataResult.metadata.map(async (metadata) => {
+          let imageData = null;
+          try {
+            const photoResponse = await fetch(
+              `https://vanam-teal.vercel.app/api/get-photo?hash=${metadata.imageHash}`,
+            );
+            if (photoResponse.ok) {
+              const photoResult = await photoResponse.json();
+              if (photoResult.success && photoResult.photo) {
+                imageData = photoResult.photo.imageData;
+              }
+            }
+          } catch (err) {
+            console.error(`Failed to fetch photo ${metadata.imageHash}:`, err);
+          }
 
-      if (!photosResponse.ok) {
-        const errorText = await photosResponse.text();
-        console.error(
-          "Failed to list photos. Status:",
-          photosResponse.status,
-          "Response:",
-          errorText,
-        );
-        return { success: false, error: `HTTP ${photosResponse.status}` };
-      }
-
-      const photosResult = await photosResponse.json();
-      if (!photosResult.success || !photosResult.photos) {
-        console.error("Failed to list photos:", photosResult.error);
-        return { success: false, error: photosResult.error };
-      }
-
-      // Create a map of image data by hash
-      const imageDataMap = new Map();
-      photosResult.photos.forEach((photo) => {
-        imageDataMap.set(photo.imageHash, photo.imageData);
-      });
-
-      // Combine metadata with image data
-      const combinedData = metadataResult.metadata.map((metadata) => ({
-        ...metadata,
-        imageData: imageDataMap.get(metadata.imageHash) || null,
-      }));
-
-      const plantPhotos = combinedData.map((photoData) =>
-        PlantPhoto.fromJSON(photoData),
+          return PlantPhoto.fromJSON({
+            ...metadata,
+            imageData,
+          });
+        })
       );
 
       // Cache the results
