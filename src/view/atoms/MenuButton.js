@@ -49,7 +49,7 @@ const MenuButton = ({ inAppBar = false }) => {
           localStorage.removeItem(key);
         }
       });
-      alert("Cache cleared successfully!");
+      window.location.reload();
     }
     handleMenuClose();
   };
