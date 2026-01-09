@@ -13,7 +13,7 @@ export default class PlantPhoto {
     imageData,
     imageLocation,
     utImageTaken,
-    plantNetPredictions,
+    plantNetPredictions
   ) {
     this.imageHash = imageHash;
     this.imageData = imageData;
@@ -65,8 +65,8 @@ export default class PlantPhoto {
               r.gbif?.id,
               r.powo?.id,
               r.iucn?.id,
-              r.iucn?.category,
-            ),
+              r.iucn?.category
+            )
         ) || [];
 
     return new PlantPhoto(
@@ -74,7 +74,7 @@ export default class PlantPhoto {
       imageData,
       locationPrediction,
       utImageTaken,
-      plantNetPredictions,
+      plantNetPredictions
     );
   }
 
@@ -104,7 +104,7 @@ export default class PlantPhoto {
       ? new LocationPrediction(
           json.imageLocation.latitude,
           json.imageLocation.longitude,
-          json.imageLocation.accuracy,
+          json.imageLocation.accuracy
         )
       : null;
 
@@ -120,8 +120,8 @@ export default class PlantPhoto {
             p.gbifId,
             p.powoId,
             p.iucnId,
-            p.iucnCategory,
-          ),
+            p.iucnCategory
+          )
       ) || [];
 
     return new PlantPhoto(
@@ -129,7 +129,7 @@ export default class PlantPhoto {
       json.imageData,
       imageLocation,
       json.utImageTaken,
-      plantNetPredictions,
+      plantNetPredictions
     );
   }
 
@@ -152,7 +152,7 @@ export default class PlantPhoto {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(dataToStore),
-        },
+        }
       );
 
       if (!response.ok) {
@@ -161,7 +161,7 @@ export default class PlantPhoto {
           "Failed to store results. Status:",
           response.status,
           "Response:",
-          errorText,
+          errorText
         );
         return { success: false, error: `HTTP ${response.status}` };
       }
@@ -205,44 +205,73 @@ export default class PlantPhoto {
     }
 
     try {
-      const response = await fetch(
-        "https://vanam-teal.vercel.app/api/list-results",
+      // Fetch metadata
+      const metadataResponse = await fetch(
+        "https://vanam-teal.vercel.app/api/list-metadata"
       );
-      console.debug("response", response);
+      console.debug("metadata response", metadataResponse);
 
-      if (!response.ok) {
-        const errorText = await response.text();
+      if (!metadataResponse.ok) {
+        const errorText = await metadataResponse.text();
         console.error(
-          "Failed to list results. Status:",
-          response.status,
+          "Failed to list metadata. Status:",
+          metadataResponse.status,
           "Response:",
-          errorText,
+          errorText
         );
-        return { success: false, error: `HTTP ${response.status}` };
+        return { success: false, error: `HTTP ${metadataResponse.status}` };
       }
 
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        const text = await response.text();
-        console.error("Non-JSON response received:", text);
-        return { success: false, error: "Invalid response format" };
+      const metadataResult = await metadataResponse.json();
+      if (!metadataResult.success || !metadataResult.metadata) {
+        console.error("Failed to list metadata:", metadataResult.error);
+        return { success: false, error: metadataResult.error };
       }
 
-      const result = await response.json();
-      if (result.success && result.photos) {
-        const plantPhotos = result.photos.map((photoData) =>
-          PlantPhoto.fromJSON(photoData),
+      // Fetch photos
+      const photosResponse = await fetch(
+        "https://vanam-teal.vercel.app/api/list-photos"
+      );
+      console.debug("photos response", photosResponse);
+
+      if (!photosResponse.ok) {
+        const errorText = await photosResponse.text();
+        console.error(
+          "Failed to list photos. Status:",
+          photosResponse.status,
+          "Response:",
+          errorText
         );
-
-        // Cache the results
-        PlantPhoto.cachedPhotos = plantPhotos;
-        PlantPhoto.cacheTimestamp = now;
-
-        return { success: true, photos: plantPhotos, cached: false };
-      } else {
-        console.error("Failed to list results:", result.error);
-        return { success: false, error: result.error };
+        return { success: false, error: `HTTP ${photosResponse.status}` };
       }
+
+      const photosResult = await photosResponse.json();
+      if (!photosResult.success || !photosResult.photos) {
+        console.error("Failed to list photos:", photosResult.error);
+        return { success: false, error: photosResult.error };
+      }
+
+      // Create a map of image data by hash
+      const imageDataMap = new Map();
+      photosResult.photos.forEach((photo) => {
+        imageDataMap.set(photo.imageHash, photo.imageData);
+      });
+
+      // Combine metadata with image data
+      const combinedData = metadataResult.metadata.map((metadata) => ({
+        ...metadata,
+        imageData: imageDataMap.get(metadata.imageHash) || null,
+      }));
+
+      const plantPhotos = combinedData.map((photoData) =>
+        PlantPhoto.fromJSON(photoData)
+      );
+
+      // Cache the results
+      PlantPhoto.cachedPhotos = plantPhotos;
+      PlantPhoto.cacheTimestamp = now;
+
+      return { success: true, photos: plantPhotos, cached: false };
     } catch (error) {
       console.error("Error listing results from blob:", error);
       return { success: false, error: error.message };
