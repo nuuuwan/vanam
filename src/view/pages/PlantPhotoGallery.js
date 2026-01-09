@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Box, Typography, List, CircularProgress, Alert } from "@mui/material";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
-import AppBarComponent from "../atoms/AppBarComponent";
-import CameraControls from "../atoms/CameraControls";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
+import { useAppBarTitle } from "../../App";
 
 const PlantPhotoGallery = () => {
-  const navigate = useNavigate();
+  const { setAppBarTitle } = useAppBarTitle();
   const [plantPhotos, setPlantPhotos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    setAppBarTitle("Plant Photo Gallery");
     loadPlantPhotos();
-  }, []);
+  }, [setAppBarTitle]);
 
   const loadPlantPhotos = async () => {
     setIsLoading(true);
@@ -73,30 +72,19 @@ const PlantPhotoGallery = () => {
   }
 
   return (
-    <Box>
-      <AppBarComponent title="Plant Photo Gallery" />
-      <Box sx={{ p: 2, pb: 10 }}>
-        {plantPhotos.length === 0 ? (
-          <Typography variant="body1" color="text.secondary">
-            No plant photos found. Start by identifying a plant!
-          </Typography>
-        ) : (
-          <List>
-            {plantPhotos.map((photo, index) => (
-              <PlantPhotoListItem key={photo.hash || index} photo={photo} />
-            ))}
-          </List>
-        )}
-
-        <CameraControls
-          isLoading={false}
-          currentView={1}
-          onViewChange={(view) => {
-            if (view === 0) navigate("/add");
-          }}
-        />
-      </Box>
-    </Box>
+    <>
+      {plantPhotos.length === 0 ? (
+        <Typography variant="body1" color="text.secondary">
+          No plant photos found. Start by identifying a plant!
+        </Typography>
+      ) : (
+        <List>
+          {plantPhotos.map((photo, index) => (
+            <PlantPhotoListItem key={photo.hash || index} photo={photo} />
+          ))}
+        </List>
+      )}
+    </>
   );
 };
 

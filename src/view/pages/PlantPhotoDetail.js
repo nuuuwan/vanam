@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Box, CircularProgress, Alert } from "@mui/material";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
-import AppBarComponent from "../atoms/AppBarComponent";
 import PlantPhotoView from "../moles/PlantPhotoView";
-import CameraControls from "../atoms/CameraControls";
+import { useAppBarTitle } from "../../App";
 
 const PlantPhotoDetail = () => {
   const { imageHash } = useParams();
-  const navigate = useNavigate();
+  const { setAppBarTitle } = useAppBarTitle();
   const [plantPhoto, setPlantPhoto] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [appBarTitle, setAppBarTitle] = useState("Plant Details");
 
   useEffect(() => {
     loadPlantPhoto();
@@ -78,26 +76,15 @@ const PlantPhotoDetail = () => {
   }
 
   return (
-    <Box>
-      <AppBarComponent title={appBarTitle} />
-      <Box sx={{ maxWidth: 600, mx: "auto", pb: 2, position: "relative" }}>
-        <PlantPhotoView
-          plantPhoto={plantPhoto}
-          imageData={plantPhoto.imageData}
-          isLoading={false}
-          isStoring={false}
-          blobUrl={null}
-          error={null}
-        />
-        <CameraControls
-          isLoading={false}
-          currentView={-1}
-          onViewChange={(view) => {
-            if (view === 0) navigate("/add");
-            if (view === 1) navigate("/gallery");
-          }}
-        />
-      </Box>
+    <Box sx={{ maxWidth: 600, mx: "auto", position: "relative" }}>
+      <PlantPhotoView
+        plantPhoto={plantPhoto}
+        imageData={plantPhoto.imageData}
+        isLoading={false}
+        isStoring={false}
+        blobUrl={null}
+        error={null}
+      />
     </Box>
   );
 };
