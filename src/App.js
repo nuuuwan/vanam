@@ -39,7 +39,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Monda", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Recursive", "Roboto", "Helvetica", "Arial", sans-serif',
   },
   components: {
     MuiLink: {
