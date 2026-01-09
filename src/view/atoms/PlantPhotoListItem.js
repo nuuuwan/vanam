@@ -44,7 +44,7 @@ const PlantPhotoListItem = ({ photo }) => {
     }
 
     if (photo.userId) {
-      parts.push(photo.userId);
+      parts.push(photo.userId.substring(0, 8));
     }
 
     return parts.length > 0 ? parts.join(" • ") : "Saved successfully";
