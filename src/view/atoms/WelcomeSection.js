@@ -61,7 +61,7 @@ const WelcomeSection = ({ onStartCamera, onUploadPhoto, isLoading }) => {
       <Typography variant="body2" color="secondary">
         The name <em>vanam</em> comes from Sanskrit, meaning forest, and is also
         the root of the Sinhala word <em>vanaya</em> (වනය) and the Tamil word{" "}
-        <em>vanam</em> (වනම්), both meaning forest.
+        <em>vanam</em> (வனம்), both meaning forest.
       </Typography>
 
       <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
