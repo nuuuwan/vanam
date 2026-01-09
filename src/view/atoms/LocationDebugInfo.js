@@ -108,6 +108,26 @@ const LocationDebugInfo = () => {
                   <br />
                   Error: {debugInfo.error} (code: {debugInfo.errorCode})<br />
                   Time: {debugInfo.time}ms
+                  <br />
+                  <br />
+                  {debugInfo.errorCode === 1 && (
+                    <>
+                      <strong>Fix for iOS:</strong>
+                      <br />
+                      1. Tap Safari's "AA" icon in address bar
+                      <br />
+                      2. Tap "Website Settings"
+                      <br />
+                      3. Set Location to "Allow"
+                      <br />
+                      4. Tap "Test Again" below
+                      <br />
+                      <br />
+                      OR clear & retry:
+                      <br />
+                      Settings → Safari → Advanced → Website Data → Remove this site
+                    </>
+                  )}
                 </>
               )}
               <br />
