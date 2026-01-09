@@ -188,24 +188,34 @@ const PictureCaptureView = () => {
         photo.plantNetPredictions && photo.plantNetPredictions.length > 0;
       const hasLocation = photo.imageLocation;
 
+      // Only save to blob if plant is identified and location is available
+      let saveError = null;
+      if (hasPlant && hasLocation) {
+        try {
+          await storeResultsToBlob(photo);
+        } catch (saveErr) {
+          saveError = saveErr.message;
+        }
+      }
+
       // Add to processed photos list
       const photoInfo = {
         name: fileName,
-        status: hasPlant && hasLocation ? "success" : "warning",
+        status: saveError
+          ? "error"
+          : hasPlant && hasLocation
+          ? "success"
+          : "warning",
         species: hasPlant
           ? photo.plantNetPredictions[0].species
           : "No plant identified",
         hasLocation: hasLocation,
         hash: photo.imageHash,
         timestamp: new Date(),
+        error: saveError,
       };
 
       setProcessedPhotos((prev) => [...prev, photoInfo]);
-
-      // Only save to blob if plant is identified and location is available
-      if (hasPlant && hasLocation) {
-        await storeResultsToBlob(photo);
-      }
     } catch (err) {
       console.error(err);
       setProcessedPhotos((prev) => [
@@ -221,9 +231,17 @@ const PictureCaptureView = () => {
 
   const storeResultsToBlob = async (plantPhoto) => {
     try {
-      await plantPhoto.save();
+      const result = await plantPhoto.save();
+      if (!result.success) {
+        if (result.isDuplicate) {
+          throw new Error("DUPLICATE: This plant is already in the database");
+        } else {
+          throw new Error(result.message || result.error || "Failed to save");
+        }
+      }
     } catch (error) {
       console.error("Error storing results:", error);
+      throw error;
     }
   };
 
