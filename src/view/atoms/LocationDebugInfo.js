@@ -4,14 +4,36 @@ import { Alert, Box, Typography, Button } from "@mui/material";
 const LocationDebugInfo = () => {
   const [debugInfo, setDebugInfo] = useState(null);
   const [testing, setTesting] = useState(false);
+  const [permissionState, setPermissionState] = useState(null);
 
-  const testLocation = () => {
+  const checkPermission = async () => {
+    // Check if Permissions API is available
+    if (navigator.permissions && navigator.permissions.query) {
+      try {
+        const result = await navigator.permissions.query({
+          name: "geolocation",
+        });
+        setPermissionState(result.state); // 'granted', 'denied', or 'prompt'
+        return result.state;
+      } catch (e) {
+        console.log("Permissions API not fully supported", e);
+      }
+    }
+    return null;
+  };
+
+  const testLocation = async () => {
     setTesting(true);
+
+    // First check permission state
+    const permState = await checkPermission();
+
     const info = {
       userAgent: navigator.userAgent,
       isHTTPS: window.location.protocol === "https:",
       hasGeolocation: !!navigator.geolocation,
       url: window.location.href,
+      permissionState: permState,
     };
 
     if (!navigator.geolocation) {
@@ -68,8 +90,14 @@ const LocationDebugInfo = () => {
   };
 
   useEffect(() => {
-    // Auto-run on mount
-    testLocation();
+    // Check permission on mount
+    checkPermission();
+
+    // Don't auto-run on iOS - Safari requires user gesture
+    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    if (!isIOS) {
+      testLocation();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -88,6 +116,9 @@ const LocationDebugInfo = () => {
               HTTPS: {debugInfo.isHTTPS ? "✓" : "✗"}
               <br />
               Geolocation API: {debugInfo.hasGeolocation ? "✓" : "✗"}
+              <br />
+              Permission:{" "}
+              {debugInfo.permissionState || permissionState || "unknown"}
               <br />
               {debugInfo.success ? (
                 <>
@@ -112,20 +143,50 @@ const LocationDebugInfo = () => {
                   <br />
                   {debugInfo.errorCode === 1 && (
                     <>
-                      <strong>Fix for iOS:</strong>
-                      <br />
-                      1. Tap Safari's "AA" icon in address bar
-                      <br />
-                      2. Tap "Website Settings"
-                      <br />
-                      3. Set Location to "Allow"
-                      <br />
-                      4. Tap "Test Again" below
+                      <strong style={{ color: "orange" }}>
+                        {debugInfo.permissionState === "denied"
+                          ? "⚠ Safari has BLOCKED this site"
+                          : "Permission Error"}
+                      </strong>
                       <br />
                       <br />
-                      OR clear & retry:
-                      <br />
-                      Settings → Safari → Advanced → Website Data → Remove this site
+                      {debugInfo.permissionState === "denied" ? (
+                        <>
+                          Safari remembers you denied permission.
+                          <br />
+                          <strong>To reset:</strong>
+                          <br />
+                          1. Tap "AA" in address bar
+                          <br />
+                          2. Tap "Website Settings"
+                          <br />
+                          3. Change Location to "Ask" or "Allow"
+                          <br />
+                          4. Reload page & tap "Test Location"
+                          <br />
+                          <br />
+                          If "AA" icon doesn't work:
+                          <br />
+                          Settings → Safari → Clear History
+                        </>
+                      ) : (
+                        <>
+                          Other apps work, so your iPhone is OK.
+                          <br />
+                          Safari blocked this specific website.
+                          <br />
+                          <br />
+                          Quick fix:
+                          <br />
+                          1. Tap "AA" icon in Safari address bar
+                          <br />
+                          2. Tap "Website Settings"
+                          <br />
+                          3. Set Location to "Allow"
+                          <br />
+                          4. Tap "Test Location" below
+                        </>
+                      )}
                     </>
                   )}
                 </>
@@ -134,7 +195,11 @@ const LocationDebugInfo = () => {
               iOS: {/iPhone|iPad|iPod/.test(debugInfo.userAgent) ? "✓" : "✗"}
             </>
           ) : (
-            "Loading..."
+            <>
+              {/iPhone|iPad|iPod/.test(navigator.userAgent)
+                ? "iOS: Tap 'Test Location' button below"
+                : "Loading..."}
+            </>
           )}
         </Typography>
         <Button
@@ -142,8 +207,10 @@ const LocationDebugInfo = () => {
           onClick={testLocation}
           disabled={testing}
           sx={{ mt: 1 }}
+          variant="contained"
+          color="primary"
         >
-          {testing ? "Testing..." : "Test Again"}
+          {testing ? "Testing..." : debugInfo ? "Test Again" : "Test Location"}
         </Button>
       </Alert>
     </Box>
