@@ -105,6 +105,14 @@ class PlantNetClient {
 
       if (!apiResponse.ok) {
         const errorText = await apiResponse.text();
+        
+        // Handle 404 specifically - no species found
+        if (apiResponse.status === 404) {
+          throw new Error(
+            "No plant species could be identified in this image. Please try a clearer photo showing distinctive features like flowers, leaves, or bark."
+          );
+        }
+        
         throw new Error(
           `PlantNet API error (${apiResponse.status}): ${errorText}`,
         );
