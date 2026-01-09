@@ -200,7 +200,7 @@ const PictureCaptureView = () => {
       <MenuButton />
       {!isCameraActive ? (
         <Box>
-          {isLoading && processedPhotos.length === 0 ? (
+          {isLoading && totalFiles === 0 ? (
             <LoadingView message="Opening camera..." />
           ) : (
             <Box sx={{ py: 4 }}>

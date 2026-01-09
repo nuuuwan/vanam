@@ -10,12 +10,17 @@ class PictureCapture {
   /**
    * Compress and resize an image to target file size <100KB
    * @param {string} imageDataUrl - Base64 data URL of the image
-   * @param {number} maxWidth - Maximum width (default: 1024)
-   * @param {number} maxHeight - Maximum height (default: 1024)
+   * @param {number} maxWidth - Maximum width (default: 256)
+   * @param {number} maxHeight - Maximum height (default: 256)
    * @param {number} quality - JPEG quality (0-1, default: 0.8)
    * @returns {Promise<string>} Compressed image data URL
    */
-  async compressImage(imageDataUrl, maxWidth = 1024, maxHeight = 1024, quality = 0.8) {
+  async compressImage(
+    imageDataUrl,
+    maxWidth = 256,
+    maxHeight = 256,
+    quality = 0.8
+  ) {
     return new Promise((resolve) => {
       const img = new Image();
       img.onload = () => {
@@ -36,21 +41,21 @@ class PictureCapture {
         }
 
         // Create canvas and draw resized image
-        const canvas = document.createElement('canvas');
+        const canvas = document.createElement("canvas");
         canvas.width = width;
         canvas.height = height;
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
 
         // Convert to JPEG with compression
-        let compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-        
+        let compressedDataUrl = canvas.toDataURL("image/jpeg", quality);
+
         // If still too large, reduce quality further
         const sizeInKB = (compressedDataUrl.length * 3) / 4 / 1024;
         if (sizeInKB > 100 && quality > 0.5) {
           // Recursively compress with lower quality
           const newQuality = quality - 0.1;
-          compressedDataUrl = canvas.toDataURL('image/jpeg', newQuality);
+          compressedDataUrl = canvas.toDataURL("image/jpeg", newQuality);
         }
 
         resolve(compressedDataUrl);
@@ -123,7 +128,7 @@ class PictureCapture {
                 enableHighAccuracy: false,
                 timeout: 30000,
                 maximumAge: 300000, // 5 minutes
-              },
+              }
             );
           } else {
             resolve({ success: true, gpsData: null });
@@ -133,7 +138,7 @@ class PictureCapture {
           enableHighAccuracy: true,
           timeout: 20000,
           maximumAge: 60000, // 1 minute
-        },
+        }
       );
     });
   }
@@ -228,7 +233,9 @@ class PictureCapture {
         const reader = new FileReader();
         reader.onload = async (e) => {
           // Compress the image before resolving
-          const compressedImageData = await this.compressImage(e.target?.result);
+          const compressedImageData = await this.compressImage(
+            e.target?.result
+          );
           resolve({
             success: true,
             imageData: compressedImageData,
