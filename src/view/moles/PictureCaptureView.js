@@ -254,7 +254,8 @@ const PictureCaptureView = () => {
               )}
               {locationStatus === "unavailable" && (
                 <Alert severity="warning" sx={{ mb: 1 }}>
-                  {locationError || "GPS location unavailable. Photos will be saved without location data."}
+                  {locationError ||
+                    "GPS location unavailable. Photos will be saved without location data."}
                 </Alert>
               )}
 

@@ -76,23 +76,36 @@ const LocationDebugInfo = () => {
   return (
     <Box sx={{ mb: 2 }}>
       <Alert severity="info" sx={{ mb: 1 }}>
-        <Typography variant="caption" component="div" sx={{ fontFamily: "monospace", fontSize: "0.7rem" }}>
-          <strong>Debug Info:</strong><br />
+        <Typography
+          variant="caption"
+          component="div"
+          sx={{ fontFamily: "monospace", fontSize: "0.7rem" }}
+        >
+          <strong>Debug Info:</strong>
+          <br />
           {debugInfo ? (
             <>
-              HTTPS: {debugInfo.isHTTPS ? "✓" : "✗"}<br />
-              Geolocation API: {debugInfo.hasGeolocation ? "✓" : "✗"}<br />
+              HTTPS: {debugInfo.isHTTPS ? "✓" : "✗"}
+              <br />
+              Geolocation API: {debugInfo.hasGeolocation ? "✓" : "✗"}
+              <br />
               {debugInfo.success ? (
                 <>
-                  <strong style={{ color: "green" }}>✓ Location Retrieved</strong><br />
-                  Lat: {debugInfo.latitude?.toFixed(6)}<br />
-                  Lng: {debugInfo.longitude?.toFixed(6)}<br />
+                  <strong style={{ color: "green" }}>
+                    ✓ Location Retrieved
+                  </strong>
+                  <br />
+                  Lat: {debugInfo.latitude?.toFixed(6)}
+                  <br />
+                  Lng: {debugInfo.longitude?.toFixed(6)}
+                  <br />
                   Accuracy: ±{Math.round(debugInfo.accuracy)}m<br />
                   Time: {debugInfo.time}ms
                 </>
               ) : (
                 <>
-                  <strong style={{ color: "red" }}>✗ Location Failed</strong><br />
+                  <strong style={{ color: "red" }}>✗ Location Failed</strong>
+                  <br />
                   Error: {debugInfo.error} (code: {debugInfo.errorCode})<br />
                   Time: {debugInfo.time}ms
                 </>
@@ -104,7 +117,12 @@ const LocationDebugInfo = () => {
             "Loading..."
           )}
         </Typography>
-        <Button size="small" onClick={testLocation} disabled={testing} sx={{ mt: 1 }}>
+        <Button
+          size="small"
+          onClick={testLocation}
+          disabled={testing}
+          sx={{ mt: 1 }}
+        >
           {testing ? "Testing..." : "Test Again"}
         </Button>
       </Alert>
