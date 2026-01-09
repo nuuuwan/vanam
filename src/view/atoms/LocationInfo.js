@@ -64,11 +64,6 @@ const LocationInfo = ({ gpsData, imageTimestamp, deviceIPAddress, userId }) => {
                 {formatTimestamp(imageTimestamp)} ({getTimeAgo(imageTimestamp)})
               </Typography>
             )}
-            {deviceIPAddress && (
-              <Typography variant="caption" color="text.secondary">
-                IP: {deviceIPAddress}
-              </Typography>
-            )}
             {userId && (
               <Typography variant="caption" color="text.secondary">
                 User ID: {userId.substring(0, 8)}
