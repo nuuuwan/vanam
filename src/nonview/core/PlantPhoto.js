@@ -14,12 +14,14 @@ export default class PlantPhoto {
     imageLocation,
     utImageTaken,
     plantNetPredictions,
+    deviceIPAddress
   ) {
     this.imageHash = imageHash;
     this.imageData = imageData;
     this.imageLocation = imageLocation;
     this.utImageTaken = utImageTaken;
     this.plantNetPredictions = plantNetPredictions;
+    this.deviceIPAddress = deviceIPAddress;
   }
 
   static async fromImage(imageData) {
@@ -65,9 +67,19 @@ export default class PlantPhoto {
               r.gbif?.id,
               r.powo?.id,
               r.iucn?.id,
-              r.iucn?.category,
-            ),
+              r.iucn?.category
+            )
         ) || [];
+
+    // Get device IP address
+    let deviceIPAddress = null;
+    try {
+      const ipResponse = await fetch("https://api.ipify.org?format=json");
+      const ipData = await ipResponse.json();
+      deviceIPAddress = ipData.ip;
+    } catch (error) {
+      console.error("Failed to fetch IP address:", error);
+    }
 
     return new PlantPhoto(
       imageHash,
@@ -75,6 +87,7 @@ export default class PlantPhoto {
       locationPrediction,
       utImageTaken,
       plantNetPredictions,
+      deviceIPAddress
     );
   }
 
@@ -96,6 +109,7 @@ export default class PlantPhoto {
       imageLocation: this.imageLocation,
       utImageTaken: this.utImageTaken,
       plantNetPredictions: this.plantNetPredictions,
+      deviceIPAddress: this.deviceIPAddress,
     };
   }
 
@@ -104,7 +118,7 @@ export default class PlantPhoto {
       ? new LocationPrediction(
           json.imageLocation.latitude,
           json.imageLocation.longitude,
-          json.imageLocation.accuracy,
+          json.imageLocation.accuracy
         )
       : null;
 
@@ -120,8 +134,8 @@ export default class PlantPhoto {
             p.gbifId,
             p.powoId,
             p.iucnId,
-            p.iucnCategory,
-          ),
+            p.iucnCategory
+          )
       ) || [];
 
     return new PlantPhoto(
@@ -130,6 +144,7 @@ export default class PlantPhoto {
       imageLocation,
       json.utImageTaken,
       plantNetPredictions,
+      json.deviceIPAddress
     );
   }
 
@@ -152,7 +167,7 @@ export default class PlantPhoto {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(dataToStore),
-        },
+        }
       );
 
       if (!response.ok) {
@@ -161,7 +176,7 @@ export default class PlantPhoto {
           "Failed to store results. Status:",
           response.status,
           "Response:",
-          errorText,
+          errorText
         );
         return { success: false, error: `HTTP ${response.status}` };
       }
@@ -209,7 +224,7 @@ export default class PlantPhoto {
     try {
       // Fetch metadata
       const metadataResponse = await fetch(
-        "https://vanam-teal.vercel.app/api/list-metadata",
+        "https://vanam-teal.vercel.app/api/list-metadata"
       );
       console.debug("metadata response", metadataResponse);
 
@@ -219,7 +234,7 @@ export default class PlantPhoto {
           "Failed to list metadata. Status:",
           metadataResponse.status,
           "Response:",
-          errorText,
+          errorText
         );
         return { success: false, error: `HTTP ${metadataResponse.status}` };
       }
@@ -236,7 +251,7 @@ export default class PlantPhoto {
           let imageData = null;
           try {
             const photoResponse = await fetch(
-              `https://vanam-teal.vercel.app/api/get-photo?hash=${metadata.imageHash}`,
+              `https://vanam-teal.vercel.app/api/get-photo?hash=${metadata.imageHash}`
             );
             if (photoResponse.ok) {
               const photoResult = await photoResponse.json();
@@ -252,7 +267,7 @@ export default class PlantPhoto {
             ...metadata,
             imageData,
           });
-        }),
+        })
       );
 
       // Cache the results
