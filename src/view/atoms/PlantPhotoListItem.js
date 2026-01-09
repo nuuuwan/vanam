@@ -13,6 +13,42 @@ const PlantPhotoListItem = ({ photo }) => {
 
   const isClickable = photo.status === "success";
 
+  const formatLocation = (location) => {
+    if (!location) return null;
+    const lat = Math.abs(location.latitude).toFixed(4);
+    const lng = Math.abs(location.longitude).toFixed(4);
+    const latDir = location.latitude >= 0 ? "N" : "S";
+    const lngDir = location.longitude >= 0 ? "E" : "W";
+    return `${lat}${latDir}, ${lng}${lngDir}`;
+  };
+
+  const getSecondaryText = () => {
+    if (photo.status === "error") {
+      return photo.error || "Processing failed";
+    }
+
+    if (photo.status === "warning") {
+      return `${!photo.hasLocation ? "No location data" : "Not saved"}`;
+    }
+
+    // Success status - show location and IP
+    const parts = [];
+
+    if (photo.timestamp) {
+      parts.push(photo.timestamp.toLocaleTimeString());
+    }
+
+    if (photo.imageLocation) {
+      parts.push(formatLocation(photo.imageLocation));
+    }
+
+    if (photo.deviceIPAddress) {
+      parts.push(photo.deviceIPAddress);
+    }
+
+    return parts.length > 0 ? parts.join(" • ") : "Saved successfully";
+  };
+
   const content = (
     <>
       {photo.imageData && (
@@ -22,15 +58,7 @@ const PlantPhotoListItem = ({ photo }) => {
       )}
       <ListItemText
         primary={photo.species || photo.name}
-        secondary={
-          photo.status === "success"
-            ? photo.timestamp
-              ? photo.timestamp.toLocaleTimeString()
-              : "Saved successfully"
-            : photo.status === "warning"
-              ? `${!photo.hasLocation ? "No location data" : "Not saved"}`
-              : photo.error || "Processing failed"
-        }
+        secondary={getSecondaryText()}
       />
     </>
   );
