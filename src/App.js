@@ -10,7 +10,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import React, { useState, createContext, useContext } from "react";
-import AddIcon from "@mui/icons-material/Add";
+import HomeIcon from "@mui/icons-material/Home";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import PictureCaptureView from "./view/moles/PictureCaptureView";
 import PlantPhotoGallery from "./view/pages/PlantPhotoGallery";
@@ -81,13 +81,13 @@ const AppLayout = () => {
           </Routes>
         </Container>
         <BottomNavigator>
-          <Tooltip title="Add Plant">
+          <Tooltip title="Home">
             <IconButton
               color={getCurrentView() === 0 ? "primary" : "default"}
               onClick={() => handleViewChange(0)}
               size="large"
             >
-              <AddIcon />
+              <HomeIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Gallery View">
