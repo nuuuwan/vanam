@@ -61,7 +61,7 @@ class PlantNetClient {
 
       // Generate cache key from image and options
       const cacheKey = await this.hashString(
-        imageBase64 + organs + (options.project || "all")
+        imageBase64 + organs + (options.project || "all"),
       );
 
       // Check cache first
@@ -100,7 +100,7 @@ class PlantNetClient {
         {
           method: "POST",
           body: formData,
-        }
+        },
       );
 
       if (!apiResponse.ok) {
@@ -109,12 +109,12 @@ class PlantNetClient {
         // Handle 404 specifically - no species found
         if (apiResponse.status === 404) {
           throw new Error(
-            "No plant species could be identified in this image. Please try a clearer photo showing distinctive features like flowers, leaves, or bark."
+            "No plant species could be identified in this image. Please try a clearer photo showing distinctive features like flowers, leaves, or bark.",
           );
         }
 
         throw new Error(
-          `PlantNet API error (${apiResponse.status}): ${errorText}`
+          `PlantNet API error (${apiResponse.status}): ${errorText}`,
         );
       }
 

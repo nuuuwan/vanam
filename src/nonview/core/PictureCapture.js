@@ -19,7 +19,7 @@ class PictureCapture {
     imageDataUrl,
     maxWidth = 256,
     maxHeight = 256,
-    quality = 0.8
+    quality = 0.8,
   ) {
     return new Promise((resolve) => {
       const img = new Image();
@@ -128,7 +128,7 @@ class PictureCapture {
                 enableHighAccuracy: false,
                 timeout: 30000,
                 maximumAge: 300000, // 5 minutes
-              }
+              },
             );
           } else {
             resolve({ success: true, gpsData: null });
@@ -138,7 +138,7 @@ class PictureCapture {
           enableHighAccuracy: true,
           timeout: 20000,
           maximumAge: 60000, // 1 minute
-        }
+        },
       );
     });
   }
@@ -234,7 +234,7 @@ class PictureCapture {
         reader.onload = async (e) => {
           // Compress the image before resolving
           const compressedImageData = await this.compressImage(
-            e.target?.result
+            e.target?.result,
           );
           resolve({
             success: true,

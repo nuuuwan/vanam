@@ -72,7 +72,7 @@ const PictureCaptureView = () => {
   const capturePhoto = async () => {
     const result = await pictureCapture.current.capturePhoto(
       videoRef.current,
-      canvasRef.current
+      canvasRef.current,
     );
 
     if (result.success) {
@@ -146,7 +146,7 @@ const PictureCaptureView = () => {
   const identifyPlantFromImage = async (
     imageData,
     fileName = "photo",
-    index = 0
+    index = 0,
   ) => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);

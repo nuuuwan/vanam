@@ -28,8 +28,8 @@ const PlantPhotoListItem = ({ photo }) => {
               ? photo.timestamp.toLocaleTimeString()
               : "Saved successfully"
             : photo.status === "warning"
-            ? `${!photo.hasLocation ? "No location data" : "Not saved"}`
-            : photo.error || "Processing failed"
+              ? `${!photo.hasLocation ? "No location data" : "Not saved"}`
+              : photo.error || "Processing failed"
         }
       />
     </>
