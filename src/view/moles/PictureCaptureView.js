@@ -7,7 +7,6 @@ import WelcomeSection from "../atoms/WelcomeSection";
 import CameraView from "../atoms/CameraView";
 import LoadingView from "../atoms/LoadingView";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
-import LocationDebugInfo from "../atoms/LocationDebugInfo";
 
 const PictureCaptureView = () => {
   const { setAppBarTitle } = useAppBarTitle();
@@ -91,7 +90,7 @@ const PictureCaptureView = () => {
   const capturePhoto = async () => {
     const result = await pictureCapture.current.capturePhoto(
       videoRef.current,
-      canvasRef.current,
+      canvasRef.current
     );
 
     if (result.success) {
@@ -179,7 +178,7 @@ const PictureCaptureView = () => {
   const identifyPlantFromImage = async (
     imageData,
     fileName = "photo",
-    index = 0,
+    index = 0
   ) => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
@@ -241,8 +240,6 @@ const PictureCaptureView = () => {
                 onUploadPhoto={uploadPhoto}
                 isLoading={isLoading}
               />
-
-              <LocationDebugInfo />
 
               {locationStatus === "retrieved" && retrievedGpsData && (
                 <Alert severity="success" sx={{ mb: 1 }}>
