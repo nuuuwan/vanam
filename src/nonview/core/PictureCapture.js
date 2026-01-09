@@ -71,7 +71,7 @@ class PictureCapture {
                 enableHighAccuracy: false,
                 timeout: 30000,
                 maximumAge: 300000, // 5 minutes
-              }
+              },
             );
           } else {
             resolve({ success: true, gpsData: null });
@@ -81,7 +81,7 @@ class PictureCapture {
           enableHighAccuracy: true,
           timeout: 20000,
           maximumAge: 60000, // 1 minute
-        }
+        },
       );
     });
   }

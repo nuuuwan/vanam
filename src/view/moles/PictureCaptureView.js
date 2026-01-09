@@ -73,7 +73,7 @@ const PictureCaptureView = () => {
   const capturePhoto = async () => {
     const result = pictureCapture.current.capturePhoto(
       videoRef.current,
-      canvasRef.current
+      canvasRef.current,
     );
 
     if (result.success) {
