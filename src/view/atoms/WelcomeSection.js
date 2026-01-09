@@ -30,35 +30,16 @@ const WelcomeSection = ({ onStartCamera, onUploadPhoto, isLoading }) => {
   };
   return (
     <Stack direction="column" gap={1} sx={{ mb: 2 }}>
-      <Typography variant="body1" sx={{ mb: 2 }}>
-        Vanam is a web app for cataloguing trees. Point your phone at a plant,
-        take a photo, and vanam records it as a structured observation with:
-      </Typography>
-      <List sx={{ bgcolor: "background.paper" }}>
-        <ListItem>
-          <ListItemIcon>
-            <LocationOnIcon color="secondary" />
-          </ListItemIcon>
-          <ListItemText secondary="GPS latitude and longitude" />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <PhotoCameraIcon color="secondary" />
-          </ListItemIcon>
-          <ListItemText secondary="Species identification via PlantNet" />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <ImageIcon color="secondary" />
-          </ListItemIcon>
-          <ListItemText secondary="Image and contextual metadata" />
-        </ListItem>
-      </List>
       <Typography variant="body1">
+        Vanam is a web app for cataloguing trees. Point your phone at a plant,
+        take a photo, and vanam records it as a structured observation.
+      </Typography>
+
+      <Typography variant="body2">
         The goal is simple: make it easy to build accurate, geo-referenced tree
         inventories, one plant at a time.
       </Typography>
-      <Typography variant="body2" color="secondary">
+      <Typography variant="caption" color="secondary">
         The name <em>vanam</em> comes from Sanskrit, meaning forest, and is also
         the root of the Sinhala word <em>vanaya</em> (වනය) and the Tamil word{" "}
         <em>vanam</em> (வனம்), both meaning forest.
