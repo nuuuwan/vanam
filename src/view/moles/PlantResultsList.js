@@ -1,10 +1,27 @@
 import React from "react";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import PlantResultItem from "./PlantResultItem";
 
 const PlantResultsList = ({ results, isLoading }) => {
-  if (!results || isLoading) {
-    return <CircularProgress size={40} />;
+  if (isLoading) {
+    return (
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+        <CircularProgress size={40} />
+        <Typography variant="body1" color="text.secondary">
+          Identifying plant...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (!results || results.length === 0) {
+    return (
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="body1" color="text.secondary">
+          No plant identified. Please try again with a clearer image.
+        </Typography>
+      </Box>
+    );
   }
 
   return (

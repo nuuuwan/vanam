@@ -73,7 +73,7 @@ const PictureCaptureView = () => {
   const capturePhoto = async () => {
     const result = pictureCapture.current.capturePhoto(
       videoRef.current,
-      canvasRef.current,
+      canvasRef.current
     );
 
     if (result.success) {
@@ -116,9 +116,12 @@ const PictureCaptureView = () => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
       setPlantPhoto(photo);
+      setIsLoading(false);
       await storeResultsToBlob(photo);
-      // Navigate to the detail page after photo is created and stored
-      navigate(`/${photo.imageHash}`);
+      // Only navigate if we have plant predictions
+      if (photo.plantNetPredictions && photo.plantNetPredictions.length > 0) {
+        navigate(`/${photo.imageHash}`);
+      }
     } catch (err) {
       setError(err.message || "Failed to identify plant");
       console.error(err);
@@ -146,7 +149,7 @@ const PictureCaptureView = () => {
       {!capturedImage ? (
         <Box>
           {isLoading && !isCameraActive ? (
-            <LoadingView message="Identifying plant..." />
+            <LoadingView message="Opening camera..." />
           ) : isCameraActive ? (
             <CameraView
               videoRef={videoRef}
