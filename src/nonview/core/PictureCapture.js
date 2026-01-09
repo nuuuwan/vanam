@@ -141,7 +141,7 @@ class PictureCapture {
             "- Position unavailable:",
             error.code === 2,
             "- Timeout:",
-            error.code === 3,
+            error.code === 3
           );
           resolve({ success: true, gpsData: null });
         },

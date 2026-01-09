@@ -53,7 +53,7 @@ const PictureCaptureView = () => {
     try {
       // Request location permission immediately (iOS requires user gesture)
       await pictureCapture.current.getCurrentLocation();
-      
+
       const result = await pictureCapture.current.startCamera();
       if (result.success) {
         setStream(result.stream);
@@ -75,7 +75,7 @@ const PictureCaptureView = () => {
   const capturePhoto = async () => {
     const result = await pictureCapture.current.capturePhoto(
       videoRef.current,
-      canvasRef.current,
+      canvasRef.current
     );
 
     if (result.success) {
@@ -152,7 +152,7 @@ const PictureCaptureView = () => {
   const identifyPlantFromImage = async (
     imageData,
     fileName = "photo",
-    index = 0,
+    index = 0
   ) => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
