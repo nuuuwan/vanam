@@ -73,7 +73,7 @@ const PictureCaptureView = () => {
   const capturePhoto = async () => {
     const result = pictureCapture.current.capturePhoto(
       videoRef.current,
-      canvasRef.current,
+      canvasRef.current
     );
 
     if (result.success) {
@@ -91,28 +91,44 @@ const PictureCaptureView = () => {
     setBlobUrl(null);
   };
 
-  const uploadPhoto = async (file) => {
-    setIsLoading(true);
-    setError(null);
-    setPlantPhoto(null);
-    try {
-      const result = await pictureCapture.current.loadFromFile(file);
-      if (result.success) {
-        setCapturedImage(result.imageData);
-        await identifyPlantFromImage(result.imageData);
-      } else {
-        setError(result.error);
+  const uploadPhoto = async (files) => {
+    // Handle both single file and array of files
+    const fileArray = Array.isArray(files) ? files : [files];
+
+    // Process files sequentially
+    for (let i = 0; i < fileArray.length; i++) {
+      const file = fileArray[i];
+      setIsLoading(true);
+      setError(null);
+      setPlantPhoto(null);
+
+      try {
+        const result = await pictureCapture.current.loadFromFile(file);
+        if (result.success) {
+          setCapturedImage(result.imageData);
+          await identifyPlantFromImage(
+            result.imageData,
+            i === fileArray.length - 1
+          );
+          // Small delay between processing multiple files
+          if (i < fileArray.length - 1) {
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            // Clear the previous image before loading next one
+            clearImage();
+          }
+        } else {
+          setError(result.error);
+          setIsLoading(false);
+        }
+      } catch (err) {
+        setError(`Failed to load uploaded file: ${file.name}`);
+        console.error(err);
         setIsLoading(false);
       }
-    } catch (err) {
-      setError("Failed to load uploaded file");
-      console.error(err);
-      setIsLoading(false);
     }
   };
 
-  const identifyPlantFromImage = async (imageData) => {
-    setIsLoading(true);
+  const identifyPlantFromImage = async (imageData, shouldNavigate = true) => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
       setPlantPhoto(photo);
@@ -124,7 +140,10 @@ const PictureCaptureView = () => {
         photo.imageLocation
       ) {
         await storeResultsToBlob(photo);
-        navigate(`/${photo.imageHash}`);
+        // Only navigate on the last image or when explicitly requested
+        if (shouldNavigate) {
+          navigate(`/${photo.imageHash}`);
+        }
       }
     } catch (err) {
       setError(err.message || "Failed to identify plant");
@@ -193,9 +212,9 @@ const PictureCaptureView = () => {
               setIsCameraActive(false);
               startCamera();
             }}
-            onUploadPhoto={(file) => {
+            onUploadPhoto={(files) => {
               clearImage();
-              uploadPhoto(file);
+              uploadPhoto(files);
             }}
             isLoading={isLoading}
             currentView={0}

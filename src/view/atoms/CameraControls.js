@@ -19,10 +19,10 @@ const CameraControls = ({
   };
 
   const handleFileChange = (event) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      onUploadPhoto(file);
-      // Reset the input so the same file can be selected again
+    const files = Array.from(event.target.files || []);
+    if (files.length > 0) {
+      onUploadPhoto(files);
+      // Reset the input so the same files can be selected again
       event.target.value = "";
     }
   };
@@ -39,7 +39,7 @@ const CameraControls = ({
           <PhotoCameraIcon />
         </IconButton>
       </Tooltip>
-      <Tooltip title="Upload Photo">
+      <Tooltip title="Upload Photos">
         <IconButton
           sx={{ color: "#008822" }}
           onClick={handleFileClick}
@@ -62,6 +62,7 @@ const CameraControls = ({
         ref={fileInputRef}
         type="file"
         accept="image/*"
+        multiple
         style={{ display: "none" }}
         onChange={handleFileChange}
       />
