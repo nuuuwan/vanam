@@ -116,9 +116,13 @@ class PictureCapture {
       };
 
       console.log("Requesting location from browser...");
+      console.log("User agent:", navigator.userAgent);
+      console.log("HTTPS:", window.location.protocol === "https:");
+      console.log("Geolocation available:", !!navigator.geolocation);
+      
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log("Location received:", position.coords);
+          console.log("✓ Location received:", position.coords);
           const gpsData = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -131,19 +135,30 @@ class PictureCapture {
           resolve({ success: true, gpsData });
         },
         (error) => {
+          let errorMessage = "Location error: ";
+          switch (error.code) {
+            case 1:
+              errorMessage += "Permission denied. Please enable location services for this site in Settings.";
+              console.error("✗ Permission denied. User rejected location request or location services disabled.");
+              break;
+            case 2:
+              errorMessage += "Position unavailable. GPS signal not available.";
+              console.error("✗ Position unavailable. GPS/network location unavailable.");
+              break;
+            case 3:
+              errorMessage += "Request timeout. Location took too long to retrieve.";
+              console.error("✗ Timeout after 60 seconds.");
+              break;
+            default:
+              errorMessage += error.message;
+              console.error("✗ Unknown error:", error.message);
+          }
           console.error(
-            "Error getting location:",
-            error.message,
-            "code:",
-            error.code,
-            "- Permission denied:",
-            error.code === 1,
-            "- Position unavailable:",
-            error.code === 2,
-            "- Timeout:",
-            error.code === 3,
+            "Error details:",
+            "code:", error.code,
+            "message:", error.message
           );
-          resolve({ success: true, gpsData: null });
+          resolve({ success: false, gpsData: null, error: errorMessage });
         },
         options,
       );

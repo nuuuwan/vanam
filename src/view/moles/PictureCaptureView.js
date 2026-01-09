@@ -7,6 +7,7 @@ import WelcomeSection from "../atoms/WelcomeSection";
 import CameraView from "../atoms/CameraView";
 import LoadingView from "../atoms/LoadingView";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
+import LocationDebugInfo from "../atoms/LocationDebugInfo";
 
 const PictureCaptureView = () => {
   const { setAppBarTitle } = useAppBarTitle();
@@ -21,6 +22,7 @@ const PictureCaptureView = () => {
   const [isComplete, setIsComplete] = useState(false);
   const [locationStatus, setLocationStatus] = useState(null);
   const [retrievedGpsData, setRetrievedGpsData] = useState(null);
+  const [locationError, setLocationError] = useState(null);
   const pictureCapture = useRef(new PictureCapture());
 
   // Cleanup on unmount
@@ -54,15 +56,18 @@ const PictureCaptureView = () => {
   const startCamera = async () => {
     setIsLoading(true);
     setLocationStatus("requesting");
+    setLocationError(null);
     try {
       // Request location permission immediately (iOS requires user gesture)
       const locationResult = await pictureCapture.current.getCurrentLocation();
       if (locationResult.success && locationResult.gpsData) {
         setLocationStatus("retrieved");
         setRetrievedGpsData(locationResult.gpsData);
+        setLocationError(null);
       } else {
         setLocationStatus("unavailable");
         setRetrievedGpsData(null);
+        setLocationError(locationResult.error || "Location unavailable");
       }
 
       const result = await pictureCapture.current.startCamera();
@@ -114,15 +119,18 @@ const PictureCaptureView = () => {
     setProcessedPhotos([]);
     setIsComplete(false);
     setLocationStatus("requesting");
+    setLocationError(null);
 
     // Request location permission immediately (iOS requires user gesture)
     const locationResult = await pictureCapture.current.getCurrentLocation();
     if (locationResult.success && locationResult.gpsData) {
       setLocationStatus("retrieved");
       setRetrievedGpsData(locationResult.gpsData);
+      setLocationError(null);
     } else {
       setLocationStatus("unavailable");
       setRetrievedGpsData(null);
+      setLocationError(locationResult.error || "Location unavailable");
     }
 
     // Process files sequentially
@@ -234,6 +242,8 @@ const PictureCaptureView = () => {
                 isLoading={isLoading}
               />
 
+              <LocationDebugInfo />
+
               {locationStatus === "retrieved" && retrievedGpsData && (
                 <Alert severity="success" sx={{ mb: 1 }}>
                   GPS location retrieved: {retrievedGpsData.latitude.toFixed(6)}
@@ -244,8 +254,7 @@ const PictureCaptureView = () => {
               )}
               {locationStatus === "unavailable" && (
                 <Alert severity="warning" sx={{ mb: 1 }}>
-                  GPS location unavailable. Photos will be saved without
-                  location data.
+                  {locationError || "GPS location unavailable. Photos will be saved without location data."}
                 </Alert>
               )}
 
