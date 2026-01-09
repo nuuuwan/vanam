@@ -134,12 +134,10 @@ const PlantPhotoGallery = () => {
       )}
 
       <CameraControls
-        onStartCamera={() => navigate("/")}
-        onUploadPhoto={() => navigate("/")}
         isLoading={false}
         currentView={1}
         onViewChange={(view) => {
-          if (view === 0) navigate("/");
+          if (view === 0) navigate("/add");
         }}
       />
     </Box>

@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Container } from "@mui/material";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import PictureCaptureView from "./view/moles/PictureCaptureView";
 import PlantPhotoGallery from "./view/pages/PlantPhotoGallery";
 import PlantPhotoDetail from "./view/pages/PlantPhotoDetail";
@@ -9,10 +9,10 @@ import PlantPhotoDetail from "./view/pages/PlantPhotoDetail";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#000000",
+      main: "#008800",
     },
     secondary: {
-      main: "#888888",
+      main: "#aaaaaa",
     },
   },
   typography: {
@@ -34,7 +34,8 @@ function App() {
       <BrowserRouter basename="/vanam">
         <Container maxWidth="lg" sx={{ pb: 8 }}>
           <Routes>
-            <Route path="/" element={<PictureCaptureView />} />
+            <Route path="/" element={<Navigate to="/add" replace />} />
+            <Route path="/add" element={<PictureCaptureView />} />
             <Route path="/gallery" element={<PlantPhotoGallery />} />
             <Route path="/:imageHash" element={<PlantPhotoDetail />} />
           </Routes>

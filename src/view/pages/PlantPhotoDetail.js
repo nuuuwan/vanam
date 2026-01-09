@@ -84,12 +84,10 @@ const PlantPhotoDetail = () => {
         error={null}
       />
       <CameraControls
-        onStartCamera={() => navigate("/")}
-        onUploadPhoto={() => navigate("/")}
         isLoading={false}
         currentView={-1}
         onViewChange={(view) => {
-          if (view === 0) navigate("/");
+          if (view === 0) navigate("/add");
           if (view === 1) navigate("/gallery");
         }}
       />

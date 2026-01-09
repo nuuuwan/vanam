@@ -182,10 +182,12 @@ const PictureCaptureView = () => {
             />
           ) : (
             <Box sx={{ py: 4 }}>
-              <WelcomeSection />
-              <CameraControls
+              <WelcomeSection
                 onStartCamera={startCamera}
                 onUploadPhoto={uploadPhoto}
+                isLoading={isLoading}
+              />
+              <CameraControls
                 isLoading={isLoading}
                 currentView={0}
                 onViewChange={(view) => {
@@ -207,18 +209,10 @@ const PictureCaptureView = () => {
           />
 
           <CameraControls
-            onStartCamera={() => {
-              clearImage();
-              setIsCameraActive(false);
-              startCamera();
-            }}
-            onUploadPhoto={(files) => {
-              clearImage();
-              uploadPhoto(files);
-            }}
             isLoading={isLoading}
-            currentView={0}
+            currentView={-1}
             onViewChange={(view) => {
+              if (view === 0) navigate("/add");
               if (view === 1) navigate("/gallery");
             }}
           />

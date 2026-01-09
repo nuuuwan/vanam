@@ -6,12 +6,28 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Button,
+  Box,
 } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import ImageIcon from "@mui/icons-material/Image";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 
-const WelcomeSection = () => {
+const WelcomeSection = ({ onStartCamera, onUploadPhoto, isLoading }) => {
+  const fileInputRef = React.useRef(null);
+
+  const handleFileClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files || []);
+    if (files.length > 0) {
+      onUploadPhoto(files);
+      event.target.value = "";
+    }
+  };
   return (
     <Stack direction="column" gap={2} sx={{ mb: 4 }}>
       <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
@@ -48,8 +64,39 @@ const WelcomeSection = () => {
       <Typography variant="body2" color="secondary">
         The name <em>vanam</em> comes from Sanskrit, meaning forest, and is also
         the root of the Sinhala word <em>vanaya</em> (වනය) and the Tamil word{" "}
-        <em>vanam</em> (வනம்), both meaning forest.
+        <em>vanam</em> (වනම්), both meaning forest.
       </Typography>
+
+      <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<PhotoCameraIcon />}
+          onClick={onStartCamera}
+          disabled={isLoading}
+          fullWidth
+        >
+          Take Plant Photo
+        </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          startIcon={<UploadFileIcon />}
+          onClick={handleFileClick}
+          disabled={isLoading}
+          fullWidth
+        >
+          Upload Photos
+        </Button>
+      </Box>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
     </Stack>
   );
 };
