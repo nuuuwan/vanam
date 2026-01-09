@@ -85,7 +85,7 @@ const LocationDebugInfo = () => {
         enableHighAccuracy: false,
         timeout: 60000,
         maximumAge: 600000,
-      }
+      },
     );
   };
 

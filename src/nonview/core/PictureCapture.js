@@ -21,7 +21,7 @@ class PictureCapture {
     imageDataUrl,
     maxWidth = 256,
     maxHeight = 256,
-    quality = 0.8
+    quality = 0.8,
   ) {
     return new Promise((resolve) => {
       const img = new Image();
@@ -141,13 +141,13 @@ class PictureCapture {
               errorMessage +=
                 "Permission denied. Please enable location services for this site in Settings.";
               console.error(
-                "✗ Permission denied. User rejected location request or location services disabled."
+                "✗ Permission denied. User rejected location request or location services disabled.",
               );
               break;
             case 2:
               errorMessage += "Position unavailable. GPS signal not available.";
               console.error(
-                "✗ Position unavailable. GPS/network location unavailable."
+                "✗ Position unavailable. GPS/network location unavailable.",
               );
               break;
             case 3:
@@ -164,11 +164,11 @@ class PictureCapture {
             "code:",
             error.code,
             "message:",
-            error.message
+            error.message,
           );
           resolve({ success: false, gpsData: null, error: errorMessage });
         },
-        options
+        options,
       );
     });
   }
@@ -264,7 +264,7 @@ class PictureCapture {
         reader.onload = async (e) => {
           // Compress the image before resolving
           const compressedImageData = await this.compressImage(
-            e.target?.result
+            e.target?.result,
           );
           resolve({
             success: true,
