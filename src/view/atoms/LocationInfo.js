@@ -71,8 +71,7 @@ const LocationInfo = ({ gpsData, imageTimestamp, deviceIPAddress, userId }) => {
             )}
             {userId && (
               <Typography variant="caption" color="text.secondary">
-                User ID: {userId.substring(0, 8)}...
-                {userId.substring(userId.length - 4)}
+                User ID: {userId.substring(0, 8)}
               </Typography>
             )}
           </Stack>
