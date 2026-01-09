@@ -3,16 +3,14 @@ import { useNavigate } from "react-router-dom";
 import {
   Box,
   Typography,
-  Grid,
-  Card,
-  CardMedia,
-  CardContent,
+  List,
   CircularProgress,
   Alert,
 } from "@mui/material";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
 import MenuButton from "../atoms/MenuButton";
 import CameraControls from "../atoms/CameraControls";
+import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 
 const PlantPhotoGallery = () => {
   const navigate = useNavigate();
@@ -36,7 +34,15 @@ const PlantPhotoGallery = () => {
           const dateB = new Date(b.utImageTaken).getTime();
           return dateB - dateA;
         });
-        setPlantPhotos(sortedPhotos);
+        // Convert to format expected by PlantPhotoListItem
+        const formattedPhotos = sortedPhotos.map(photo => ({
+          species: photo.plantNetPredictions?.[0]?.species || "Unknown",
+          status: "success",
+          hash: photo.imageHash,
+          hasLocation: photo.imageLocation != null,
+          timestamp: new Date(photo.utImageTaken),
+        }));
+        setPlantPhotos(formattedPhotos);
       } else {
         setError(result.error || "Failed to load plant photos");
       }
@@ -46,12 +52,6 @@ const PlantPhotoGallery = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const formatDate = (timestamp) => {
-    if (!timestamp) return "Unknown date";
-    const date = new Date(timestamp);
-    return date.toLocaleDateString();
   };
 
   if (isLoading) {
@@ -89,48 +89,11 @@ const PlantPhotoGallery = () => {
           No plant photos found. Start by identifying a plant!
         </Typography>
       ) : (
-        <Grid container spacing={2}>
-          {plantPhotos.map((photo) => (
-            <Grid item xs={12} sm={6} md={4} key={photo.imageHash}>
-              <Card
-                sx={{ cursor: "pointer" }}
-                onClick={() => navigate(`/${photo.imageHash}`)}
-              >
-                {photo.imageData && (
-                  <CardMedia
-                    component="img"
-                    height="200"
-                    image={photo.imageData}
-                    alt={photo.plantNetPredictions?.[0]?.species || "Plant"}
-                    sx={{ objectFit: "cover" }}
-                  />
-                )}
-                <CardContent>
-                  <Typography
-                    variant="subtitle1"
-                    fontStyle="italic"
-                    sx={{ mb: 1 }}
-                  >
-                    {photo.plantNetPredictions?.[0]?.species || "Unknown"}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {formatDate(photo.utImageTaken)}
-                  </Typography>
-                  {photo.imageLocation && (
-                    <Typography
-                      variant="caption"
-                      color="text.secondary"
-                      display="block"
-                    >
-                      {photo.imageLocation.latitude.toFixed(4)}°,{" "}
-                      {photo.imageLocation.longitude.toFixed(4)}°
-                    </Typography>
-                  )}
-                </CardContent>
-              </Card>
-            </Grid>
+        <List>
+          {plantPhotos.map((photo, index) => (
+            <PlantPhotoListItem key={photo.hash || index} photo={photo} />
           ))}
-        </Grid>
+        </List>
       )}
 
       <CameraControls

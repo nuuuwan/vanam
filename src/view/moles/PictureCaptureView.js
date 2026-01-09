@@ -1,19 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Button,
-  Alert,
-  LinearProgress,
-} from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ErrorIcon from "@mui/icons-material/Error";
-import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
+import { Box, Typography, List, Alert, LinearProgress } from "@mui/material";
 import PictureCapture from "../../nonview/core/PictureCapture";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
 import MenuButton from "../atoms/MenuButton";
@@ -21,6 +8,7 @@ import WelcomeSection from "../atoms/WelcomeSection";
 import CameraView from "../atoms/CameraView";
 import LoadingView from "../atoms/LoadingView";
 import CameraControls from "../atoms/CameraControls";
+import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 
 const PictureCaptureView = () => {
   const navigate = useNavigate();
@@ -30,7 +18,6 @@ const PictureCaptureView = () => {
   const [stream, setStream] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [plantPhoto, setPlantPhoto] = useState(null);
-  const [currentFileIndex, setCurrentFileIndex] = useState(0);
   const [totalFiles, setTotalFiles] = useState(0);
   const [processedPhotos, setProcessedPhotos] = useState([]);
   const [isComplete, setIsComplete] = useState(false);
@@ -92,7 +79,6 @@ const PictureCaptureView = () => {
       setStream(null);
       setIsCameraActive(false);
       setTotalFiles(1);
-      setCurrentFileIndex(1);
       setProcessedPhotos([]);
       setIsComplete(false);
       await identifyPlantFromImage(result.imageData, "Camera photo", 0);
@@ -114,7 +100,6 @@ const PictureCaptureView = () => {
     // Process files sequentially
     for (let i = 0; i < fileArray.length; i++) {
       const file = fileArray[i];
-      setCurrentFileIndex(i + 1);
       setPlantPhoto(null);
 
       try {
@@ -251,47 +236,7 @@ const PictureCaptureView = () => {
                   )}
                   <List>
                     {processedPhotos.map((photo, index) => (
-                      <ListItem
-                        key={index}
-                        button={photo.status === "success"}
-                        onClick={() => {
-                          if (photo.status === "success" && photo.hash) {
-                            navigate(`/${photo.hash}`);
-                          }
-                        }}
-                        sx={{
-                          cursor:
-                            photo.status === "success" ? "pointer" : "default",
-                        }}
-                      >
-                        <ListItemIcon>
-                          {photo.status === "success" ? (
-                            <CheckCircleIcon color="success" />
-                          ) : photo.status === "error" ? (
-                            <ErrorIcon color="error" />
-                          ) : photo.status === "warning" ? (
-                            <ErrorIcon color="warning" />
-                          ) : (
-                            <HourglassEmptyIcon />
-                          )}
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={photo.species || photo.name}
-                          secondary={
-                            photo.status === "success"
-                              ? photo.timestamp
-                                ? photo.timestamp.toLocaleTimeString()
-                                : "Saved successfully"
-                              : photo.status === "warning"
-                              ? `${
-                                  !photo.hasLocation
-                                    ? "No location data"
-                                    : "Not saved"
-                                }`
-                              : photo.error || "Processing failed"
-                          }
-                        />
-                      </ListItem>
+                      <PlantPhotoListItem key={index} photo={photo} />
                     ))}
                   </List>
                 </Box>
