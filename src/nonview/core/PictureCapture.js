@@ -7,6 +7,58 @@ class PictureCapture {
     this.stream = null;
   }
 
+  /**
+   * Compress and resize an image to target file size <100KB
+   * @param {string} imageDataUrl - Base64 data URL of the image
+   * @param {number} maxWidth - Maximum width (default: 1024)
+   * @param {number} maxHeight - Maximum height (default: 1024)
+   * @param {number} quality - JPEG quality (0-1, default: 0.8)
+   * @returns {Promise<string>} Compressed image data URL
+   */
+  async compressImage(imageDataUrl, maxWidth = 1024, maxHeight = 1024, quality = 0.8) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        // Calculate new dimensions while maintaining aspect ratio
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height = (height * maxWidth) / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = (width * maxHeight) / height;
+            height = maxHeight;
+          }
+        }
+
+        // Create canvas and draw resized image
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert to JPEG with compression
+        let compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+        
+        // If still too large, reduce quality further
+        const sizeInKB = (compressedDataUrl.length * 3) / 4 / 1024;
+        if (sizeInKB > 100 && quality > 0.5) {
+          // Recursively compress with lower quality
+          const newQuality = quality - 0.1;
+          compressedDataUrl = canvas.toDataURL('image/jpeg', newQuality);
+        }
+
+        resolve(compressedDataUrl);
+      };
+      img.src = imageDataUrl;
+    });
+  }
+
   async startCamera() {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -86,7 +138,7 @@ class PictureCapture {
     });
   }
 
-  capturePhoto(videoElement, canvasElement) {
+  async capturePhoto(videoElement, canvasElement) {
     if (!videoElement || !canvasElement) {
       return { success: false, error: "Missing video or canvas element" };
     }
@@ -103,10 +155,13 @@ class PictureCapture {
     canvasElement.height = height;
     context.drawImage(videoElement, 0, 0, width, height);
 
-    const imageData = canvasElement.toDataURL("image/png");
+    const rawImageData = canvasElement.toDataURL("image/jpeg", 0.9);
     this.stopCamera();
 
-    return { success: true, imageData };
+    // Compress the image
+    const compressedImageData = await this.compressImage(rawImageData);
+
+    return { success: true, imageData: compressedImageData };
   }
 
   async extractGPSDataFromFile(file) {
@@ -171,10 +226,12 @@ class PictureCapture {
 
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
+          // Compress the image before resolving
+          const compressedImageData = await this.compressImage(e.target?.result);
           resolve({
             success: true,
-            imageData: e.target?.result,
+            imageData: compressedImageData,
             gpsData: gpsData || null,
             timestamp: gpsResult.timestamp || null,
           });
