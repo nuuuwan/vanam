@@ -90,7 +90,7 @@ const PictureCaptureView = () => {
   const capturePhoto = async () => {
     const result = await pictureCapture.current.capturePhoto(
       videoRef.current,
-      canvasRef.current,
+      canvasRef.current
     );
 
     if (result.success) {
@@ -178,7 +178,7 @@ const PictureCaptureView = () => {
   const identifyPlantFromImage = async (
     imageData,
     fileName = "photo",
-    index = 0,
+    index = 0
   ) => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
@@ -198,34 +198,33 @@ const PictureCaptureView = () => {
         }
       }
 
-      // Add to processed photos list
-      const photoInfo = {
-        name: fileName,
-        status: saveError
-          ? "error"
-          : hasPlant && hasLocation
-            ? "success"
-            : "warning",
-        species: hasPlant
-          ? photo.plantNetPredictions[0].species
-          : "No plant identified",
-        hasLocation: hasLocation,
-        hash: photo.imageHash,
-        timestamp: new Date(),
-        error: saveError,
-      };
+      // Add metadata properties to PlantPhoto instance for display
+      photo.name = fileName;
+      photo.status = saveError
+        ? "error"
+        : hasPlant && hasLocation
+        ? "success"
+        : "warning";
+      photo.species = hasPlant
+        ? photo.plantNetPredictions[0].species
+        : "No plant identified";
+      photo.hasLocation = hasLocation;
+      photo.hash = photo.imageHash;
+      photo.timestamp = new Date();
+      photo.error = saveError;
 
-      setProcessedPhotos((prev) => [...prev, photoInfo]);
+      setProcessedPhotos((prev) => [...prev, photo]);
     } catch (err) {
       console.error(err);
-      setProcessedPhotos((prev) => [
-        ...prev,
-        {
-          name: fileName,
-          status: "error",
-          error: err.message,
-        },
-      ]);
+      // Create a minimal PlantPhoto-like object for errors
+      const errorPhoto = {
+        name: fileName,
+        status: "error",
+        error: err.message,
+        species: "Error",
+        timestamp: new Date(),
+      };
+      setProcessedPhotos((prev) => [...prev, errorPhoto]);
     }
   };
 
