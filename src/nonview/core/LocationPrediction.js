@@ -15,21 +15,14 @@ export default class LocationPrediction {
         return;
       }
 
-      // Use more permissive settings for iOS compatibility
-      const options = {
-        enableHighAccuracy: false, // iOS can be slow with high accuracy
-        timeout: 60000, // 60 seconds - iOS can be slow
-        maximumAge: 600000, // 10 minutes - allow cached location
-      };
-
       navigator.geolocation.getCurrentPosition(
         (position) => {
           resolve(
             new LocationPrediction(
               position.coords.latitude,
               position.coords.longitude,
-              position.coords.accuracy,
-            ),
+              position.coords.accuracy
+            )
           );
         },
         (error) => {
@@ -42,11 +35,10 @@ export default class LocationPrediction {
             "- Position unavailable:",
             error.code === 2,
             "- Timeout:",
-            error.code === 3,
+            error.code === 3
           );
           resolve(null);
-        },
-        options,
+        }
       );
     });
   }
@@ -69,7 +61,7 @@ export default class LocationPrediction {
       return new LocationPrediction(
         exifData.latitude,
         exifData.longitude,
-        exifData.GPSAltitude || null,
+        exifData.GPSAltitude || null
       );
     }
 
