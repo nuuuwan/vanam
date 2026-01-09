@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  Typography,
-  List,
-  CircularProgress,
-  Alert,
-} from "@mui/material";
+import { Box, Typography, List, CircularProgress, Alert } from "@mui/material";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
 import MenuButton from "../atoms/MenuButton";
 import CameraControls from "../atoms/CameraControls";
@@ -35,7 +29,7 @@ const PlantPhotoGallery = () => {
           return dateB - dateA;
         });
         // Convert to format expected by PlantPhotoListItem
-        const formattedPhotos = sortedPhotos.map(photo => ({
+        const formattedPhotos = sortedPhotos.map((photo) => ({
           species: photo.plantNetPredictions?.[0]?.species || "Unknown",
           status: "success",
           hash: photo.imageHash,
