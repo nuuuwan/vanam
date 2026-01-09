@@ -190,8 +190,6 @@ export default class PlantPhoto {
   }
 
   static async listAll(forceRefresh = false) {
-    console.debug("listAll");
-
     // Check if we have valid cached data
     const now = Date.now();
     if (
