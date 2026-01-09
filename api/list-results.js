@@ -22,23 +22,57 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { blobs } = await list({
-      prefix: "plant-results/",
+    // List metadata files
+    const { blobs: metadataBlobs } = await list({
+      prefix: "plant-metadata/",
+    });
+
+    // List image files
+    const { blobs: imageBlobs } = await list({
+      prefix: "plant-images/",
     });
 
     // Filter only JSON files
-    const jsonBlobs = blobs.filter((blob) => blob.pathname.endsWith(".json"));
+    const jsonMetadataBlobs = metadataBlobs.filter((blob) =>
+      blob.pathname.endsWith(".json")
+    );
+    const jsonImageBlobs = imageBlobs.filter((blob) =>
+      blob.pathname.endsWith(".json")
+    );
 
+    // Create a map of image data by hash
+    const imageDataMap = new Map();
+    await Promise.all(
+      jsonImageBlobs.map(async (blob) => {
+        try {
+          const response = await fetch(blob.url);
+          if (!response.ok) {
+            console.error(`Failed to fetch ${blob.url}: ${response.status}`);
+            return;
+          }
+          const data = await response.json();
+          imageDataMap.set(data.imageHash, data.imageData);
+        } catch (error) {
+          console.error(`Error fetching blob ${blob.url}:`, error);
+        }
+      })
+    );
+
+    // Fetch metadata and combine with image data
     const photos = await Promise.all(
-      jsonBlobs.map(async (blob) => {
+      jsonMetadataBlobs.map(async (blob) => {
         try {
           const response = await fetch(blob.url);
           if (!response.ok) {
             console.error(`Failed to fetch ${blob.url}: ${response.status}`);
             return null;
           }
-          const data = await response.json();
-          return data;
+          const metadata = await response.json();
+          // Combine metadata with image data
+          return {
+            ...metadata,
+            imageData: imageDataMap.get(metadata.imageHash) || null,
+          };
         } catch (error) {
           console.error(`Error fetching blob ${blob.url}:`, error);
           return null;
