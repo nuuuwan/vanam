@@ -18,18 +18,48 @@ export default async function handler(req, res) {
   try {
     const data = req.body;
 
-    const filename = `plant-results/${data.imageHash}.json`;
+    // Separate image data from metadata
+    const imageData = {
+      imageHash: data.imageHash,
+      imageData: data.imageData,
+    };
 
-    // Store the data to Vercel Blob
-    const blob = await put(filename, JSON.stringify(data, null, 2), {
-      access: "public",
-      contentType: "application/json",
-    });
+    const metadata = {
+      imageHash: data.imageHash,
+      imageLocation: data.imageLocation,
+      utImageTaken: data.utImageTaken,
+      plantNetPredictions: data.plantNetPredictions,
+    };
+
+    const imageFilename = `plant-images/${data.imageHash}.json`;
+    const metadataFilename = `plant-metadata/${data.imageHash}.json`;
+
+    // Store the image data to Vercel Blob
+    const imageBlob = await put(
+      imageFilename,
+      JSON.stringify(imageData, null, 2),
+      {
+        access: "public",
+        contentType: "application/json",
+      }
+    );
+
+    // Store the metadata to Vercel Blob
+    const metadataBlob = await put(
+      metadataFilename,
+      JSON.stringify(metadata, null, 2),
+      {
+        access: "public",
+        contentType: "application/json",
+      }
+    );
 
     return res.status(200).json({
       success: true,
-      url: blob.url,
-      filename: filename,
+      url: metadataBlob.url,
+      imageUrl: imageBlob.url,
+      metadataUrl: metadataBlob.url,
+      filename: metadataFilename,
     });
   } catch (error) {
     console.error("Error storing to Vercel Blob:", error);
