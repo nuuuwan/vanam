@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, List, CircularProgress, Alert } from "@mui/material";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
-import MenuButton from "../atoms/MenuButton";
+import AppBarComponent from "../atoms/AppBarComponent";
 import CameraControls from "../atoms/CameraControls";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 
@@ -73,31 +73,29 @@ const PlantPhotoGallery = () => {
   }
 
   return (
-    <Box sx={{ p: 2, pb: 10 }}>
-      <MenuButton />
-      <Typography variant="h4" sx={{ mb: 3 }}>
-        Plant Photo Gallery
-      </Typography>
+    <Box>
+      <AppBarComponent title="Plant Photo Gallery" />
+      <Box sx={{ p: 2, pb: 10 }}>
+        {plantPhotos.length === 0 ? (
+          <Typography variant="body1" color="text.secondary">
+            No plant photos found. Start by identifying a plant!
+          </Typography>
+        ) : (
+          <List>
+            {plantPhotos.map((photo, index) => (
+              <PlantPhotoListItem key={photo.hash || index} photo={photo} />
+            ))}
+          </List>
+        )}
 
-      {plantPhotos.length === 0 ? (
-        <Typography variant="body1" color="text.secondary">
-          No plant photos found. Start by identifying a plant!
-        </Typography>
-      ) : (
-        <List>
-          {plantPhotos.map((photo, index) => (
-            <PlantPhotoListItem key={photo.hash || index} photo={photo} />
-          ))}
-        </List>
-      )}
-
-      <CameraControls
-        isLoading={false}
-        currentView={1}
-        onViewChange={(view) => {
-          if (view === 0) navigate("/add");
-        }}
-      />
+        <CameraControls
+          isLoading={false}
+          currentView={1}
+          onViewChange={(view) => {
+            if (view === 0) navigate("/add");
+          }}
+        />
+      </Box>
     </Box>
   );
 };

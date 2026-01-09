@@ -16,7 +16,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import VERSION from "../../nonview/cons/VERSION";
 
-const MenuButton = () => {
+const MenuButton = ({ inAppBar = false }) => {
   const [menuAnchor, setMenuAnchor] = useState(null);
 
   const handleMenuOpen = (event) => {
@@ -52,17 +52,22 @@ const MenuButton = () => {
     <>
       <IconButton
         onClick={handleMenuOpen}
-        sx={{
-          position: "fixed",
-          top: 24,
-          right: 8,
-          zIndex: 1000,
-          bgcolor: "background.paper",
-          boxShadow: 2,
-          "&:hover": {
-            bgcolor: "background.paper",
-          },
-        }}
+        color={inAppBar ? "inherit" : "default"}
+        sx={
+          inAppBar
+            ? {}
+            : {
+                position: "fixed",
+                top: 24,
+                right: 8,
+                zIndex: 1000,
+                bgcolor: "background.paper",
+                boxShadow: 2,
+                "&:hover": {
+                  bgcolor: "background.paper",
+                },
+              }
+        }
       >
         <MenuIcon />
       </IconButton>

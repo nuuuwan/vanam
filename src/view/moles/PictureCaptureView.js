@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Typography, List, Alert, LinearProgress } from "@mui/material";
 import PictureCapture from "../../nonview/core/PictureCapture";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
-import MenuButton from "../atoms/MenuButton";
+import AppBarComponent from "../atoms/AppBarComponent";
 import WelcomeSection from "../atoms/WelcomeSection";
 import CameraView from "../atoms/CameraView";
 import LoadingView from "../atoms/LoadingView";
@@ -23,6 +23,7 @@ const PictureCaptureView = () => {
   const [isComplete, setIsComplete] = useState(false);
   const [locationStatus, setLocationStatus] = useState(null);
   const [retrievedGpsData, setRetrievedGpsData] = useState(null);
+  const [appBarTitle, setAppBarTitle] = useState("Vanam");
   const pictureCapture = useRef(new PictureCapture());
 
   // Cleanup on unmount
@@ -40,13 +41,16 @@ const PictureCaptureView = () => {
     }
   }, [isCameraActive, stream]);
 
-  // Update document title when plant is identified
+  // Update document title and app bar when plant is identified
   useEffect(() => {
     if (plantPhoto?.plantNetPredictions?.length > 0) {
       const topResult = plantPhoto.plantNetPredictions[0];
-      document.title = topResult.species || "Vanam";
+      const title = topResult.species || "Vanam";
+      document.title = title;
+      setAppBarTitle(title);
     } else {
       document.title = "Vanam";
+      setAppBarTitle("Vanam");
     }
   }, [plantPhoto]);
 
@@ -220,91 +224,95 @@ const PictureCaptureView = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto", pb: 2, position: "relative" }}>
-      <MenuButton />
-      {!isCameraActive ? (
-        <Box>
-          {isLoading && totalFiles === 0 ? (
-            <LoadingView message="Opening camera..." />
-          ) : (
-            <Box sx={{ py: 4 }}>
-              <WelcomeSection
-                onStartCamera={startCamera}
-                onUploadPhoto={uploadPhoto}
-                isLoading={isLoading}
-              />
+    <Box>
+      <AppBarComponent title={appBarTitle} />
+      <Box sx={{ maxWidth: 600, mx: "auto", pb: 2, position: "relative" }}>
+        {!isCameraActive ? (
+          <Box>
+            {isLoading && totalFiles === 0 ? (
+              <LoadingView message="Opening camera..." />
+            ) : (
+              <Box sx={{ py: 4 }}>
+                <WelcomeSection
+                  onStartCamera={startCamera}
+                  onUploadPhoto={uploadPhoto}
+                  isLoading={isLoading}
+                />
 
-              {locationStatus === "retrieved" && retrievedGpsData && (
-                <Alert severity="success" sx={{ mb: 2 }}>
-                  GPS location retrieved: {retrievedGpsData.latitude.toFixed(6)}
-                  °, {retrievedGpsData.longitude.toFixed(6)}°
-                  {retrievedGpsData.accuracy &&
-                    ` (±${Math.round(retrievedGpsData.accuracy)}m)`}
-                </Alert>
-              )}
-              {locationStatus === "unavailable" && (
-                <Alert severity="warning" sx={{ mb: 2 }}>
-                  GPS location unavailable. Photos will be saved without
-                  location data.
-                </Alert>
-              )}
+                {locationStatus === "retrieved" && retrievedGpsData && (
+                  <Alert severity="success" sx={{ mb: 2 }}>
+                    GPS location retrieved:{" "}
+                    {retrievedGpsData.latitude.toFixed(6)}
+                    °, {retrievedGpsData.longitude.toFixed(6)}°
+                    {retrievedGpsData.accuracy &&
+                      ` (±${Math.round(retrievedGpsData.accuracy)}m)`}
+                  </Alert>
+                )}
+                {locationStatus === "unavailable" && (
+                  <Alert severity="warning" sx={{ mb: 2 }}>
+                    GPS location unavailable. Photos will be saved without
+                    location data.
+                  </Alert>
+                )}
 
-              {totalFiles > 0 && (
-                <Box sx={{ mt: 3, mb: 3 }}>
-                  {isComplete && (
-                    <Alert severity="success" sx={{ mb: 2 }}>
-                      Processing complete!{" "}
-                      {
-                        processedPhotos.filter((p) => p.status === "success")
-                          .length
-                      }{" "}
-                      photo(s) saved.
-                    </Alert>
-                  )}
-                  {!isComplete && (
-                    <Box sx={{ mb: 2 }}>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ mb: 1 }}
-                      >
-                        Processed {processedPhotos.length} of {totalFiles} photo
-                        {totalFiles !== 1 ? "s" : ""}...
-                      </Typography>
-                      <LinearProgress
-                        variant="determinate"
-                        value={(processedPhotos.length / totalFiles) * 100}
-                      />
-                    </Box>
-                  )}
-                  {processedPhotos.length > 0 && (
-                    <List>
-                      {processedPhotos.map((photo, index) => (
-                        <PlantPhotoListItem key={index} photo={photo} />
-                      ))}
-                    </List>
-                  )}
-                </Box>
-              )}
+                {totalFiles > 0 && (
+                  <Box sx={{ mt: 3, mb: 3 }}>
+                    {isComplete && (
+                      <Alert severity="success" sx={{ mb: 2 }}>
+                        Processing complete!{" "}
+                        {
+                          processedPhotos.filter((p) => p.status === "success")
+                            .length
+                        }{" "}
+                        photo(s) saved.
+                      </Alert>
+                    )}
+                    {!isComplete && (
+                      <Box sx={{ mb: 2 }}>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ mb: 1 }}
+                        >
+                          Processed {processedPhotos.length} of {totalFiles}{" "}
+                          photo
+                          {totalFiles !== 1 ? "s" : ""}...
+                        </Typography>
+                        <LinearProgress
+                          variant="determinate"
+                          value={(processedPhotos.length / totalFiles) * 100}
+                        />
+                      </Box>
+                    )}
+                    {processedPhotos.length > 0 && (
+                      <List>
+                        {processedPhotos.map((photo, index) => (
+                          <PlantPhotoListItem key={index} photo={photo} />
+                        ))}
+                      </List>
+                    )}
+                  </Box>
+                )}
 
-              <CameraControls
-                isLoading={isLoading}
-                currentView={0}
-                onViewChange={(view) => {
-                  if (view === 1) navigate("/gallery");
-                }}
-              />
-            </Box>
-          )}
-        </Box>
-      ) : (
-        <CameraView
-          videoRef={videoRef}
-          canvasRef={canvasRef}
-          onCapture={capturePhoto}
-          onCancel={stopCamera}
-        />
-      )}
+                <CameraControls
+                  isLoading={isLoading}
+                  currentView={0}
+                  onViewChange={(view) => {
+                    if (view === 1) navigate("/gallery");
+                  }}
+                />
+              </Box>
+            )}
+          </Box>
+        ) : (
+          <CameraView
+            videoRef={videoRef}
+            canvasRef={canvasRef}
+            onCapture={capturePhoto}
+            onCancel={stopCamera}
+          />
+        )}
+      </Box>
     </Box>
   );
 };
