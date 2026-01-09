@@ -86,7 +86,7 @@ const PictureCaptureView = () => {
   const capturePhoto = async () => {
     const result = await pictureCapture.current.capturePhoto(
       videoRef.current,
-      canvasRef.current,
+      canvasRef.current
     );
 
     if (result.success) {
@@ -171,7 +171,7 @@ const PictureCaptureView = () => {
   const identifyPlantFromImage = async (
     imageData,
     fileName = "photo",
-    index = 0,
+    index = 0
   ) => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
@@ -227,7 +227,7 @@ const PictureCaptureView = () => {
           {isLoading && totalFiles === 0 ? (
             <LoadingView message="Opening camera..." />
           ) : (
-            <Box sx={{ py: 4 }}>
+            <Box>
               <WelcomeSection
                 onStartCamera={startCamera}
                 onUploadPhoto={uploadPhoto}
@@ -235,7 +235,7 @@ const PictureCaptureView = () => {
               />
 
               {locationStatus === "retrieved" && retrievedGpsData && (
-                <Alert severity="success" sx={{ mb: 2 }}>
+                <Alert severity="success" sx={{ mb: 1 }}>
                   GPS location retrieved: {retrievedGpsData.latitude.toFixed(6)}
                   °, {retrievedGpsData.longitude.toFixed(6)}°
                   {retrievedGpsData.accuracy &&
@@ -243,7 +243,7 @@ const PictureCaptureView = () => {
                 </Alert>
               )}
               {locationStatus === "unavailable" && (
-                <Alert severity="warning" sx={{ mb: 2 }}>
+                <Alert severity="warning" sx={{ mb: 1 }}>
                   GPS location unavailable. Photos will be saved without
                   location data.
                 </Alert>
@@ -252,7 +252,7 @@ const PictureCaptureView = () => {
               {totalFiles > 0 && (
                 <Box sx={{ mt: 3, mb: 3 }}>
                   {isComplete && (
-                    <Alert severity="success" sx={{ mb: 2 }}>
+                    <Alert severity="success" sx={{ mb: 1 }}>
                       Processing complete!{" "}
                       {
                         processedPhotos.filter((p) => p.status === "success")

@@ -29,7 +29,7 @@ const WelcomeSection = ({ onStartCamera, onUploadPhoto, isLoading }) => {
     }
   };
   return (
-    <Stack direction="column" gap={2} sx={{ mb: 4 }}>
+    <Stack direction="column" gap={1} sx={{ mb: 2 }}>
       <Typography variant="body1" sx={{ mb: 2 }}>
         Vanam is a web app for cataloguing trees. Point your phone at a plant,
         take a photo, and vanam records it as a structured observation with:
@@ -72,6 +72,7 @@ const WelcomeSection = ({ onStartCamera, onUploadPhoto, isLoading }) => {
           onClick={onStartCamera}
           disabled={isLoading}
           fullWidth
+          sx={{ height: "5em" }}
         >
           Camera
         </Button>
@@ -82,6 +83,7 @@ const WelcomeSection = ({ onStartCamera, onUploadPhoto, isLoading }) => {
           onClick={handleFileClick}
           disabled={isLoading}
           fullWidth
+          sx={{ height: "5em" }}
         >
           Upload
         </Button>
