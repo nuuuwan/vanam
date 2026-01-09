@@ -15,14 +15,21 @@ export default class LocationPrediction {
         return;
       }
 
+      // Use more permissive settings for iOS compatibility
+      const options = {
+        enableHighAccuracy: false, // iOS can be slow with high accuracy
+        timeout: 60000, // 60 seconds - iOS can be slow
+        maximumAge: 600000, // 10 minutes - allow cached location
+      };
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           resolve(
             new LocationPrediction(
               position.coords.latitude,
               position.coords.longitude,
-              position.coords.accuracy,
-            ),
+              position.coords.accuracy
+            )
           );
         },
         (error) => {
@@ -30,39 +37,16 @@ export default class LocationPrediction {
             "Error getting browser location:",
             error.message,
             error.code,
+            "- Permission denied:",
+            error.code === 1,
+            "- Position unavailable:",
+            error.code === 2,
+            "- Timeout:",
+            error.code === 3
           );
-          // Try again with lower accuracy for Safari/iOS compatibility
-          if (error.code === 3) {
-            // TIMEOUT
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                resolve(
-                  new LocationPrediction(
-                    position.coords.latitude,
-                    position.coords.longitude,
-                    position.coords.accuracy,
-                  ),
-                );
-              },
-              (err) => {
-                console.warn("Retry failed:", err.message);
-                resolve(null);
-              },
-              {
-                enableHighAccuracy: false,
-                timeout: 30000,
-                maximumAge: 300000, // 5 minutes
-              },
-            );
-          } else {
-            resolve(null);
-          }
+          resolve(null);
         },
-        {
-          enableHighAccuracy: true,
-          timeout: 20000,
-          maximumAge: 60000, // 1 minute
-        },
+        options
       );
     });
   }
@@ -85,7 +69,7 @@ export default class LocationPrediction {
       return new LocationPrediction(
         exifData.latitude,
         exifData.longitude,
-        exifData.GPSAltitude || null,
+        exifData.GPSAltitude || null
       );
     }
 

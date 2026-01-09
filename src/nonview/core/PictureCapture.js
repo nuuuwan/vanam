@@ -19,7 +19,7 @@ class PictureCapture {
     imageDataUrl,
     maxWidth = 256,
     maxHeight = 256,
-    quality = 0.8,
+    quality = 0.8
   ) {
     return new Promise((resolve) => {
       const img = new Image();
@@ -95,6 +95,13 @@ class PictureCapture {
         return;
       }
 
+      // Use more permissive settings for iOS compatibility
+      const options = {
+        enableHighAccuracy: false, // iOS can be slow with high accuracy
+        timeout: 60000, // 60 seconds - iOS can be slow
+        maximumAge: 600000, // 10 minutes - allow cached location
+      };
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const gpsData = {
@@ -106,39 +113,20 @@ class PictureCapture {
           resolve({ success: true, gpsData });
         },
         (error) => {
-          console.warn("Error getting location:", error.message, error.code);
-          // Try again with lower accuracy for Safari/iOS compatibility
-          if (error.code === 3) {
-            // TIMEOUT
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                const gpsData = {
-                  latitude: position.coords.latitude,
-                  longitude: position.coords.longitude,
-                  altitude: position.coords.altitude,
-                  accuracy: position.coords.accuracy,
-                };
-                resolve({ success: true, gpsData });
-              },
-              (err) => {
-                console.warn("Retry failed:", err.message);
-                resolve({ success: true, gpsData: null });
-              },
-              {
-                enableHighAccuracy: false,
-                timeout: 30000,
-                maximumAge: 300000, // 5 minutes
-              },
-            );
-          } else {
-            resolve({ success: true, gpsData: null });
-          }
+          console.warn(
+            "Error getting location:",
+            error.message,
+            error.code,
+            "- Permission denied:",
+            error.code === 1,
+            "- Position unavailable:",
+            error.code === 2,
+            "- Timeout:",
+            error.code === 3
+          );
+          resolve({ success: true, gpsData: null });
         },
-        {
-          enableHighAccuracy: true,
-          timeout: 20000,
-          maximumAge: 60000, // 1 minute
-        },
+        options
       );
     });
   }
@@ -234,7 +222,7 @@ class PictureCapture {
         reader.onload = async (e) => {
           // Compress the image before resolving
           const compressedImageData = await this.compressImage(
-            e.target?.result,
+            e.target?.result
           );
           resolve({
             success: true,
