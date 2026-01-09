@@ -21,8 +21,8 @@ export default class LocationPrediction {
             new LocationPrediction(
               position.coords.latitude,
               position.coords.longitude,
-              position.coords.accuracy
-            )
+              position.coords.accuracy,
+            ),
           );
         },
         (error) => {
@@ -35,7 +35,7 @@ export default class LocationPrediction {
             "- Position unavailable:",
             error.code === 2,
             "- Timeout:",
-            error.code === 3
+            error.code === 3,
           );
           resolve(null);
         },
@@ -43,7 +43,7 @@ export default class LocationPrediction {
           enableHighAccuracy: true,
           timeout: 10000,
           maximumAge: 0,
-        }
+        },
       );
     });
   }
@@ -66,7 +66,7 @@ export default class LocationPrediction {
       return new LocationPrediction(
         exifData.latitude,
         exifData.longitude,
-        exifData.GPSAltitude || null
+        exifData.GPSAltitude || null,
       );
     }
 
