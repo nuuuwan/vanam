@@ -30,7 +30,13 @@ const PlantPhotoGallery = () => {
     try {
       const result = await PlantPhoto.listAll();
       if (result.success) {
-        setPlantPhotos(result.photos);
+        // Sort by date-time descending (newest first)
+        const sortedPhotos = result.photos.sort((a, b) => {
+          const dateA = new Date(a.utImageTaken).getTime();
+          const dateB = new Date(b.utImageTaken).getTime();
+          return dateB - dateA;
+        });
+        setPlantPhotos(sortedPhotos);
       } else {
         setError(result.error || "Failed to load plant photos");
       }
