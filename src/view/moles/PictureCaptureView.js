@@ -93,7 +93,7 @@ const PictureCaptureView = () => {
   const capturePhoto = async () => {
     const result = await pictureCapture.current.capturePhoto(
       videoRef.current,
-      canvasRef.current
+      canvasRef.current,
     );
 
     if (result.success) {
@@ -183,7 +183,7 @@ const PictureCaptureView = () => {
   const identifyPlantFromImage = async (
     imageData,
     fileName = "photo",
-    index = 0
+    index = 0,
   ) => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
@@ -219,8 +219,8 @@ const PictureCaptureView = () => {
       photo.status = saveError
         ? "error"
         : hasPlant && hasLocation
-        ? "success"
-        : "warning";
+          ? "success"
+          : "warning";
       photo.species = hasPlant
         ? photo.plantNetPredictions[0].species
         : "No plant identified";
@@ -250,7 +250,7 @@ const PictureCaptureView = () => {
       if (!result.success) {
         if (result.isDuplicate) {
           throw new Error(
-            "DUPLICATE: This plant photo is already in the database"
+            "DUPLICATE: This plant photo is already in the database",
           );
         } else {
           throw new Error(result.message || result.error || "Failed to save");
