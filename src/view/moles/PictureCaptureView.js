@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Box, Alert } from "@mui/material";
-import ImageUtils from "../../nonview/core/ImageUtils";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
-import LocationPrediction from "../../nonview/core/LocationPrediction";
 import { useAppBarTitle } from "../../App";
 import WelcomeSection from "../atoms/WelcomeSection";
+import UploadPhotoButton from "../atoms/UploadPhotoButton";
 import LoadingView from "../atoms/LoadingView";
 import PhotoProcessingStatus from "../atoms/PhotoProcessingStatus";
 
@@ -32,80 +31,6 @@ const PictureCaptureView = () => {
       setAppBarTitle("Vanam");
     }
   }, [plantPhoto, setAppBarTitle]);
-
-  const clearImage = () => {
-    setPlantPhoto(null);
-  };
-
-  const uploadPhoto = async (files) => {
-    // Handle both single file and array of files
-    const fileArray = Array.isArray(files) ? files : [files];
-    setIsLoading(true);
-    setTotalFiles(fileArray.length);
-    setProcessedPhotos([]);
-    setIsComplete(false);
-    setLocationStatus("requesting");
-    setLocationError(null);
-
-    const locationPrediction = await LocationPrediction.fromBrowser();
-    if (locationPrediction) {
-      setLocationStatus("retrieved");
-      setRetrievedGpsData({
-        latitude: locationPrediction.latitude,
-        longitude: locationPrediction.longitude,
-        accuracy: locationPrediction.accuracy,
-      });
-      setLocationSource("browser");
-      setLocationError(null);
-    } else {
-      setLocationStatus("unavailable");
-      setRetrievedGpsData(null);
-      setLocationSource(null);
-      setLocationError("Location unavailable");
-    }
-
-    // Process files sequentially
-    for (let i = 0; i < fileArray.length; i++) {
-      const file = fileArray[i];
-      setPlantPhoto(null);
-
-      try {
-        const result = await ImageUtils.loadFromFile(file);
-        if (result.success) {
-          await identifyPlantFromImage(result.imageData, file.name, i);
-          // Small delay between processing multiple files
-          if (i < fileArray.length - 1) {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            // Clear the previous image before loading next one
-            clearImage();
-          }
-        } else {
-          setProcessedPhotos((prev) => [
-            ...prev,
-            {
-              name: file.name,
-              status: "error",
-              error: "Failed to load file",
-            },
-          ]);
-        }
-      } catch (err) {
-        console.error(err);
-        setProcessedPhotos((prev) => [
-          ...prev,
-          {
-            name: file.name,
-            status: "error",
-            error: err.message,
-          },
-        ]);
-      }
-    }
-
-    // Mark as complete instead of navigating
-    setIsComplete(true);
-    setIsLoading(false);
-  };
 
   const identifyPlantFromImage = async (
     imageData,
@@ -195,7 +120,20 @@ const PictureCaptureView = () => {
         <LoadingView message="Processing..." />
       ) : (
         <Box>
-          <WelcomeSection onUploadPhoto={uploadPhoto} isLoading={isLoading} />
+          <WelcomeSection />
+          <UploadPhotoButton
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+            setTotalFiles={setTotalFiles}
+            setProcessedPhotos={setProcessedPhotos}
+            setIsComplete={setIsComplete}
+            setLocationStatus={setLocationStatus}
+            setLocationError={setLocationError}
+            setRetrievedGpsData={setRetrievedGpsData}
+            setLocationSource={setLocationSource}
+            setPlantPhoto={setPlantPhoto}
+            identifyPlantFromImage={identifyPlantFromImage}
+          />
 
           {locationStatus === "retrieved" && retrievedGpsData && (
             <Alert severity="success" sx={{ mb: 1 }}>
