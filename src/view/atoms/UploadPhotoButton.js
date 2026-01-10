@@ -1,30 +1,25 @@
 import React from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Alert } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ImageUtils from "../../nonview/core/ImageUtils";
 import LocationPrediction from "../../nonview/core/LocationPrediction";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
+import LoadingView from "./LoadingView";
+import PhotoProcessingStatus from "./PhotoProcessingStatus";
 
-const UploadPhotoButton = ({
-  isLoading,
-  setIsLoading,
-  setTotalFiles,
-  setProcessedPhotos,
-  setIsComplete,
-  setLocationStatus,
-  setLocationError,
-  setRetrievedGpsData,
-  setLocationSource,
-  setPlantPhoto,
-}) => {
+const UploadPhotoButton = () => {
   const fileInputRef = React.useRef(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [totalFiles, setTotalFiles] = React.useState(0);
+  const [processedPhotos, setProcessedPhotos] = React.useState([]);
+  const [isComplete, setIsComplete] = React.useState(false);
+  const [locationStatus, setLocationStatus] = React.useState(null);
+  const [retrievedGpsData, setRetrievedGpsData] = React.useState(null);
+  const [locationSource, setLocationSource] = React.useState(null);
+  const [locationError, setLocationError] = React.useState(null);
 
   const handleFileClick = () => {
     fileInputRef.current?.click();
-  };
-
-  const clearImage = () => {
-    setPlantPhoto(null);
   };
 
   const storeResultsToBlob = async (plantPhoto) => {
@@ -45,14 +40,9 @@ const UploadPhotoButton = ({
     }
   };
 
-  const identifyPlantFromImage = async (
-    imageData,
-    fileName = "photo",
-    index = 0
-  ) => {
+  const identifyPlantFromImage = async (imageData, fileName = "photo") => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
-      setPlantPhoto(photo);
 
       const hasPlant =
         photo.plantNetPredictions && photo.plantNetPredictions.length > 0;
@@ -133,7 +123,6 @@ const UploadPhotoButton = ({
 
     for (let i = 0; i < fileArray.length; i++) {
       const file = fileArray[i];
-      setPlantPhoto(null);
 
       try {
         const result = await ImageUtils.loadFromFile(file);
@@ -141,7 +130,6 @@ const UploadPhotoButton = ({
           await identifyPlantFromImage(result.imageData, file.name, i);
           if (i < fileArray.length - 1) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
-            clearImage();
           }
         } else {
           setProcessedPhotos((prev) => [
@@ -180,25 +168,54 @@ const UploadPhotoButton = ({
 
   return (
     <Box sx={{ mt: 2 }}>
-      <Button
-        variant="contained"
-        color="primary"
-        startIcon={<UploadFileIcon />}
-        onClick={handleFileClick}
-        disabled={isLoading}
-        fullWidth
-        sx={{ height: "5em" }}
-      >
-        Upload Photo
-      </Button>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        multiple
-        style={{ display: "none" }}
-        onChange={handleFileChange}
-      />
+      {isLoading && totalFiles === 0 ? (
+        <LoadingView message="Processing..." />
+      ) : (
+        <>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<UploadFileIcon />}
+            onClick={handleFileClick}
+            disabled={isLoading}
+            fullWidth
+            sx={{ height: "5em" }}
+          >
+            Upload Photo
+          </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+          />
+
+          {locationStatus === "retrieved" && retrievedGpsData && (
+            <Alert severity="success" sx={{ mb: 1, mt: 2 }}>
+              GPS location retrieved from{" "}
+              {locationSource === "exif" ? "image EXIF data" : "browser"}:{" "}
+              {retrievedGpsData.latitude.toFixed(6)}
+              °, {retrievedGpsData.longitude.toFixed(6)}°
+              {retrievedGpsData.accuracy &&
+                ` (±${Math.round(retrievedGpsData.accuracy)}m)`}
+            </Alert>
+          )}
+          {locationStatus === "unavailable" && (
+            <Alert severity="warning" sx={{ mb: 1, mt: 2 }}>
+              {locationError ||
+                "GPS location unavailable. Photos will be saved without location data."}
+            </Alert>
+          )}
+
+          <PhotoProcessingStatus
+            totalFiles={totalFiles}
+            isComplete={isComplete}
+            processedPhotos={processedPhotos}
+          />
+        </>
+      )}
     </Box>
   );
 };
