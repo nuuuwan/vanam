@@ -3,6 +3,7 @@ import { Box, Button } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ImageUtils from "../../nonview/core/ImageUtils";
 import LocationPrediction from "../../nonview/core/LocationPrediction";
+import PlantPhoto from "../../nonview/core/PlantPhoto";
 
 const UploadPhotoButton = ({
   isLoading,
@@ -15,7 +16,6 @@ const UploadPhotoButton = ({
   setRetrievedGpsData,
   setLocationSource,
   setPlantPhoto,
-  identifyPlantFromImage,
 }) => {
   const fileInputRef = React.useRef(null);
 
@@ -25,6 +25,84 @@ const UploadPhotoButton = ({
 
   const clearImage = () => {
     setPlantPhoto(null);
+  };
+
+  const storeResultsToBlob = async (plantPhoto) => {
+    try {
+      const result = await plantPhoto.save();
+      if (!result.success) {
+        if (result.isDuplicate) {
+          throw new Error(
+            "DUPLICATE: This plant photo is already in the database"
+          );
+        } else {
+          throw new Error(result.message || result.error || "Failed to save");
+        }
+      }
+    } catch (error) {
+      console.error("Error storing results:", error);
+      throw error;
+    }
+  };
+
+  const identifyPlantFromImage = async (
+    imageData,
+    fileName = "photo",
+    index = 0
+  ) => {
+    try {
+      const photo = await PlantPhoto.fromImage(imageData);
+      setPlantPhoto(photo);
+
+      const hasPlant =
+        photo.plantNetPredictions && photo.plantNetPredictions.length > 0;
+      const hasLocation = photo.imageLocation;
+
+      if (hasLocation && photo.imageLocation.source === "exif") {
+        setLocationStatus("retrieved");
+        setRetrievedGpsData({
+          latitude: photo.imageLocation.latitude,
+          longitude: photo.imageLocation.longitude,
+          accuracy: photo.imageLocation.accuracy,
+        });
+        setLocationSource("exif");
+      }
+
+      let saveError = null;
+      if (hasPlant && hasLocation) {
+        try {
+          await storeResultsToBlob(photo);
+        } catch (saveErr) {
+          saveError = saveErr.message;
+        }
+      }
+
+      photo.name = fileName;
+      photo.status = saveError
+        ? "error"
+        : hasPlant && hasLocation
+        ? "success"
+        : "warning";
+      photo.species = hasPlant
+        ? photo.plantNetPredictions[0].species
+        : "No plant identified";
+      photo.hasLocation = hasLocation;
+      photo.hash = photo.imageHash;
+      photo.timestamp = new Date();
+      photo.error = saveError;
+
+      setProcessedPhotos((prev) => [...prev, photo]);
+    } catch (err) {
+      console.error(err);
+      const errorPhoto = {
+        name: fileName,
+        status: "error",
+        error: err.message,
+        species: "Error",
+        timestamp: new Date(),
+      };
+      setProcessedPhotos((prev) => [...prev, errorPhoto]);
+    }
   };
 
   const uploadPhoto = async (files) => {

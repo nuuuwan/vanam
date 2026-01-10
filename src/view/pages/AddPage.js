@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Box, Alert } from "@mui/material";
-import PlantPhoto from "../../nonview/core/PlantPhoto";
 import { useAppBarTitle } from "../../App";
 import WelcomeSection from "../atoms/WelcomeSection";
 import UploadPhotoButton from "../atoms/UploadPhotoButton";
@@ -31,84 +30,6 @@ const AddPage = () => {
     }
   }, [plantPhoto, setAppBarTitle]);
 
-  const identifyPlantFromImage = async (
-    imageData,
-    fileName = "photo",
-    index = 0,
-  ) => {
-    try {
-      const photo = await PlantPhoto.fromImage(imageData);
-      setPlantPhoto(photo);
-
-      const hasPlant =
-        photo.plantNetPredictions && photo.plantNetPredictions.length > 0;
-      const hasLocation = photo.imageLocation;
-
-      if (hasLocation && photo.imageLocation.source === "exif") {
-        setLocationStatus("retrieved");
-        setRetrievedGpsData({
-          latitude: photo.imageLocation.latitude,
-          longitude: photo.imageLocation.longitude,
-          accuracy: photo.imageLocation.accuracy,
-        });
-        setLocationSource("exif");
-      }
-
-      let saveError = null;
-      if (hasPlant && hasLocation) {
-        try {
-          await storeResultsToBlob(photo);
-        } catch (saveErr) {
-          saveError = saveErr.message;
-        }
-      }
-
-      photo.name = fileName;
-      photo.status = saveError
-        ? "error"
-        : hasPlant && hasLocation
-          ? "success"
-          : "warning";
-      photo.species = hasPlant
-        ? photo.plantNetPredictions[0].species
-        : "No plant identified";
-      photo.hasLocation = hasLocation;
-      photo.hash = photo.imageHash;
-      photo.timestamp = new Date();
-      photo.error = saveError;
-
-      setProcessedPhotos((prev) => [...prev, photo]);
-    } catch (err) {
-      console.error(err);
-      const errorPhoto = {
-        name: fileName,
-        status: "error",
-        error: err.message,
-        species: "Error",
-        timestamp: new Date(),
-      };
-      setProcessedPhotos((prev) => [...prev, errorPhoto]);
-    }
-  };
-
-  const storeResultsToBlob = async (plantPhoto) => {
-    try {
-      const result = await plantPhoto.save();
-      if (!result.success) {
-        if (result.isDuplicate) {
-          throw new Error(
-            "DUPLICATE: This plant photo is already in the database",
-          );
-        } else {
-          throw new Error(result.message || result.error || "Failed to save");
-        }
-      }
-    } catch (error) {
-      console.error("Error storing results:", error);
-      throw error;
-    }
-  };
-
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", position: "relative" }}>
       {isLoading && totalFiles === 0 ? (
@@ -127,7 +48,6 @@ const AddPage = () => {
             setRetrievedGpsData={setRetrievedGpsData}
             setLocationSource={setLocationSource}
             setPlantPhoto={setPlantPhoto}
-            identifyPlantFromImage={identifyPlantFromImage}
           />
 
           {locationStatus === "retrieved" && retrievedGpsData && (
