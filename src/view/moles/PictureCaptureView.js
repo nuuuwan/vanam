@@ -21,6 +21,7 @@ const PictureCaptureView = () => {
   const [isComplete, setIsComplete] = useState(false);
   const [locationStatus, setLocationStatus] = useState(null);
   const [retrievedGpsData, setRetrievedGpsData] = useState(null);
+  const [locationSource, setLocationSource] = useState(null);
   const [locationError, setLocationError] = useState(null);
   const pictureCapture = useRef(new PictureCapture());
 
@@ -62,10 +63,12 @@ const PictureCaptureView = () => {
       if (locationResult.success && locationResult.gpsData) {
         setLocationStatus("retrieved");
         setRetrievedGpsData(locationResult.gpsData);
+        setLocationSource("browser");
         setLocationError(null);
       } else {
         setLocationStatus("unavailable");
         setRetrievedGpsData(null);
+        setLocationSource(null);
         setLocationError(locationResult.error || "Location unavailable");
       }
 
@@ -90,7 +93,7 @@ const PictureCaptureView = () => {
   const capturePhoto = async () => {
     const result = await pictureCapture.current.capturePhoto(
       videoRef.current,
-      canvasRef.current,
+      canvasRef.current
     );
 
     if (result.success) {
@@ -125,10 +128,12 @@ const PictureCaptureView = () => {
     if (locationResult.success && locationResult.gpsData) {
       setLocationStatus("retrieved");
       setRetrievedGpsData(locationResult.gpsData);
+      setLocationSource("browser");
       setLocationError(null);
     } else {
       setLocationStatus("unavailable");
       setRetrievedGpsData(null);
+      setLocationSource(null);
       setLocationError(locationResult.error || "Location unavailable");
     }
 
@@ -178,7 +183,7 @@ const PictureCaptureView = () => {
   const identifyPlantFromImage = async (
     imageData,
     fileName = "photo",
-    index = 0,
+    index = 0
   ) => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
@@ -187,6 +192,17 @@ const PictureCaptureView = () => {
       const hasPlant =
         photo.plantNetPredictions && photo.plantNetPredictions.length > 0;
       const hasLocation = photo.imageLocation;
+
+      // Update location source if we got location from EXIF
+      if (hasLocation && photo.imageLocation.source === "exif") {
+        setLocationStatus("retrieved");
+        setRetrievedGpsData({
+          latitude: photo.imageLocation.latitude,
+          longitude: photo.imageLocation.longitude,
+          accuracy: photo.imageLocation.accuracy,
+        });
+        setLocationSource("exif");
+      }
 
       // Only save to blob if plant is identified and location is available
       let saveError = null;
@@ -203,8 +219,8 @@ const PictureCaptureView = () => {
       photo.status = saveError
         ? "error"
         : hasPlant && hasLocation
-          ? "success"
-          : "warning";
+        ? "success"
+        : "warning";
       photo.species = hasPlant
         ? photo.plantNetPredictions[0].species
         : "No plant identified";
@@ -234,7 +250,7 @@ const PictureCaptureView = () => {
       if (!result.success) {
         if (result.isDuplicate) {
           throw new Error(
-            "DUPLICATE: This plant photo is already in the database",
+            "DUPLICATE: This plant photo is already in the database"
           );
         } else {
           throw new Error(result.message || result.error || "Failed to save");
@@ -262,7 +278,9 @@ const PictureCaptureView = () => {
 
               {locationStatus === "retrieved" && retrievedGpsData && (
                 <Alert severity="success" sx={{ mb: 1 }}>
-                  GPS location retrieved: {retrievedGpsData.latitude.toFixed(6)}
+                  GPS location retrieved from{" "}
+                  {locationSource === "exif" ? "image EXIF data" : "browser"}:{" "}
+                  {retrievedGpsData.latitude.toFixed(6)}
                   °, {retrievedGpsData.longitude.toFixed(6)}°
                   {retrievedGpsData.accuracy &&
                     ` (±${Math.round(retrievedGpsData.accuracy)}m)`}

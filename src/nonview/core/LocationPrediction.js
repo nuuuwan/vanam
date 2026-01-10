@@ -1,10 +1,11 @@
 import exifr from "exifr";
 
 export default class LocationPrediction {
-  constructor(latitude, longitude, accuracy) {
+  constructor(latitude, longitude, accuracy, source = "browser") {
     this.latitude = latitude;
     this.longitude = longitude;
     this.accuracy = accuracy;
+    this.source = source; // "browser" or "exif"
   }
 
   static async fromBrowser() {
@@ -22,6 +23,7 @@ export default class LocationPrediction {
               position.coords.latitude,
               position.coords.longitude,
               position.coords.accuracy,
+              "browser",
             ),
           );
         },
@@ -67,6 +69,7 @@ export default class LocationPrediction {
         exifData.latitude,
         exifData.longitude,
         exifData.GPSAltitude || null,
+        "exif",
       );
     }
 

@@ -127,6 +127,7 @@ export default class PlantPhoto {
           json.imageLocation.latitude,
           json.imageLocation.longitude,
           json.imageLocation.accuracy,
+          json.imageLocation.source || "browser",
         )
       : null;
 
