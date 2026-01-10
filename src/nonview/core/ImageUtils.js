@@ -5,7 +5,7 @@ class ImageUtils {
     imageDataUrl,
     maxWidth = 256,
     maxHeight = 256,
-    quality = 0.8
+    quality = 0.8,
   ) {
     return new Promise((resolve) => {
       const img = new Image();
@@ -98,7 +98,7 @@ class ImageUtils {
         const reader = new FileReader();
         reader.onload = async (e) => {
           const compressedImageData = await ImageUtils.compressImage(
-            e.target?.result
+            e.target?.result,
           );
           resolve({
             success: true,
