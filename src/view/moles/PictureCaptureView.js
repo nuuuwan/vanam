@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, List, Alert, LinearProgress } from "@mui/material";
+import { Box, Alert } from "@mui/material";
 import ImageUtils from "../../nonview/core/ImageUtils";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
 import LocationPrediction from "../../nonview/core/LocationPrediction";
 import { useAppBarTitle } from "../../App";
 import WelcomeSection from "../atoms/WelcomeSection";
 import LoadingView from "../atoms/LoadingView";
-import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
+import PhotoProcessingStatus from "../atoms/PhotoProcessingStatus";
 
 const PictureCaptureView = () => {
   const { setAppBarTitle } = useAppBarTitle();
@@ -110,7 +110,7 @@ const PictureCaptureView = () => {
   const identifyPlantFromImage = async (
     imageData,
     fileName = "photo",
-    index = 0,
+    index = 0
   ) => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
@@ -146,8 +146,8 @@ const PictureCaptureView = () => {
       photo.status = saveError
         ? "error"
         : hasPlant && hasLocation
-          ? "success"
-          : "warning";
+        ? "success"
+        : "warning";
       photo.species = hasPlant
         ? photo.plantNetPredictions[0].species
         : "No plant identified";
@@ -177,7 +177,7 @@ const PictureCaptureView = () => {
       if (!result.success) {
         if (result.isDuplicate) {
           throw new Error(
-            "DUPLICATE: This plant photo is already in the database",
+            "DUPLICATE: This plant photo is already in the database"
           );
         } else {
           throw new Error(result.message || result.error || "Failed to save");
@@ -214,40 +214,11 @@ const PictureCaptureView = () => {
             </Alert>
           )}
 
-          {totalFiles > 0 && (
-            <Box sx={{ mt: 3, mb: 3 }}>
-              {isComplete && (
-                <Alert severity="success" sx={{ mb: 1 }}>
-                  Processing complete!{" "}
-                  {processedPhotos.filter((p) => p.status === "success").length}{" "}
-                  photo(s) saved.
-                </Alert>
-              )}
-              {!isComplete && (
-                <Box sx={{ mb: 2 }}>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ mb: 1 }}
-                  >
-                    Processed {processedPhotos.length} of {totalFiles} photo
-                    {totalFiles !== 1 ? "s" : ""}...
-                  </Typography>
-                  <LinearProgress
-                    variant="determinate"
-                    value={(processedPhotos.length / totalFiles) * 100}
-                  />
-                </Box>
-              )}
-              {processedPhotos.length > 0 && (
-                <List>
-                  {processedPhotos.map((photo, index) => (
-                    <PlantPhotoListItem key={index} photo={photo} />
-                  ))}
-                </List>
-              )}
-            </Box>
-          )}
+          <PhotoProcessingStatus
+            totalFiles={totalFiles}
+            isComplete={isComplete}
+            processedPhotos={processedPhotos}
+          />
         </Box>
       )}
     </Box>
