@@ -21,7 +21,7 @@ import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";
 import VERSION from "../../nonview/cons/VERSION";
 import UserIdentity from "../../nonview/core/UserIdentity";
 
-const MenuButton = () => {
+const CustomMenu = () => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [copied, setCopied] = useState(false);
   const userId = UserIdentity.getInstance().getUserId();
@@ -104,7 +104,7 @@ const MenuButton = () => {
         <MenuItem
           onClick={() =>
             handleMenuItemClick(
-              "https://github.com/nuuuwan/vanam/blob/main/README.privacy.md",
+              "https://github.com/nuuuwan/vanam/blob/main/README.privacy.md"
             )
           }
         >
@@ -159,4 +159,4 @@ const MenuButton = () => {
   );
 };
 
-export default MenuButton;
+export default CustomMenu;

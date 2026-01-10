@@ -1,6 +1,6 @@
 import React from "react";
 import { AppBar, Toolbar, Typography, Box, Avatar } from "@mui/material";
-import MenuButton from "../atoms/MenuButton";
+import CustomMenu from "../atoms/MenuButton";
 
 const CustomAppBar = ({ title = "Vanam" }) => {
   return (
@@ -15,7 +15,7 @@ const CustomAppBar = ({ title = "Vanam" }) => {
           {title}
         </Typography>
         <Box>
-          <MenuButton />
+          <CustomMenu />
         </Box>
       </Toolbar>
     </AppBar>
