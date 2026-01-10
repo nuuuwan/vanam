@@ -48,8 +48,8 @@ const PlantPhotoFromImageMixin = (Base) =>
                 r.gbif?.id,
                 r.powo?.id,
                 r.iucn?.id,
-                r.iucn?.category,
-              ),
+                r.iucn?.category
+              )
           ) || [];
 
       // Get device IP address
@@ -72,7 +72,7 @@ const PlantPhotoFromImageMixin = (Base) =>
         utImageTaken,
         plantNetPredictions,
         deviceIPAddress,
-        userId,
+        userId
       );
     }
 
