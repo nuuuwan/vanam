@@ -41,6 +41,7 @@ const PlantPhotoView = ({
           imageTimestamp={plantPhoto?.utImageTaken}
           deviceIPAddress={plantPhoto?.deviceIPAddress}
           userId={plantPhoto?.userId}
+          locationSource={plantPhoto?.imageLocation?.source}
         />
       )}
 
