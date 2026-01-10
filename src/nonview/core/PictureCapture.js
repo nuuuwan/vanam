@@ -1,16 +1,7 @@
 import exifr from "exifr";
-import PlantNetClient from "./PlantNetClient";
-import LocationPrediction from "./LocationPrediction";
 
 class PictureCapture {
-  constructor() {
-    this.plantNetClient = new PlantNetClient();
-    this.stream = null;
-    this.cachedLocation = null;
-    this.locationTimestamp = null;
-  }
-
-  async compressImage(
+  static async compressImage(
     imageDataUrl,
     maxWidth = 256,
     maxHeight = 256,
@@ -54,12 +45,11 @@ class PictureCapture {
     });
   }
 
-  async startCamera() {
+  static async startCamera() {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "environment" },
       });
-      this.stream = mediaStream;
       return { success: true, stream: mediaStream };
     } catch (error) {
       console.error("Error accessing camera:", error);
@@ -70,53 +60,13 @@ class PictureCapture {
     }
   }
 
-  stopCamera() {
-    if (this.stream) {
-      this.stream.getTracks().forEach((track) => track.stop());
-      this.stream = null;
+  static stopCamera(stream) {
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
     }
   }
 
-  async getCurrentLocation(providedLocation = null) {
-    if (providedLocation) {
-      this.cachedLocation = providedLocation;
-      this.locationTimestamp = Date.now();
-      return { success: true, gpsData: providedLocation };
-    }
-
-    const now = Date.now();
-    if (
-      this.cachedLocation &&
-      this.locationTimestamp &&
-      now - this.locationTimestamp < 300000
-    ) {
-      console.log("Using cached location");
-      return { success: true, gpsData: this.cachedLocation };
-    }
-
-    const locationPrediction = await LocationPrediction.fromBrowser();
-
-    if (locationPrediction) {
-      const gpsData = {
-        latitude: locationPrediction.latitude,
-        longitude: locationPrediction.longitude,
-        accuracy: locationPrediction.accuracy,
-      };
-      this.cachedLocation = gpsData;
-      this.locationTimestamp = Date.now();
-      console.log("Retrieved fresh location from browser:", gpsData);
-      return { success: true, gpsData };
-    }
-
-    return {
-      success: false,
-      gpsData: null,
-      error:
-        "Location unavailable. Please enable location access in your browser settings.",
-    };
-  }
-
-  async capturePhoto(videoElement, canvasElement) {
+  static async capturePhoto(videoElement, canvasElement, stream) {
     if (!videoElement || !canvasElement) {
       return { success: false, error: "Missing video or canvas element" };
     }
@@ -134,14 +84,16 @@ class PictureCapture {
     context.drawImage(videoElement, 0, 0, width, height);
 
     const rawImageData = canvasElement.toDataURL("image/jpeg", 0.9);
-    this.stopCamera();
+    PictureCapture.stopCamera(stream);
 
-    const compressedImageData = await this.compressImage(rawImageData);
+    const compressedImageData = await PictureCapture.compressImage(
+      rawImageData
+    );
 
     return { success: true, imageData: compressedImageData };
   }
 
-  async extractGPSDataFromFile(file) {
+  static async extractGPSDataFromFile(file) {
     try {
       const exifData = await exifr.parse(file, {
         gps: true,
@@ -186,26 +138,20 @@ class PictureCapture {
     }
   }
 
-  async loadFromFile(file) {
+  static async loadFromFile(file) {
     try {
-      const gpsResult = await this.extractGPSDataFromFile(file);
-
-      let gpsData = gpsResult.gpsData;
-      if (!gpsData && this.cachedLocation) {
-        console.log("Using cached location for uploaded file");
-        gpsData = this.cachedLocation;
-      }
+      const gpsResult = await PictureCapture.extractGPSDataFromFile(file);
 
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = async (e) => {
-          const compressedImageData = await this.compressImage(
+          const compressedImageData = await PictureCapture.compressImage(
             e.target?.result
           );
           resolve({
             success: true,
             imageData: compressedImageData,
-            gpsData: gpsData || null,
+            gpsData: gpsResult.gpsData || null,
             timestamp: gpsResult.timestamp || null,
           });
         };
@@ -219,10 +165,6 @@ class PictureCapture {
       console.error("Failed to load file:", err);
       return { success: false, error: "Failed to load file" };
     }
-  }
-
-  cleanup() {
-    this.stopCamera();
   }
 }
 

@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { Box, Typography, List, Alert, LinearProgress } from "@mui/material";
 import PictureCapture from "../../nonview/core/PictureCapture";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
+import LocationPrediction from "../../nonview/core/LocationPrediction";
 import { useAppBarTitle } from "../../App";
 import WelcomeSection from "../atoms/WelcomeSection";
 import CameraView from "../atoms/CameraView";
@@ -23,15 +24,15 @@ const PictureCaptureView = () => {
   const [retrievedGpsData, setRetrievedGpsData] = useState(null);
   const [locationSource, setLocationSource] = useState(null);
   const [locationError, setLocationError] = useState(null);
-  const pictureCapture = useRef(new PictureCapture());
 
   // Cleanup on unmount
   useEffect(() => {
-    const capture = pictureCapture.current;
     return () => {
-      capture.cleanup();
+      if (stream) {
+        PictureCapture.stopCamera(stream);
+      }
     };
-  }, []);
+  }, [stream]);
 
   // Attach stream to video element when camera becomes active
   useEffect(() => {
@@ -58,21 +59,24 @@ const PictureCaptureView = () => {
     setLocationStatus("requesting");
     setLocationError(null);
     try {
-      // Request location permission immediately (iOS requires user gesture)
-      const locationResult = await pictureCapture.current.getCurrentLocation();
-      if (locationResult.success && locationResult.gpsData) {
+      const locationPrediction = await LocationPrediction.fromBrowser();
+      if (locationPrediction) {
         setLocationStatus("retrieved");
-        setRetrievedGpsData(locationResult.gpsData);
+        setRetrievedGpsData({
+          latitude: locationPrediction.latitude,
+          longitude: locationPrediction.longitude,
+          accuracy: locationPrediction.accuracy,
+        });
         setLocationSource("browser");
         setLocationError(null);
       } else {
         setLocationStatus("unavailable");
         setRetrievedGpsData(null);
         setLocationSource(null);
-        setLocationError(locationResult.error || "Location unavailable");
+        setLocationError("Location unavailable");
       }
 
-      const result = await pictureCapture.current.startCamera();
+      const result = await PictureCapture.startCamera();
       if (result.success) {
         setStream(result.stream);
         setIsCameraActive(true);
@@ -85,15 +89,16 @@ const PictureCaptureView = () => {
   };
 
   const stopCamera = () => {
-    pictureCapture.current.stopCamera();
+    PictureCapture.stopCamera(stream);
     setStream(null);
     setIsCameraActive(false);
   };
 
   const capturePhoto = async () => {
-    const result = await pictureCapture.current.capturePhoto(
+    const result = await PictureCapture.capturePhoto(
       videoRef.current,
       canvasRef.current,
+      stream
     );
 
     if (result.success) {
@@ -123,18 +128,21 @@ const PictureCaptureView = () => {
     setLocationStatus("requesting");
     setLocationError(null);
 
-    // Request location permission immediately (iOS requires user gesture)
-    const locationResult = await pictureCapture.current.getCurrentLocation();
-    if (locationResult.success && locationResult.gpsData) {
+    const locationPrediction = await LocationPrediction.fromBrowser();
+    if (locationPrediction) {
       setLocationStatus("retrieved");
-      setRetrievedGpsData(locationResult.gpsData);
+      setRetrievedGpsData({
+        latitude: locationPrediction.latitude,
+        longitude: locationPrediction.longitude,
+        accuracy: locationPrediction.accuracy,
+      });
       setLocationSource("browser");
       setLocationError(null);
     } else {
       setLocationStatus("unavailable");
       setRetrievedGpsData(null);
       setLocationSource(null);
-      setLocationError(locationResult.error || "Location unavailable");
+      setLocationError("Location unavailable");
     }
 
     // Process files sequentially
@@ -143,7 +151,7 @@ const PictureCaptureView = () => {
       setPlantPhoto(null);
 
       try {
-        const result = await pictureCapture.current.loadFromFile(file);
+        const result = await PictureCapture.loadFromFile(file);
         if (result.success) {
           await identifyPlantFromImage(result.imageData, file.name, i);
           // Small delay between processing multiple files
@@ -183,7 +191,7 @@ const PictureCaptureView = () => {
   const identifyPlantFromImage = async (
     imageData,
     fileName = "photo",
-    index = 0,
+    index = 0
   ) => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
@@ -219,8 +227,8 @@ const PictureCaptureView = () => {
       photo.status = saveError
         ? "error"
         : hasPlant && hasLocation
-          ? "success"
-          : "warning";
+        ? "success"
+        : "warning";
       photo.species = hasPlant
         ? photo.plantNetPredictions[0].species
         : "No plant identified";
@@ -250,7 +258,7 @@ const PictureCaptureView = () => {
       if (!result.success) {
         if (result.isDuplicate) {
           throw new Error(
-            "DUPLICATE: This plant photo is already in the database",
+            "DUPLICATE: This plant photo is already in the database"
           );
         } else {
           throw new Error(result.message || result.error || "Failed to save");
