@@ -1,6 +1,6 @@
 import exifr from "exifr";
 
-class PictureCapture {
+class ImageUtils {
   static async compressImage(
     imageDataUrl,
     maxWidth = 256,
@@ -43,54 +43,6 @@ class PictureCapture {
       };
       img.src = imageDataUrl;
     });
-  }
-
-  static async startCamera() {
-    try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" },
-      });
-      return { success: true, stream: mediaStream };
-    } catch (error) {
-      console.error("Error accessing camera:", error);
-      return {
-        success: false,
-        error: "Unable to access camera. Please check permissions.",
-      };
-    }
-  }
-
-  static stopCamera(stream) {
-    if (stream) {
-      stream.getTracks().forEach((track) => track.stop());
-    }
-  }
-
-  static async capturePhoto(videoElement, canvasElement, stream) {
-    if (!videoElement || !canvasElement) {
-      return { success: false, error: "Missing video or canvas element" };
-    }
-
-    const width = videoElement.videoWidth;
-    const height = videoElement.videoHeight;
-
-    if (!width || !height) {
-      return { success: false, error: "Invalid video dimensions" };
-    }
-
-    const context = canvasElement.getContext("2d");
-    canvasElement.width = width;
-    canvasElement.height = height;
-    context.drawImage(videoElement, 0, 0, width, height);
-
-    const rawImageData = canvasElement.toDataURL("image/jpeg", 0.9);
-    PictureCapture.stopCamera(stream);
-
-    const compressedImageData = await PictureCapture.compressImage(
-      rawImageData
-    );
-
-    return { success: true, imageData: compressedImageData };
   }
 
   static async extractGPSDataFromFile(file) {
@@ -140,12 +92,12 @@ class PictureCapture {
 
   static async loadFromFile(file) {
     try {
-      const gpsResult = await PictureCapture.extractGPSDataFromFile(file);
+      const gpsResult = await ImageUtils.extractGPSDataFromFile(file);
 
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = async (e) => {
-          const compressedImageData = await PictureCapture.compressImage(
+          const compressedImageData = await ImageUtils.compressImage(
             e.target?.result
           );
           resolve({
@@ -168,4 +120,4 @@ class PictureCapture {
   }
 }
 
-export default PictureCapture;
+export default ImageUtils;

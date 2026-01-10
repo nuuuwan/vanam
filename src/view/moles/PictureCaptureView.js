@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Box, Typography, List, Alert, LinearProgress } from "@mui/material";
-import PictureCapture from "../../nonview/core/PictureCapture";
+import CameraUtils from "../../nonview/core/CameraUtils";
+import ImageUtils from "../../nonview/core/ImageUtils";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
 import LocationPrediction from "../../nonview/core/LocationPrediction";
 import { useAppBarTitle } from "../../App";
@@ -29,7 +30,7 @@ const PictureCaptureView = () => {
   useEffect(() => {
     return () => {
       if (stream) {
-        PictureCapture.stopCamera(stream);
+        CameraUtils.stopCamera(stream);
       }
     };
   }, [stream]);
@@ -76,7 +77,7 @@ const PictureCaptureView = () => {
         setLocationError("Location unavailable");
       }
 
-      const result = await PictureCapture.startCamera();
+      const result = await CameraUtils.startCamera();
       if (result.success) {
         setStream(result.stream);
         setIsCameraActive(true);
@@ -89,13 +90,13 @@ const PictureCaptureView = () => {
   };
 
   const stopCamera = () => {
-    PictureCapture.stopCamera(stream);
+    CameraUtils.stopCamera(stream);
     setStream(null);
     setIsCameraActive(false);
   };
 
   const capturePhoto = async () => {
-    const result = await PictureCapture.capturePhoto(
+    const result = await CameraUtils.capturePhoto(
       videoRef.current,
       canvasRef.current,
       stream
@@ -151,7 +152,7 @@ const PictureCaptureView = () => {
       setPlantPhoto(null);
 
       try {
-        const result = await PictureCapture.loadFromFile(file);
+        const result = await ImageUtils.loadFromFile(file);
         if (result.success) {
           await identifyPlantFromImage(result.imageData, file.name, i);
           // Small delay between processing multiple files
