@@ -7,7 +7,7 @@ import UploadPhotoButton from "../atoms/UploadPhotoButton";
 import LoadingView from "../atoms/LoadingView";
 import PhotoProcessingStatus from "../atoms/PhotoProcessingStatus";
 
-const PictureCaptureView = () => {
+const AddPage = () => {
   const { setAppBarTitle } = useAppBarTitle();
   const [isLoading, setIsLoading] = useState(false);
   const [plantPhoto, setPlantPhoto] = useState(null);
@@ -19,7 +19,6 @@ const PictureCaptureView = () => {
   const [locationSource, setLocationSource] = useState(null);
   const [locationError, setLocationError] = useState(null);
 
-  // Update document title when plant is identified
   useEffect(() => {
     if (plantPhoto?.plantNetPredictions?.length > 0) {
       const topResult = plantPhoto.plantNetPredictions[0];
@@ -35,7 +34,7 @@ const PictureCaptureView = () => {
   const identifyPlantFromImage = async (
     imageData,
     fileName = "photo",
-    index = 0,
+    index = 0
   ) => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
@@ -45,7 +44,6 @@ const PictureCaptureView = () => {
         photo.plantNetPredictions && photo.plantNetPredictions.length > 0;
       const hasLocation = photo.imageLocation;
 
-      // Update location source if we got location from EXIF
       if (hasLocation && photo.imageLocation.source === "exif") {
         setLocationStatus("retrieved");
         setRetrievedGpsData({
@@ -56,7 +54,6 @@ const PictureCaptureView = () => {
         setLocationSource("exif");
       }
 
-      // Only save to blob if plant is identified and location is available
       let saveError = null;
       if (hasPlant && hasLocation) {
         try {
@@ -66,13 +63,12 @@ const PictureCaptureView = () => {
         }
       }
 
-      // Add metadata properties to PlantPhoto instance for display
       photo.name = fileName;
       photo.status = saveError
         ? "error"
         : hasPlant && hasLocation
-          ? "success"
-          : "warning";
+        ? "success"
+        : "warning";
       photo.species = hasPlant
         ? photo.plantNetPredictions[0].species
         : "No plant identified";
@@ -84,7 +80,6 @@ const PictureCaptureView = () => {
       setProcessedPhotos((prev) => [...prev, photo]);
     } catch (err) {
       console.error(err);
-      // Create a minimal PlantPhoto-like object for errors
       const errorPhoto = {
         name: fileName,
         status: "error",
@@ -102,7 +97,7 @@ const PictureCaptureView = () => {
       if (!result.success) {
         if (result.isDuplicate) {
           throw new Error(
-            "DUPLICATE: This plant photo is already in the database",
+            "DUPLICATE: This plant photo is already in the database"
           );
         } else {
           throw new Error(result.message || result.error || "Failed to save");
@@ -163,4 +158,4 @@ const PictureCaptureView = () => {
   );
 };
 
-export default PictureCaptureView;
+export default AddPage;

@@ -12,7 +12,7 @@ import {
 import React, { useState, createContext, useContext, useEffect } from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
-import PictureCaptureView from "./view/moles/PictureCaptureView";
+import AddPage from "./view/pages/AddPage";
 import PlantPhotoGallery from "./view/pages/PlantPhotoGallery";
 import PlantPhotoDetail from "./view/pages/PlantPhotoDetail";
 import AppBarComponent from "./view/atoms/AppBarComponent";
@@ -76,7 +76,7 @@ const AppLayout = () => {
         <Container maxWidth="lg" sx={{ flexGrow: 1, pb: 10, pt: 2 }}>
           <Routes>
             <Route path="/" element={<Navigate to="/add" replace />} />
-            <Route path="/add" element={<PictureCaptureView />} />
+            <Route path="/add" element={<AddPage />} />
             <Route path="/gallery" element={<PlantPhotoGallery />} />
             <Route path="/:imageHash" element={<PlantPhotoDetail />} />
           </Routes>
