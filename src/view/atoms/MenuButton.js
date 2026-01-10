@@ -21,7 +21,7 @@ import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";
 import VERSION from "../../nonview/cons/VERSION";
 import UserIdentity from "../../nonview/core/UserIdentity";
 
-const MenuButton = ({ inAppBar = false }) => {
+const MenuButton = () => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [copied, setCopied] = useState(false);
   const userId = UserIdentity.getInstance().getUserId();
@@ -67,25 +67,7 @@ const MenuButton = ({ inAppBar = false }) => {
 
   return (
     <>
-      <IconButton
-        onClick={handleMenuOpen}
-        color={inAppBar ? "inherit" : "default"}
-        sx={
-          inAppBar
-            ? {}
-            : {
-                position: "fixed",
-                top: 24,
-                right: 8,
-                zIndex: 1000,
-                bgcolor: "background.paper",
-                boxShadow: 2,
-                "&:hover": {
-                  bgcolor: "background.paper",
-                },
-              }
-        }
-      >
+      <IconButton onClick={handleMenuOpen} color="inherit">
         <MenuIcon />
       </IconButton>
       <Menu
@@ -122,7 +104,7 @@ const MenuButton = ({ inAppBar = false }) => {
         <MenuItem
           onClick={() =>
             handleMenuItemClick(
-              "https://github.com/nuuuwan/vanam/blob/main/README.privacy.md",
+              "https://github.com/nuuuwan/vanam/blob/main/README.privacy.md"
             )
           }
         >

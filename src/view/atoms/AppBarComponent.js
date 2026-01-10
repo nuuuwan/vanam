@@ -15,7 +15,7 @@ const AppBarComponent = ({ title = "Vanam" }) => {
           {title}
         </Typography>
         <Box>
-          <MenuButton inAppBar />
+          <MenuButton />
         </Box>
       </Toolbar>
     </AppBar>
