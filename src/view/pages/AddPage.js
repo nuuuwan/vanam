@@ -34,7 +34,7 @@ const AddPage = () => {
   const identifyPlantFromImage = async (
     imageData,
     fileName = "photo",
-    index = 0
+    index = 0,
   ) => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
@@ -67,8 +67,8 @@ const AddPage = () => {
       photo.status = saveError
         ? "error"
         : hasPlant && hasLocation
-        ? "success"
-        : "warning";
+          ? "success"
+          : "warning";
       photo.species = hasPlant
         ? photo.plantNetPredictions[0].species
         : "No plant identified";
@@ -97,7 +97,7 @@ const AddPage = () => {
       if (!result.success) {
         if (result.isDuplicate) {
           throw new Error(
-            "DUPLICATE: This plant photo is already in the database"
+            "DUPLICATE: This plant photo is already in the database",
           );
         } else {
           throw new Error(result.message || result.error || "Failed to save");
