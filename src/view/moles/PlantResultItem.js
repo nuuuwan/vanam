@@ -25,7 +25,7 @@ const PlantResultItem = ({ result }) => {
           >
             <Link
               href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
-                result.species
+                result.species,
               )}`}
               target="_blank"
               rel="noopener noreferrer"

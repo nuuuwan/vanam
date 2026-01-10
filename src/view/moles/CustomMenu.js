@@ -104,7 +104,7 @@ const CustomMenu = () => {
         <MenuItem
           onClick={() =>
             handleMenuItemClick(
-              "https://github.com/nuuuwan/vanam/blob/main/README.privacy.md"
+              "https://github.com/nuuuwan/vanam/blob/main/README.privacy.md",
             )
           }
         >
