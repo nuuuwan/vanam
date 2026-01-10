@@ -1,21 +1,15 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, List, Alert, LinearProgress } from "@mui/material";
-import CameraUtils from "../../nonview/core/CameraUtils";
 import ImageUtils from "../../nonview/core/ImageUtils";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
 import LocationPrediction from "../../nonview/core/LocationPrediction";
 import { useAppBarTitle } from "../../App";
 import WelcomeSection from "../atoms/WelcomeSection";
-import CameraView from "../atoms/CameraView";
 import LoadingView from "../atoms/LoadingView";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 
 const PictureCaptureView = () => {
   const { setAppBarTitle } = useAppBarTitle();
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
-  const [isCameraActive, setIsCameraActive] = useState(false);
-  const [stream, setStream] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [plantPhoto, setPlantPhoto] = useState(null);
   const [totalFiles, setTotalFiles] = useState(0);
@@ -25,22 +19,6 @@ const PictureCaptureView = () => {
   const [retrievedGpsData, setRetrievedGpsData] = useState(null);
   const [locationSource, setLocationSource] = useState(null);
   const [locationError, setLocationError] = useState(null);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (stream) {
-        CameraUtils.stopCamera(stream);
-      }
-    };
-  }, [stream]);
-
-  // Attach stream to video element when camera becomes active
-  useEffect(() => {
-    if (isCameraActive && videoRef.current && stream) {
-      videoRef.current.srcObject = stream;
-    }
-  }, [isCameraActive, stream]);
 
   // Update document title when plant is identified
   useEffect(() => {
@@ -54,66 +32,6 @@ const PictureCaptureView = () => {
       setAppBarTitle("Vanam");
     }
   }, [plantPhoto, setAppBarTitle]);
-
-  const startCamera = async () => {
-    setIsLoading(true);
-    setLocationStatus("requesting");
-    setLocationError(null);
-    try {
-      const locationPrediction = await LocationPrediction.fromBrowser();
-      if (locationPrediction) {
-        setLocationStatus("retrieved");
-        setRetrievedGpsData({
-          latitude: locationPrediction.latitude,
-          longitude: locationPrediction.longitude,
-          accuracy: locationPrediction.accuracy,
-        });
-        setLocationSource("browser");
-        setLocationError(null);
-      } else {
-        setLocationStatus("unavailable");
-        setRetrievedGpsData(null);
-        setLocationSource(null);
-        setLocationError("Location unavailable");
-      }
-
-      const result = await CameraUtils.startCamera();
-      if (result.success) {
-        setStream(result.stream);
-        setIsCameraActive(true);
-      } else {
-        alert(result.error);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const stopCamera = () => {
-    CameraUtils.stopCamera(stream);
-    setStream(null);
-    setIsCameraActive(false);
-  };
-
-  const capturePhoto = async () => {
-    const result = await CameraUtils.capturePhoto(
-      videoRef.current,
-      canvasRef.current,
-      stream,
-    );
-
-    if (result.success) {
-      setStream(null);
-      setIsCameraActive(false);
-      setIsLoading(true);
-      setTotalFiles(1);
-      setProcessedPhotos([]);
-      setIsComplete(false);
-      await identifyPlantFromImage(result.imageData, "Camera photo", 0);
-      setIsComplete(true);
-      setIsLoading(false);
-    }
-  };
 
   const clearImage = () => {
     setPlantPhoto(null);
@@ -192,7 +110,7 @@ const PictureCaptureView = () => {
   const identifyPlantFromImage = async (
     imageData,
     fileName = "photo",
-    index = 0,
+    index = 0
   ) => {
     try {
       const photo = await PlantPhoto.fromImage(imageData);
@@ -228,8 +146,8 @@ const PictureCaptureView = () => {
       photo.status = saveError
         ? "error"
         : hasPlant && hasLocation
-          ? "success"
-          : "warning";
+        ? "success"
+        : "warning";
       photo.species = hasPlant
         ? photo.plantNetPredictions[0].species
         : "No plant identified";
@@ -259,7 +177,7 @@ const PictureCaptureView = () => {
       if (!result.success) {
         if (result.isDuplicate) {
           throw new Error(
-            "DUPLICATE: This plant photo is already in the database",
+            "DUPLICATE: This plant photo is already in the database"
           );
         } else {
           throw new Error(result.message || result.error || "Failed to save");
@@ -273,82 +191,64 @@ const PictureCaptureView = () => {
 
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", position: "relative" }}>
-      {!isCameraActive ? (
+      {isLoading && totalFiles === 0 ? (
+        <LoadingView message="Processing..." />
+      ) : (
         <Box>
-          {isLoading && totalFiles === 0 ? (
-            <LoadingView message="Opening camera..." />
-          ) : (
-            <Box>
-              <WelcomeSection
-                onStartCamera={startCamera}
-                onUploadPhoto={uploadPhoto}
-                isLoading={isLoading}
-              />
+          <WelcomeSection onUploadPhoto={uploadPhoto} isLoading={isLoading} />
 
-              {locationStatus === "retrieved" && retrievedGpsData && (
+          {locationStatus === "retrieved" && retrievedGpsData && (
+            <Alert severity="success" sx={{ mb: 1 }}>
+              GPS location retrieved from{" "}
+              {locationSource === "exif" ? "image EXIF data" : "browser"}:{" "}
+              {retrievedGpsData.latitude.toFixed(6)}
+              °, {retrievedGpsData.longitude.toFixed(6)}°
+              {retrievedGpsData.accuracy &&
+                ` (±${Math.round(retrievedGpsData.accuracy)}m)`}
+            </Alert>
+          )}
+          {locationStatus === "unavailable" && (
+            <Alert severity="warning" sx={{ mb: 1 }}>
+              {locationError ||
+                "GPS location unavailable. Photos will be saved without location data."}
+            </Alert>
+          )}
+
+          {totalFiles > 0 && (
+            <Box sx={{ mt: 3, mb: 3 }}>
+              {isComplete && (
                 <Alert severity="success" sx={{ mb: 1 }}>
-                  GPS location retrieved from{" "}
-                  {locationSource === "exif" ? "image EXIF data" : "browser"}:{" "}
-                  {retrievedGpsData.latitude.toFixed(6)}
-                  °, {retrievedGpsData.longitude.toFixed(6)}°
-                  {retrievedGpsData.accuracy &&
-                    ` (±${Math.round(retrievedGpsData.accuracy)}m)`}
+                  Processing complete!{" "}
+                  {processedPhotos.filter((p) => p.status === "success").length}{" "}
+                  photo(s) saved.
                 </Alert>
               )}
-              {locationStatus === "unavailable" && (
-                <Alert severity="warning" sx={{ mb: 1 }}>
-                  {locationError ||
-                    "GPS location unavailable. Photos will be saved without location data."}
-                </Alert>
-              )}
-
-              {totalFiles > 0 && (
-                <Box sx={{ mt: 3, mb: 3 }}>
-                  {isComplete && (
-                    <Alert severity="success" sx={{ mb: 1 }}>
-                      Processing complete!{" "}
-                      {
-                        processedPhotos.filter((p) => p.status === "success")
-                          .length
-                      }{" "}
-                      photo(s) saved.
-                    </Alert>
-                  )}
-                  {!isComplete && (
-                    <Box sx={{ mb: 2 }}>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ mb: 1 }}
-                      >
-                        Processed {processedPhotos.length} of {totalFiles} photo
-                        {totalFiles !== 1 ? "s" : ""}...
-                      </Typography>
-                      <LinearProgress
-                        variant="determinate"
-                        value={(processedPhotos.length / totalFiles) * 100}
-                      />
-                    </Box>
-                  )}
-                  {processedPhotos.length > 0 && (
-                    <List>
-                      {processedPhotos.map((photo, index) => (
-                        <PlantPhotoListItem key={index} photo={photo} />
-                      ))}
-                    </List>
-                  )}
+              {!isComplete && (
+                <Box sx={{ mb: 2 }}>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mb: 1 }}
+                  >
+                    Processed {processedPhotos.length} of {totalFiles} photo
+                    {totalFiles !== 1 ? "s" : ""}...
+                  </Typography>
+                  <LinearProgress
+                    variant="determinate"
+                    value={(processedPhotos.length / totalFiles) * 100}
+                  />
                 </Box>
+              )}
+              {processedPhotos.length > 0 && (
+                <List>
+                  {processedPhotos.map((photo, index) => (
+                    <PlantPhotoListItem key={index} photo={photo} />
+                  ))}
+                </List>
               )}
             </Box>
           )}
         </Box>
-      ) : (
-        <CameraView
-          videoRef={videoRef}
-          canvasRef={canvasRef}
-          onCapture={capturePhoto}
-          onCancel={stopCamera}
-        />
       )}
     </Box>
   );

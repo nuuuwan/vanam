@@ -1,9 +1,8 @@
 import React from "react";
 import { Stack, Typography, Button, Box } from "@mui/material";
-import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 
-const WelcomeSection = ({ onStartCamera, onUploadPhoto, isLoading }) => {
+const WelcomeSection = ({ onUploadPhoto, isLoading }) => {
   const fileInputRef = React.useRef(null);
 
   const handleFileClick = () => {
@@ -34,20 +33,9 @@ const WelcomeSection = ({ onStartCamera, onUploadPhoto, isLoading }) => {
         <em>vanam</em> (வனம்), both meaning forest.
       </Typography>
 
-      <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+      <Box sx={{ mt: 2 }}>
         <Button
           variant="contained"
-          color="primary"
-          startIcon={<PhotoCameraIcon />}
-          onClick={onStartCamera}
-          disabled={isLoading}
-          fullWidth
-          sx={{ height: "5em" }}
-        >
-          Camera
-        </Button>
-        <Button
-          variant="outlined"
           color="primary"
           startIcon={<UploadFileIcon />}
           onClick={handleFileClick}
@@ -55,7 +43,7 @@ const WelcomeSection = ({ onStartCamera, onUploadPhoto, isLoading }) => {
           fullWidth
           sx={{ height: "5em" }}
         >
-          Upload
+          Upload Photo
         </Button>
       </Box>
       <input
