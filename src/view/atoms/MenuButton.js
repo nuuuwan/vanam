@@ -17,6 +17,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import PersonIcon from "@mui/icons-material/Person";
+import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";
 import VERSION from "../../nonview/cons/VERSION";
 import UserIdentity from "../../nonview/core/UserIdentity";
 
@@ -117,6 +118,18 @@ const MenuButton = ({ inAppBar = false }) => {
             <InfoIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>About PlantNet</ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() =>
+            handleMenuItemClick(
+              "https://github.com/nuuuwan/vanam/blob/main/README.privacy.md"
+            )
+          }
+        >
+          <ListItemIcon>
+            <PrivacyTipIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Privacy Policy</ListItemText>
         </MenuItem>
         <MenuItem onClick={handleClearCache}>
           <ListItemIcon>
