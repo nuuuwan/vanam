@@ -14,6 +14,7 @@ const PlantPhotoPage = () => {
 
   useEffect(() => {
     loadPlantPhoto();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageHash]);
 
   const loadPlantPhoto = async () => {
