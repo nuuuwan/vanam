@@ -36,7 +36,7 @@ const PlantPhotoListItem = ({ photo }) => {
     const parts = [];
 
     if (photo.timestamp) {
-      parts.push(photo.timestamp.toLocaleTimeString());
+      parts.push(photo.timestamp.toLocaleString());
     }
 
     if (photo.imageLocation) {
