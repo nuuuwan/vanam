@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import WelcomeSection from "../atoms/WelcomeSection";
-import UploadPhotoButton from "../atoms/UploadPhotoButton";
+import WelcomeSection from "../moles/WelcomeSection";
+import UploadPhotoButton from "../moles/UploadPhotoButton";
 
 const AddPage = () => {
   return (

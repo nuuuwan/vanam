@@ -3,7 +3,7 @@ import { Box, Button } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ImageUtils from "../../nonview/core/ImageUtils";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
-import LoadingView from "./LoadingView";
+import LoadingView from "../atoms/LoadingView";
 import PhotoProcessingStatus from "./PhotoProcessingStatus";
 
 const UploadPhotoButton = () => {
@@ -23,7 +23,7 @@ const UploadPhotoButton = () => {
       if (!result.success) {
         if (result.isDuplicate) {
           throw new Error(
-            "DUPLICATE: This plant photo is already in the database",
+            "DUPLICATE: This plant photo is already in the database"
           );
         } else {
           throw new Error(result.message || result.error || "Failed to save");
@@ -56,8 +56,8 @@ const UploadPhotoButton = () => {
       photo.status = saveError
         ? "error"
         : hasPlant && hasLocation
-          ? "success"
-          : "warning";
+        ? "success"
+        : "warning";
       photo.species = hasPlant
         ? photo.plantNetPredictions[0].species
         : "No plant identified";

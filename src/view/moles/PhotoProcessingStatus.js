@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography, List, Alert, LinearProgress } from "@mui/material";
-import PlantPhotoListItem from "./PlantPhotoListItem";
+import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 
 const PhotoProcessingStatus = ({ totalFiles, isComplete, processedPhotos }) => {
   if (totalFiles === 0) {

@@ -2,7 +2,7 @@ import React from "react";
 import { Paper, Stack, Box, Typography, Link, useTheme } from "@mui/material";
 import { Gauge } from "@mui/x-charts/Gauge";
 import CommonNamesChips from "../atoms/CommonNamesChips";
-import TaxonomySection from "../atoms/TaxonomySection";
+import TaxonomySection from "./TaxonomySection";
 import DatabaseReferencesSection from "./DatabaseReferencesSection";
 
 const PlantResultItem = ({ result }) => {
