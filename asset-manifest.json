@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/vanam/static/css/main.323d7611.css",
-    "main.js": "/vanam/static/js/main.d5c5fb0e.js",
+    "main.js": "/vanam/static/js/main.d4a719cd.js",
     "static/js/453.e0b216ae.chunk.js": "/vanam/static/js/453.e0b216ae.chunk.js",
     "index.html": "/vanam/index.html",
     "main.323d7611.css.map": "/vanam/static/css/main.323d7611.css.map",
-    "main.d5c5fb0e.js.map": "/vanam/static/js/main.d5c5fb0e.js.map",
+    "main.d4a719cd.js.map": "/vanam/static/js/main.d4a719cd.js.map",
     "453.e0b216ae.chunk.js.map": "/vanam/static/js/453.e0b216ae.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.323d7611.css",
-    "static/js/main.d5c5fb0e.js"
+    "static/js/main.d4a719cd.js"
   ]
 }
