@@ -14,7 +14,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import AddPage from "./view/pages/AddPage";
 import GalleryPage from "./view/pages/GalleryPage";
-import PlantPhotoDetail from "./view/pages/PlantPhotoDetail";
+import PlantPhotoPage from "./view/pages/PlantPhotoPage";
 import AppBarComponent from "./view/atoms/AppBarComponent";
 import BottomNavigator from "./view/atoms/BottomNavigator";
 import UserIdentity from "./nonview/core/UserIdentity";
@@ -78,7 +78,7 @@ const AppLayout = () => {
             <Route path="/" element={<Navigate to="/add" replace />} />
             <Route path="/add" element={<AddPage />} />
             <Route path="/gallery" element={<GalleryPage />} />
-            <Route path="/:imageHash" element={<PlantPhotoDetail />} />
+            <Route path="/:imageHash" element={<PlantPhotoPage />} />
           </Routes>
         </Container>
         <BottomNavigator>
