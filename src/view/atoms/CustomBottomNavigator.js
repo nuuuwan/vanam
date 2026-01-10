@@ -1,7 +1,7 @@
 import React from "react";
 import { Paper, Stack } from "@mui/material";
 
-const BottomNavigator = ({ children }) => {
+const CustomBottomNavigator = ({ children }) => {
   return (
     <Paper
       sx={{
@@ -28,4 +28,4 @@ const BottomNavigator = ({ children }) => {
   );
 };
 
-export default BottomNavigator;
+export default CustomBottomNavigator;

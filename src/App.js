@@ -16,7 +16,7 @@ import AddPage from "./view/pages/AddPage";
 import GalleryPage from "./view/pages/GalleryPage";
 import PlantPhotoPage from "./view/pages/PlantPhotoPage";
 import CustomAppBar from "./view/atoms/CustomAppBar";
-import BottomNavigator from "./view/atoms/BottomNavigator";
+import CustomBottomNavigator from "./view/atoms/CustomBottomNavigator";
 import UserIdentity from "./nonview/core/UserIdentity";
 
 // Create a context for the app bar title
@@ -81,7 +81,7 @@ const AppLayout = () => {
             <Route path="/:imageHash" element={<PlantPhotoPage />} />
           </Routes>
         </Container>
-        <BottomNavigator>
+        <CustomBottomNavigator>
           <Tooltip title="Home">
             <IconButton
               color={getCurrentView() === 0 ? "primary" : "default"}
@@ -100,7 +100,7 @@ const AppLayout = () => {
               <PhotoLibraryIcon />
             </IconButton>
           </Tooltip>
-        </BottomNavigator>
+        </CustomBottomNavigator>
       </Box>
     </AppBarTitleContext.Provider>
   );
