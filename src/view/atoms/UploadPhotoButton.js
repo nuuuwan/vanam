@@ -1,8 +1,7 @@
 import React from "react";
-import { Box, Button, Alert } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ImageUtils from "../../nonview/core/ImageUtils";
-import LocationPrediction from "../../nonview/core/LocationPrediction";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
 import LoadingView from "./LoadingView";
 import PhotoProcessingStatus from "./PhotoProcessingStatus";
@@ -13,10 +12,6 @@ const UploadPhotoButton = () => {
   const [totalFiles, setTotalFiles] = React.useState(0);
   const [processedPhotos, setProcessedPhotos] = React.useState([]);
   const [isComplete, setIsComplete] = React.useState(false);
-  const [locationStatus, setLocationStatus] = React.useState(null);
-  const [retrievedGpsData, setRetrievedGpsData] = React.useState(null);
-  const [locationSource, setLocationSource] = React.useState(null);
-  const [locationError, setLocationError] = React.useState(null);
 
   const handleFileClick = () => {
     fileInputRef.current?.click();
@@ -28,7 +23,7 @@ const UploadPhotoButton = () => {
       if (!result.success) {
         if (result.isDuplicate) {
           throw new Error(
-            "DUPLICATE: This plant photo is already in the database",
+            "DUPLICATE: This plant photo is already in the database"
           );
         } else {
           throw new Error(result.message || result.error || "Failed to save");
@@ -48,16 +43,6 @@ const UploadPhotoButton = () => {
         photo.plantNetPredictions && photo.plantNetPredictions.length > 0;
       const hasLocation = photo.imageLocation;
 
-      if (hasLocation && photo.imageLocation.source === "exif") {
-        setLocationStatus("retrieved");
-        setRetrievedGpsData({
-          latitude: photo.imageLocation.latitude,
-          longitude: photo.imageLocation.longitude,
-          accuracy: photo.imageLocation.accuracy,
-        });
-        setLocationSource("exif");
-      }
-
       let saveError = null;
       if (hasPlant && hasLocation) {
         try {
@@ -71,8 +56,8 @@ const UploadPhotoButton = () => {
       photo.status = saveError
         ? "error"
         : hasPlant && hasLocation
-          ? "success"
-          : "warning";
+        ? "success"
+        : "warning";
       photo.species = hasPlant
         ? photo.plantNetPredictions[0].species
         : "No plant identified";
@@ -101,25 +86,6 @@ const UploadPhotoButton = () => {
     setTotalFiles(fileArray.length);
     setProcessedPhotos([]);
     setIsComplete(false);
-    setLocationStatus("requesting");
-    setLocationError(null);
-
-    const locationPrediction = await LocationPrediction.fromBrowser();
-    if (locationPrediction) {
-      setLocationStatus("retrieved");
-      setRetrievedGpsData({
-        latitude: locationPrediction.latitude,
-        longitude: locationPrediction.longitude,
-        accuracy: locationPrediction.accuracy,
-      });
-      setLocationSource("browser");
-      setLocationError(null);
-    } else {
-      setLocationStatus("unavailable");
-      setRetrievedGpsData(null);
-      setLocationSource(null);
-      setLocationError("Location unavailable");
-    }
 
     for (let i = 0; i < fileArray.length; i++) {
       const file = fileArray[i];
@@ -191,23 +157,6 @@ const UploadPhotoButton = () => {
             style={{ display: "none" }}
             onChange={handleFileChange}
           />
-
-          {locationStatus === "retrieved" && retrievedGpsData && (
-            <Alert severity="success" sx={{ mb: 1, mt: 2 }}>
-              GPS location retrieved from{" "}
-              {locationSource === "exif" ? "image EXIF data" : "browser"}:{" "}
-              {retrievedGpsData.latitude.toFixed(6)}
-              °, {retrievedGpsData.longitude.toFixed(6)}°
-              {retrievedGpsData.accuracy &&
-                ` (±${Math.round(retrievedGpsData.accuracy)}m)`}
-            </Alert>
-          )}
-          {locationStatus === "unavailable" && (
-            <Alert severity="warning" sx={{ mb: 1, mt: 2 }}>
-              {locationError ||
-                "GPS location unavailable. Photos will be saved without location data."}
-            </Alert>
-          )}
 
           <PhotoProcessingStatus
             totalFiles={totalFiles}
