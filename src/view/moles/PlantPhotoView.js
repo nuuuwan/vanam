@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Alert, CircularProgress, Typography, Link } from "@mui/material";
-import MapView from "../atoms/MapView";
+import MapView from "./MapView";
 import LocationInfo from "../atoms/LocationInfo";
 import PlantResultsList from "./PlantResultsList";
 

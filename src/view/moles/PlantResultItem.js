@@ -3,7 +3,7 @@ import { Paper, Stack, Box, Typography, Link, useTheme } from "@mui/material";
 import { Gauge } from "@mui/x-charts/Gauge";
 import CommonNamesChips from "../atoms/CommonNamesChips";
 import TaxonomySection from "../atoms/TaxonomySection";
-import DatabaseReferencesSection from "../atoms/DatabaseReferencesSection";
+import DatabaseReferencesSection from "./DatabaseReferencesSection";
 
 const PlantResultItem = ({ result }) => {
   const theme = useTheme();
@@ -25,7 +25,7 @@ const PlantResultItem = ({ result }) => {
           >
             <Link
               href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
-                result.species,
+                result.species
               )}`}
               target="_blank"
               rel="noopener noreferrer"

@@ -1,6 +1,6 @@
 import { Grid, Box } from "@mui/material";
-import DatabaseLink from "./DatabaseLink";
-import IucnCategoryChip from "./IucnCategoryChip";
+import DatabaseLink from "../atoms/DatabaseLink";
+import IucnCategoryChip from "../atoms/IucnCategoryChip";
 
 const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
   if (!gbif?.id && !powo?.id && !iucn?.id && !iucn?.category) {
