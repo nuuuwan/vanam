@@ -15,7 +15,7 @@ import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import AddPage from "./view/pages/AddPage";
 import GalleryPage from "./view/pages/GalleryPage";
 import PlantPhotoPage from "./view/pages/PlantPhotoPage";
-import AppBarComponent from "./view/atoms/AppBarComponent";
+import CustomAppBar from "./view/atoms/CustomAppBar";
 import BottomNavigator from "./view/atoms/BottomNavigator";
 import UserIdentity from "./nonview/core/UserIdentity";
 
@@ -72,7 +72,7 @@ const AppLayout = () => {
       <Box
         sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >
-        <AppBarComponent title={appBarTitle} />
+        <CustomAppBar title={appBarTitle} />
         <Container maxWidth="lg" sx={{ flexGrow: 1, pb: 10, pt: 2 }}>
           <Routes>
             <Route path="/" element={<Navigate to="/add" replace />} />

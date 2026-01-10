@@ -2,7 +2,7 @@ import React from "react";
 import { AppBar, Toolbar, Typography, Box, Avatar } from "@mui/material";
 import MenuButton from "./MenuButton";
 
-const AppBarComponent = ({ title = "Vanam" }) => {
+const CustomAppBar = ({ title = "Vanam" }) => {
   return (
     <AppBar position="sticky" color="primary" elevation={2}>
       <Toolbar>
@@ -22,4 +22,4 @@ const AppBarComponent = ({ title = "Vanam" }) => {
   );
 };
 
-export default AppBarComponent;
+export default CustomAppBar;
