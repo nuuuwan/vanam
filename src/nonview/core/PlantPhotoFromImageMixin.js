@@ -28,8 +28,7 @@ const PlantPhotoFromImageMixin = (Base) =>
         exifData?.ModifyDate ||
         Date.now();
 
-      const plantNetClient = new PlantNetClient();
-      const result = await plantNetClient.identifyPlant(imageData, {
+      const result = await PlantNetClient.identifyPlant(imageData, {
         organs: "auto",
         project: "all",
       });
