@@ -15,8 +15,8 @@ import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import AddPage from "./view/pages/AddPage";
 import GalleryPage from "./view/pages/GalleryPage";
 import PlantPhotoPage from "./view/pages/PlantPhotoPage";
-import CustomAppBar from "./view/atoms/CustomAppBar";
-import CustomBottomNavigator from "./view/atoms/CustomBottomNavigator";
+import CustomAppBar from "./view/moles/CustomAppBar";
+import CustomBottomNavigator from "./view/moles/CustomBottomNavigator";
 import UserIdentity from "./nonview/core/UserIdentity";
 
 // Create a context for the app bar title

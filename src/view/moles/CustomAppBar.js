@@ -1,6 +1,6 @@
 import React from "react";
 import { AppBar, Toolbar, Typography, Box, Avatar } from "@mui/material";
-import MenuButton from "./MenuButton";
+import MenuButton from "../atoms/MenuButton";
 
 const CustomAppBar = ({ title = "Vanam" }) => {
   return (
