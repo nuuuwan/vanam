@@ -4,7 +4,7 @@ import PlantPhoto from "../../nonview/core/PlantPhoto";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 import { useAppBarTitle } from "../../App";
 
-const PlantPhotoGallery = () => {
+const GalleryPage = () => {
   const { setAppBarTitle } = useAppBarTitle();
   const [plantPhotos, setPlantPhotos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -21,13 +21,11 @@ const PlantPhotoGallery = () => {
     try {
       const result = await PlantPhoto.listAll();
       if (result.success) {
-        // Sort by date-time descending (newest first)
         const sortedPhotos = result.photos.sort((a, b) => {
           const dateA = new Date(a.utImageTaken).getTime();
           const dateB = new Date(b.utImageTaken).getTime();
           return dateB - dateA;
         });
-        // Convert to format expected by PlantPhotoListItem
         const formattedPhotos = sortedPhotos.map((photo) => ({
           species: photo.plantNetPredictions?.[0]?.species || "Unknown",
           status: "success",
@@ -91,4 +89,4 @@ const PlantPhotoGallery = () => {
   );
 };
 
-export default PlantPhotoGallery;
+export default GalleryPage;

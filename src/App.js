@@ -13,7 +13,7 @@ import React, { useState, createContext, useContext, useEffect } from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import AddPage from "./view/pages/AddPage";
-import PlantPhotoGallery from "./view/pages/PlantPhotoGallery";
+import GalleryPage from "./view/pages/GalleryPage";
 import PlantPhotoDetail from "./view/pages/PlantPhotoDetail";
 import AppBarComponent from "./view/atoms/AppBarComponent";
 import BottomNavigator from "./view/atoms/BottomNavigator";
@@ -77,7 +77,7 @@ const AppLayout = () => {
           <Routes>
             <Route path="/" element={<Navigate to="/add" replace />} />
             <Route path="/add" element={<AddPage />} />
-            <Route path="/gallery" element={<PlantPhotoGallery />} />
+            <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/:imageHash" element={<PlantPhotoDetail />} />
           </Routes>
         </Container>
