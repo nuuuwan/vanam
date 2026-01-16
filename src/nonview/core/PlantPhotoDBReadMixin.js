@@ -1,8 +1,9 @@
+import WWW from "../base/WWW";
 import UserIdentity from "./UserIdentity";
 const PlantPhotoDBReadMixin = (Base) =>
   class extends Base {
     static async fetchMetadata(userId) {
-      const metadataResponse = await fetch(
+      const metadataResponse = await WWW.fetchJSON(
         `https://vanam-teal.vercel.app/api/list-metadata?userId=${encodeURIComponent(
           userId
         )}`
@@ -31,7 +32,7 @@ const PlantPhotoDBReadMixin = (Base) =>
 
     static async fetchPhotoData(imageHash) {
       try {
-        const photoResponse = await fetch(
+        const photoResponse = await WWW.fetchBlob(
           `https://vanam-teal.vercel.app/api/get-photo?hash=${imageHash}`
         );
         console.debug("get-photo:", photoResponse);
