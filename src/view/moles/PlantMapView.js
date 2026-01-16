@@ -5,16 +5,15 @@ import "leaflet/dist/leaflet.css";
 import PlantMarker from "../atoms/PlantMarker";
 
 const PlantMapView = ({ plantPhotos }) => {
-  // Calculate the center and bounds of all photos with location
-  const { center, zoom } = useMemo(() => {
+  // Calculate the bounds of all photos with location
+  const { center, bounds } = useMemo(() => {
     const photosWithLocation = plantPhotos.filter(
-      (photo) =>
-        photo.imageLocation?.latitude && photo.imageLocation?.longitude,
+      (photo) => photo.imageLocation?.latitude && photo.imageLocation?.longitude
     );
 
     if (photosWithLocation.length === 0) {
       // Default to a world view
-      return { center: [0, 0], zoom: 2 };
+      return { center: [0, 0], bounds: null };
     }
 
     if (photosWithLocation.length === 1) {
@@ -24,20 +23,29 @@ const PlantMapView = ({ plantPhotos }) => {
           photosWithLocation[0].imageLocation.latitude,
           photosWithLocation[0].imageLocation.longitude,
         ],
-        zoom: 15,
+        bounds: null,
       };
     }
 
-    // Multiple photos - calculate center
+    // Multiple photos - calculate bounding box
     const latitudes = photosWithLocation.map((p) => p.imageLocation.latitude);
     const longitudes = photosWithLocation.map((p) => p.imageLocation.longitude);
 
-    const avgLat =
-      latitudes.reduce((sum, lat) => sum + lat, 0) / latitudes.length;
-    const avgLng =
-      longitudes.reduce((sum, lng) => sum + lng, 0) / longitudes.length;
+    const minLat = Math.min(...latitudes);
+    const maxLat = Math.max(...latitudes);
+    const minLng = Math.min(...longitudes);
+    const maxLng = Math.max(...longitudes);
 
-    return { center: [avgLat, avgLng], zoom: 12 };
+    const avgLat = (minLat + maxLat) / 2;
+    const avgLng = (minLng + maxLng) / 2;
+
+    return {
+      center: [avgLat, avgLng],
+      bounds: [
+        [minLat, minLng],
+        [maxLat, maxLng],
+      ],
+    };
   }, [plantPhotos]);
 
   return (
@@ -56,10 +64,11 @@ const PlantMapView = ({ plantPhotos }) => {
     >
       <MapContainer
         center={center}
-        zoom={zoom}
+        bounds={bounds}
+        zoom={bounds ? undefined : 15}
         style={{ height: "100%", width: "100%" }}
         maxZoom={18}
-        minZoom={12}
+        minZoom={2}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
