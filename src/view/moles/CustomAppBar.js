@@ -12,7 +12,7 @@ const CustomAppBar = ({ title = "Vanam" }) => {
           alt="Vanam"
           sx={{ width: 32, height: 32, mr: 1.5 }}
         />
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography variant="body2" component="div" sx={{ flexGrow: 1 }}>
           {title}
         </Typography>
         <Box sx={{ display: "flex", gap: 1 }}>
