@@ -39,26 +39,27 @@ const PlantPhotoDBReadMixin = (Base) =>
     }
 
     static async listAll() {
-      try {
-        const userId = UserIdentity.getInstance().getUserId();
-        const metadataResult = await this.fetchMetadata(userId);
+      const userId = UserIdentity.getInstance().getUserId();
+      const metadataResult = await this.fetchMetadata(userId);
 
-        if (!metadataResult.success) {
-          return metadataResult;
-        }
-
-        const plantPhotos = await Promise.all(
-          metadataResult.metadata.map(async (metadata) => {
-            const imageData = await this.fetchPhotoData(metadata.imageHash);
-            return this.fromJSON({ ...metadata, imageData });
-          })
-        );
-
-        return { success: true, photos: plantPhotos };
-      } catch (error) {
-        console.error("Error listing results from blob:", error);
-        return { success: false, error: error.message };
+      if (!metadataResult.success) {
+        return metadataResult;
       }
+
+      const plantPhotos = await Promise.all(
+        metadataResult.metadata.map(async (metadata) => {
+          const imageData = await this.fetchPhotoData(metadata.imageHash);
+          return this.fromJSON({ ...metadata, imageData });
+        })
+      );
+
+      const sortedPlantPhotos = plantPhotos.sort((a, b) => {
+        const dateA = new Date(a.utImageTaken).getTime();
+        const dateB = new Date(b.utImageTaken).getTime();
+        return dateB - dateA;
+      });
+
+      return sortedPlantPhotos;
     }
   };
 
