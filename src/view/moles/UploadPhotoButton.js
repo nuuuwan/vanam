@@ -12,8 +12,7 @@ const UploadPhotoButton = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [totalFiles, setTotalFiles] = React.useState(0);
   const [processedPhotos, setProcessedPhotos] = React.useState([]);
-  const [isComplete, setIsComplete] = React.useState(false);
-  const { addPlantPhoto } = useVanamDataContext();
+  const { addPlantPhoto, getPlantPhotoByHash } = useVanamDataContext();
 
   const handleFileClick = () => {
     fileInputRef.current?.click();
@@ -26,7 +25,7 @@ const UploadPhotoButton = () => {
       if (!result.success) {
         if (result.isDuplicate) {
           throw new Error(
-            "DUPLICATE: This plant photo is already in the database",
+            "DUPLICATE: This plant photo is already in the database"
           );
         } else {
           throw new Error(result.message || result.error || "Failed to save");
@@ -42,13 +41,13 @@ const UploadPhotoButton = () => {
     imageData,
     locationPrediction,
     utImageTaken,
-    fileName = "photo",
+    fileName = "photo"
   ) => {
     try {
       const photo = await PlantPhoto.fromImage(
         imageData,
         locationPrediction,
-        utImageTaken,
+        utImageTaken
       );
 
       const hasPlant =
@@ -68,8 +67,8 @@ const UploadPhotoButton = () => {
       photo.status = saveError
         ? "error"
         : hasPlant && hasLocation
-          ? "success"
-          : "warning";
+        ? "success"
+        : "warning";
       photo.species = hasPlant
         ? photo.plantNetPredictions[0].species
         : "No plant identified";
@@ -97,7 +96,6 @@ const UploadPhotoButton = () => {
     setIsLoading(true);
     setTotalFiles(fileArray.length);
     setProcessedPhotos([]);
-    setIsComplete(false);
 
     for (let i = 0; i < fileArray.length; i++) {
       const file = fileArray[i];
@@ -105,13 +103,25 @@ const UploadPhotoButton = () => {
       try {
         const result = await ImageUtils.loadFromFile(file);
         if (result.success) {
-          await identifyPlantFromImage(
-            result.imageData,
-            result.locationPrediction,
-            result.utImageTaken,
-            file.name,
-            i,
-          );
+          const imageHash = await PlantPhoto.hashImageData(result.imageData);
+          const existingPhoto = getPlantPhotoByHash(imageHash);
+
+          if (existingPhoto) {
+            existingPhoto.name = file.name;
+            existingPhoto.status = "error";
+            existingPhoto.error =
+              "Duplicate. This plant photo is already in the database";
+            setProcessedPhotos((prev) => [...prev, existingPhoto]);
+          } else {
+            await identifyPlantFromImage(
+              result.imageData,
+              result.locationPrediction,
+              result.utImageTaken,
+              file.name,
+              i
+            );
+          }
+
           if (i < fileArray.length - 1) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
           }
@@ -138,7 +148,6 @@ const UploadPhotoButton = () => {
       }
     }
 
-    setIsComplete(true);
     setIsLoading(false);
   };
 
@@ -178,7 +187,6 @@ const UploadPhotoButton = () => {
 
           <PhotoProcessingStatus
             totalFiles={totalFiles}
-            isComplete={isComplete}
             processedPhotos={processedPhotos}
           />
         </>

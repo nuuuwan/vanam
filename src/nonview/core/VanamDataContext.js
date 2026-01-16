@@ -16,6 +16,7 @@ export const VanamDataProvider = ({ children }) => {
   useEffect(() => {
     const loadPlantPhotos = async () => {
       const plantPhotos = await PlantPhoto.listAll();
+      console.debug(`Loaded ${plantPhotos.length} plant photos.`);
       setPlantPhotos(plantPhotos);
     };
 
@@ -27,8 +28,8 @@ export const VanamDataProvider = ({ children }) => {
     setPlantPhotos((prev) => [photo, ...prev]);
   };
 
-  const getPlantPhotoByHash = (hash) => {
-    return plantPhotos.find((photo) => photo.imageHash === hash);
+  const getPlantPhotoByHash = (imageHash) => {
+    return plantPhotos.find((photo) => photo.imageHash === imageHash);
   };
 
   const value = {
