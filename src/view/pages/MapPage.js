@@ -68,7 +68,7 @@ const MapPage = () => {
   }
 
   const photosWithLocation = plantPhotos.filter(
-    (photo) => photo.imageLocation?.latitude && photo.imageLocation?.longitude
+    (photo) => photo.imageLocation?.latitude && photo.imageLocation?.longitude,
   );
 
   if (plantPhotos.length === 0) {
