@@ -58,11 +58,12 @@ const PlantMapView = ({ plantPhotos }) => {
         zoom={zoom}
         style={{ height: "100%", width: "100%" }}
         maxZoom={18}
-        minZoom={2}
+        minZoom={12}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          className="grayscale-tiles"
         />
         {plantPhotos.map((photo, index) => (
           <PlantMarker key={photo.hash || index} photo={photo} />
