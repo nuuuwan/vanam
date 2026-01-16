@@ -36,14 +36,10 @@ const DateTimeView = ({ ut }) => {
   };
 
   return (
-    <Box
-      component="span"
-      sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}
-    >
+    <Box sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}>
       <AccessTimeIcon sx={{ fontSize: "1rem" }} />
       {getTimeAgo(ut)}
       <Box
-        component="span"
         sx={{
           mt: 0.5,
           ml: 0.5,

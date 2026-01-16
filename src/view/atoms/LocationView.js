@@ -21,14 +21,10 @@ const LocationView = ({ location }) => {
   const sourceText = isExif ? "EXIF" : "browser";
 
   return (
-    <Box
-      component="span"
-      sx={{ display: "inline-flex", alignItems: "center", gap: 0.15 }}
-    >
+    <Box sx={{ display: "inline-flex", alignItems: "center", gap: 0.15 }}>
       <LocationOnIcon sx={{ fontSize: "1rem" }} />
       {formatLocation(location)}
       <Box
-        component="span"
         sx={{
           display: "inline-flex",
           alignItems: "center",

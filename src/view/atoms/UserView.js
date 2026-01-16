@@ -6,10 +6,7 @@ const UserView = ({ userId, variant = "body2", component = "div" }) => {
   if (!userId) return null;
 
   return (
-    <Box
-      component="span"
-      sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}
-    >
+    <Box sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}>
       <PersonIcon sx={{ fontSize: "1rem" }} />
       {userId}
     </Box>
