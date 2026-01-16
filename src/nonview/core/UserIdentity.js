@@ -9,31 +9,18 @@ export default class UserIdentity {
     this.userId = userId;
   }
 
+  static getInstanceHot() {
+    const userId = uuidv4().substring(0, UserIdentity.USER_ID_LENGTH);
+    return new UserIdentity(userId);
+  }
+
   static getInstance() {
-    if (!UserIdentity.instance) {
-      let userId = localStorage.getItem(UserIdentity.STORAGE_KEY);
-
-      if (!userId) {
-        userId = uuidv4().substring(0, UserIdentity.USER_ID_LENGTH);
-        localStorage.setItem(UserIdentity.STORAGE_KEY, userId);
-        console.log("Generated new user ID:", userId);
-      } else {
-        console.log("Loaded existing user ID:", userId);
-      }
-
-      UserIdentity.instance = new UserIdentity(userId);
-    }
-
-    return UserIdentity.instance;
+    return Cache.get("vanam-user-identity", () =>
+      UserIdentity.getInstanceHot()
+    );
   }
 
-  getUserId() {
+  static getUserId() {
     return this.userId;
-  }
-
-  static reset() {
-    localStorage.removeItem(UserIdentity.STORAGE_KEY);
-    UserIdentity.instance = null;
-    return UserIdentity.getInstance().getUserId();
   }
 }
