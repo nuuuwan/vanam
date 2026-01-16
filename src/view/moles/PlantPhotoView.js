@@ -1,5 +1,12 @@
 import React from "react";
-import { Box, Alert, CircularProgress, Typography, Link } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Alert,
+  CircularProgress,
+  Typography,
+  Link,
+} from "@mui/material";
 import PlantResultsList from "./PlantResultsList";
 import LocationView from "../atoms/LocationView";
 import UserView from "../atoms/UserView";
@@ -47,11 +54,11 @@ const PlantPhotoView = ({
       )}
 
       {!isLoading && plantPhoto && (
-        <Box sx={{ mb: 2 }}>
+        <Stack direction="column" spacing={0.5} sx={{ m: 1 }}>
           <DateTimeView timestamp={plantPhoto.utImageTaken} />
           <LocationView location={plantPhoto.imageLocation} />
           <UserView userId={plantPhoto.userId} />
-        </Box>
+        </Stack>
       )}
 
       <PlantResultsList

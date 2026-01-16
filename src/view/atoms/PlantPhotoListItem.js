@@ -6,7 +6,7 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
-  Box,
+  Stack,
 } from "@mui/material";
 import LocationView from "./LocationView";
 import UserView from "./UserView";
@@ -27,11 +27,11 @@ const PlantPhotoListItem = ({ photo }) => {
     }
 
     return (
-      <Box component="span">
+      <Stack direction="column" spacing={0.5}>
         <DateTimeView timestamp={photo.timestamp} />
         <LocationView location={photo.imageLocation} />
         <UserView userId={photo.userId} />
-      </Box>
+      </Stack>
     );
   };
 
