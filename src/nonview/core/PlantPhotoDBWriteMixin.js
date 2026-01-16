@@ -13,12 +13,6 @@ const PlantPhotoDBWriteMixin = (Base) =>
     }
 
     async save() {
-      const storageKey = `blob_stored_${this.imageHash}`;
-      const cachedUrl = localStorage.getItem(storageKey);
-      if (cachedUrl && cachedUrl !== "true") {
-        return { success: true, url: cachedUrl, cached: true };
-      }
-
       const dataToStore = this.toJSON();
       try {
         const response = await fetch(
@@ -72,9 +66,7 @@ const PlantPhotoDBWriteMixin = (Base) =>
 
         const result = await response.json();
         if (result.success) {
-          localStorage.setItem(storageKey, result.url);
-          this.constructor.clearCache();
-          return { success: true, url: result.url, cached: false };
+          return { success: true, url: result.url };
         } else {
           console.error("Failed to store results:", result.error);
           return {

@@ -34,18 +34,8 @@ const CustomMenu = () => {
   };
 
   const handleClearCache = () => {
-    if (
-      window.confirm("Clear all cached PlantNet results and storage records?")
-    ) {
-      // Clear all localStorage items related to plantnet and blob storage
-      const keys = Object.keys(localStorage);
-      keys.forEach((key) => {
-        if (key.startsWith("plantnet_") || key.startsWith("blob_stored_")) {
-          localStorage.removeItem(key);
-        }
-      });
-      window.location.reload();
-    }
+    localStorage.clear();
+    window.location.reload();
     handleMenuClose();
   };
 
@@ -88,7 +78,7 @@ const CustomMenu = () => {
         <MenuItem
           onClick={() =>
             handleMenuItemClick(
-              "https://github.com/nuuuwan/vanam/blob/main/README.privacy.md",
+              "https://github.com/nuuuwan/vanam/blob/main/README.privacy.md"
             )
           }
         >
