@@ -26,21 +26,13 @@ const PlantPhotoListItem = ({ photo }) => {
       return `${!photo.hasLocation ? "No location data" : "Not saved"}`;
     }
 
-    // Success status - show location and IP on separate lines
     return (
       <Box component="span">
-        {photo.timestamp && (
-          <Typography variant="body2" color="text.secondary" component="div">
-            {photo.timestamp.toLocaleString()}
-          </Typography>
-        )}
         <LocationView location={photo.imageLocation} />
         <UserView userId={photo.userId} />
-        {!photo.timestamp && !photo.imageLocation && !photo.userId && (
-          <Typography variant="body2" color="text.secondary" component="div">
-            Saved successfully
-          </Typography>
-        )}
+        <Typography variant="caption" color="text.secondary" component="div">
+          {photo.timestamp.toLocaleString()}
+        </Typography>
       </Box>
     );
   };

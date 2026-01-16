@@ -18,13 +18,13 @@ const LocationView = ({ location, variant = "body2", component = "div" }) => {
   // Determine the source icon and text (camera for EXIF, globe for browser)
   const isExif = location.source === "exif";
   const SourceIcon = isExif ? PhotoCameraIcon : PublicIcon;
-  const sourceText = isExif ? "from image" : "from browser";
+  const sourceText = isExif ? "EXIF" : "browser";
 
   return (
     <Typography variant={variant} color="text.secondary" component={component}>
       <Box
         component="span"
-        sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}
+        sx={{ display: "inline-flex", alignItems: "center", gap: 0.15 }}
       >
         <LocationOnIcon sx={{ fontSize: "1rem" }} />
         {formatLocation(location)}
@@ -33,7 +33,7 @@ const LocationView = ({ location, variant = "body2", component = "div" }) => {
           sx={{
             display: "inline-flex",
             alignItems: "center",
-            gap: 0.25,
+            gap: 0.1,
             ml: 0.5,
             opacity: 0.7,
             fontSize: "0.875em",
