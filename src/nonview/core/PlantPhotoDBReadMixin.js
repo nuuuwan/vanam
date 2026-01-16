@@ -1,8 +1,8 @@
+import UserIdentity from "./UserIdentity";
 const PlantPhotoDBReadMixin = (Base) =>
   class extends Base {
     static async listAll() {
       try {
-        const UserIdentity = (await import("./UserIdentity")).default;
         const userId = UserIdentity.getInstance().getUserId();
 
         const metadataResponse = await fetch(
