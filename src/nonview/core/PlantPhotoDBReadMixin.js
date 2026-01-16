@@ -1,12 +1,15 @@
 import WWW from "../base/WWW";
 import UserIdentity from "./UserIdentity";
+import TimeUtils from "../base/TimeUtils";
+
 const PlantPhotoDBReadMixin = (Base) =>
   class extends Base {
     static async fetchMetadata(userId) {
+      const ut = TimeUtils.getUnixTime();
       const metadataResult = await WWW.fetchJSON(
         `https://vanam-teal.vercel.app/api/list-metadata?userId=${encodeURIComponent(
           userId
-        )}`
+        )}&ut=${ut}`
       );
       console.debug("list-metadata:", metadataResult);
 
@@ -20,8 +23,9 @@ const PlantPhotoDBReadMixin = (Base) =>
 
     static async fetchPhotoData(imageHash) {
       try {
+        const ut = TimeUtils.getUnixTime();
         const photoResult = await WWW.fetchJSON(
-          `https://vanam-teal.vercel.app/api/get-photo?hash=${imageHash}`
+          `https://vanam-teal.vercel.app/api/get-photo?hash=${imageHash}&ut=${ut}`
         );
         console.debug("get-photo:", photoResult);
 
