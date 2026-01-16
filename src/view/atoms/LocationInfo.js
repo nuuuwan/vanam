@@ -1,9 +1,11 @@
 import React from "react";
 import { Box, Typography, Stack, Alert } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { useNavigate } from "react-router-dom";
 import UserIdentity from "../../nonview/core/UserIdentity";
 
 const LocationInfo = ({ gpsData, imageTimestamp, userId, locationSource }) => {
+  const navigate = useNavigate();
   const formatLatLng = (lat, lng) => {
     const latAbs = Math.abs(lat).toFixed(6);
     const lngAbs = Math.abs(lng).toFixed(6);
@@ -42,7 +44,19 @@ const LocationInfo = ({ gpsData, imageTimestamp, userId, locationSource }) => {
   return (
     <Box sx={{ mb: 3 }}>
       {gpsData ? (
-        <Alert severity="success" icon={<LocationOnIcon />} sx={{ mb: 1 }}>
+        <Alert
+          severity="success"
+          icon={<LocationOnIcon />}
+          sx={{
+            mb: 1,
+            cursor: "pointer",
+            "&:hover": {
+              backgroundColor: "success.light",
+              opacity: 0.9,
+            },
+          }}
+          onClick={() => navigate("/map")}
+        >
           <Stack spacing={0.5}>
             <Typography variant="body2" fontWeight="bold">
               Location Retrieved
