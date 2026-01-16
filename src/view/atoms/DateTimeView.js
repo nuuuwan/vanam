@@ -2,11 +2,11 @@ import React from "react";
 import { Box } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
-const DateTimeView = ({ timestamp }) => {
-  if (!timestamp) return null;
+const DateTimeView = ({ ut }) => {
+  if (!ut) return null;
 
-  const formatDateTime = (timestamp) => {
-    const date = new Date(timestamp);
+  const formatDateTime = (ut) => {
+    const date = new Date(ut * 1000);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
@@ -15,9 +15,9 @@ const DateTimeView = ({ timestamp }) => {
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
-  const getTimeAgo = (timestamp) => {
+  const getTimeAgo = (ut) => {
     const now = new Date();
-    const past = new Date(timestamp);
+    const past = new Date(ut * 1000);
     const diffMs = now - past;
     const diffSec = Math.floor(diffMs / 1000);
     const diffMin = Math.floor(diffSec / 60);
@@ -41,7 +41,7 @@ const DateTimeView = ({ timestamp }) => {
       sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}
     >
       <AccessTimeIcon sx={{ fontSize: "1rem" }} />
-      {getTimeAgo(timestamp)}
+      {getTimeAgo(ut)}
       <Box
         component="span"
         sx={{
@@ -52,7 +52,7 @@ const DateTimeView = ({ timestamp }) => {
           alignItems: "center",
         }}
       >
-        {formatDateTime(timestamp)}
+        {formatDateTime(ut)}
       </Box>
     </Box>
   );

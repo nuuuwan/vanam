@@ -55,7 +55,7 @@ const PlantPhotoView = ({
 
       {!isLoading && plantPhoto && (
         <Stack direction="column" spacing={0.5} sx={{ m: 1 }}>
-          <DateTimeView timestamp={plantPhoto.utImageTaken} />
+          <DateTimeView ut={plantPhoto.utImageTaken} />
           <LocationView location={plantPhoto.imageLocation} />
           <UserView userId={plantPhoto.userId} />
         </Stack>

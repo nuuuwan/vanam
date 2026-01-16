@@ -26,7 +26,7 @@ const MapPage = () => {
           status: "success",
           hash: photo.imageHash,
           hasLocation: photo.imageLocation != null,
-          timestamp: new Date(photo.utImageTaken),
+          utImageTaken: photo.utImageTaken,
           imageData: photo.imageData,
           imageLocation: photo.imageLocation,
           deviceIPAddress: photo.deviceIPAddress,
@@ -68,7 +68,7 @@ const MapPage = () => {
   }
 
   const photosWithLocation = plantPhotos.filter(
-    (photo) => photo.imageLocation?.latitude && photo.imageLocation?.longitude,
+    (photo) => photo.imageLocation?.latitude && photo.imageLocation?.longitude
   );
 
   if (plantPhotos.length === 0) {

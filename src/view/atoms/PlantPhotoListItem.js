@@ -28,7 +28,7 @@ const PlantPhotoListItem = ({ photo }) => {
 
     return (
       <Stack direction="column" spacing={0.5}>
-        <DateTimeView timestamp={photo.timestamp} />
+        <DateTimeView ut={photo.utImageTaken} />
         <LocationView location={photo.imageLocation} />
         <UserView userId={photo.userId} />
       </Stack>

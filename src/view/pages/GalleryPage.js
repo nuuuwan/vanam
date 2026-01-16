@@ -31,7 +31,7 @@ const GalleryPage = () => {
           status: "success",
           hash: photo.imageHash,
           hasLocation: photo.imageLocation != null,
-          timestamp: new Date(photo.utImageTaken * 1000),
+          utImageTaken: photo.utImageTaken,
           imageData: photo.imageData,
           imageLocation: photo.imageLocation,
           deviceIPAddress: photo.deviceIPAddress,
