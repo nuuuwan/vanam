@@ -19,17 +19,15 @@ const PlantPhotoListItem = ({ photo }) => {
     <ListItem disablePadding>
       <ListItemButton
         onClick={() => {
-          if (photo.hash) {
-            navigate(`/plantPhoto/${photo.hash}`);
-          }
+          navigate(`/plantPhoto/${photo.imageHash}`);
         }}
       >
         <ListItemAvatar>
-          <Avatar src={photo.imageData} alt={photo.species || photo.name} />
+          <Avatar src={photo.imageData} alt={photo.mostLikelySpecies} />
         </ListItemAvatar>
 
         <ListItemText
-          primary={photo.species || photo.name}
+          primary={photo.mostLikelySpecies}
           secondary={
             <Stack direction="column" spacing={0.5}>
               <DateTimeView ut={photo.utImageTaken} />

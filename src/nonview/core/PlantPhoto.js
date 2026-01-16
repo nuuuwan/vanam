@@ -11,7 +11,7 @@ class PlantPhotoBase {
     utImageTaken,
     plantNetPredictions,
     deviceIPAddress,
-    userId,
+    userId
   ) {
     this.imageHash = imageHash;
     this.imageData = imageData;
@@ -21,13 +21,15 @@ class PlantPhotoBase {
     this.deviceIPAddress = deviceIPAddress;
     this.userId = userId;
   }
+  get mostLikelySpecies() {
+    return this.plantNetPredictions[0].species;
+  }
 }
 
-// Apply mixins in order
 const PlantPhoto = PlantPhotoDBReadMixin(
   PlantPhotoDBWriteMixin(
-    PlantPhotoFromJSONMixin(PlantPhotoFromImageMixin(PlantPhotoBase)),
-  ),
+    PlantPhotoFromJSONMixin(PlantPhotoFromImageMixin(PlantPhotoBase))
+  )
 );
 
 export default PlantPhoto;
