@@ -3,25 +3,13 @@ import UserIdentity from "./UserIdentity";
 const PlantPhotoDBReadMixin = (Base) =>
   class extends Base {
     static async fetchMetadata(userId) {
-      const metadataResponse = await WWW.fetchJSON(
+      const metadataResult = await WWW.fetchJSON(
         `https://vanam-teal.vercel.app/api/list-metadata?userId=${encodeURIComponent(
           userId
         )}`
       );
-      console.debug("list-metadata:", metadataResponse);
+      console.debug("list-metadata:", metadataResult);
 
-      if (!metadataResponse.ok) {
-        const errorText = await metadataResponse.text();
-        console.error(
-          "Failed to list metadata. Status:",
-          metadataResponse.status,
-          "Response:",
-          errorText
-        );
-        return { success: false, error: `HTTP ${metadataResponse.status}` };
-      }
-
-      const metadataResult = await metadataResponse.json();
       if (!metadataResult.success || !metadataResult.metadata) {
         console.error("Failed to list metadata:", metadataResult.error);
         return { success: false, error: metadataResult.error };

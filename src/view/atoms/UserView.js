@@ -2,7 +2,7 @@ import React from "react";
 import { Box } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 
-const UserView = ({ userId, variant = "body2", component = "div" }) => {
+const UserView = ({ userId }) => {
   if (!userId) return null;
 
   return (

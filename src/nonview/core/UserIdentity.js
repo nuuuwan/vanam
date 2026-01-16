@@ -16,7 +16,7 @@ export default class UserIdentity {
 
   static getBrowserUserId() {
     return Cache.get("vanam-user-identity", () =>
-      UserIdentity.getInstanceHot()
+      UserIdentity.getBrowserUserIdHot()
     );
   }
 
