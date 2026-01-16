@@ -5,6 +5,12 @@ import ListIcon from "@mui/icons-material/List";
 import MapIcon from "@mui/icons-material/Map";
 
 const CustomBottomNavigator = ({ currentView, onViewChange }) => {
+  const navigationButtons = [
+    { id: 0, title: "Home", Icon: HomeIcon },
+    { id: 2, title: "Map View", Icon: MapIcon },
+    { id: 1, title: "Gallery View", Icon: ListIcon },
+  ];
+
   return (
     <Paper
       sx={{
@@ -25,35 +31,26 @@ const CustomBottomNavigator = ({ currentView, onViewChange }) => {
           mx: "auto",
         }}
       >
-        <Tooltip title="Home">
-          <IconButton
-            color={currentView === 0 ? "primary" : "default"}
-            onClick={() => onViewChange(0)}
-            size="large"
-          >
-            <HomeIcon />
-          </IconButton>
-        </Tooltip>
-
-        <Tooltip title="Map View">
-          <IconButton
-            color={currentView === 2 ? "primary" : "default"}
-            onClick={() => onViewChange(2)}
-            size="large"
-          >
-            <MapIcon />
-          </IconButton>
-        </Tooltip>
-
-        <Tooltip title="Gallery View">
-          <IconButton
-            color={currentView === 1 ? "primary" : "default"}
-            onClick={() => onViewChange(1)}
-            size="large"
-          >
-            <ListIcon />
-          </IconButton>
-        </Tooltip>
+        {navigationButtons.map(({ id, title, Icon }) => (
+          <Tooltip key={id} title={title}>
+            <span>
+              <IconButton
+                color={currentView === id ? "primary" : "default"}
+                onClick={() => onViewChange(id)}
+                size="large"
+                disabled={currentView === id}
+                sx={{
+                  bgcolor: currentView === id ? "primary.light" : "transparent",
+                  "&:hover": {
+                    bgcolor: currentView === id ? "primary.light" : undefined,
+                  },
+                }}
+              >
+                <Icon />
+              </IconButton>
+            </span>
+          </Tooltip>
+        ))}
       </Stack>
     </Paper>
   );
