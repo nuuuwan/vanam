@@ -1,8 +1,8 @@
 import React from "react";
-import { Typography, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
-const DateTimeView = ({ timestamp, variant = "body2", component = "div" }) => {
+const DateTimeView = ({ timestamp }) => {
   if (!timestamp) return null;
 
   const formatDateTime = (timestamp) => {
@@ -36,27 +36,25 @@ const DateTimeView = ({ timestamp, variant = "body2", component = "div" }) => {
   };
 
   return (
-    <Typography variant={variant} color="text.secondary" component={component}>
+    <Box
+      component="span"
+      sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}
+    >
+      <AccessTimeIcon sx={{ fontSize: "1rem" }} />
+      {getTimeAgo(timestamp)}
       <Box
         component="span"
-        sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}
+        sx={{
+          mt: 0.5,
+          ml: 0.5,
+          opacity: 0.7,
+          fontSize: "0.75em",
+          alignItems: "center",
+        }}
       >
-        <AccessTimeIcon sx={{ fontSize: "1rem" }} />
-        {getTimeAgo(timestamp)}
-        <Box
-          component="span"
-          sx={{
-            mt: 0.5,
-            ml: 0.5,
-            opacity: 0.7,
-            fontSize: "0.75em",
-            alignItems: "center",
-          }}
-        >
-          {formatDateTime(timestamp)}
-        </Box>
+        {formatDateTime(timestamp)}
       </Box>
-    </Typography>
+    </Box>
   );
 };
 

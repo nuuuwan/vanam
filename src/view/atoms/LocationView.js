@@ -1,10 +1,10 @@
 import React from "react";
-import { Typography, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import PublicIcon from "@mui/icons-material/Public";
 
-const LocationView = ({ location, variant = "body2", component = "div" }) => {
+const LocationView = ({ location }) => {
   if (!location) return null;
 
   const formatLocation = (location) => {
@@ -21,29 +21,27 @@ const LocationView = ({ location, variant = "body2", component = "div" }) => {
   const sourceText = isExif ? "EXIF" : "browser";
 
   return (
-    <Typography variant={variant} color="text.secondary" component={component}>
+    <Box
+      component="span"
+      sx={{ display: "inline-flex", alignItems: "center", gap: 0.15 }}
+    >
+      <LocationOnIcon sx={{ fontSize: "1rem" }} />
+      {formatLocation(location)}
       <Box
         component="span"
-        sx={{ display: "inline-flex", alignItems: "center", gap: 0.15 }}
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 0.1,
+          ml: 0.5,
+          opacity: 0.7,
+          fontSize: "0.875em",
+        }}
       >
-        <LocationOnIcon sx={{ fontSize: "1rem" }} />
-        {formatLocation(location)}
-        <Box
-          component="span"
-          sx={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 0.1,
-            ml: 0.5,
-            opacity: 0.7,
-            fontSize: "0.875em",
-          }}
-        >
-          <SourceIcon sx={{ fontSize: "1em" }} />
-          {sourceText}
-        </Box>
+        <SourceIcon sx={{ fontSize: "1em" }} />
+        {sourceText}
       </Box>
-    </Typography>
+    </Box>
   );
 };
 
