@@ -31,9 +31,20 @@ const UserButton = () => {
     <>
       <Tooltip title="User Info">
         <IconButton onClick={handleMenuOpen} color="inherit">
-          <Avatar sx={{ width: 32, height: 32, bgcolor: "primary.dark" }}>
-            <PersonIcon fontSize="small" />
-          </Avatar>
+          <Badge
+            badgeContent={plantPhotos.length}
+            color="primary"
+            sx={{
+              "& .MuiBadge-badge": {
+                backgroundColor: "orange",
+                color: "white",
+              },
+            }}
+          >
+            <Avatar sx={{ width: 32, height: 32, bgcolor: "primary.dark" }}>
+              <PersonIcon fontSize="small" />
+            </Avatar>
+          </Badge>
         </IconButton>
       </Tooltip>
       <Menu
