@@ -7,10 +7,10 @@ import {
   ListItemAvatar,
   Avatar,
   Box,
-  Typography,
 } from "@mui/material";
 import LocationView from "./LocationView";
 import UserView from "./UserView";
+import DateTimeView from "./DateTimeView";
 
 const PlantPhotoListItem = ({ photo }) => {
   const navigate = useNavigate();
@@ -28,11 +28,9 @@ const PlantPhotoListItem = ({ photo }) => {
 
     return (
       <Box component="span">
+        <DateTimeView timestamp={photo.timestamp} />
         <LocationView location={photo.imageLocation} />
         <UserView userId={photo.userId} />
-        <Typography variant="caption" color="text.secondary" component="div">
-          {photo.timestamp.toLocaleString()}
-        </Typography>
       </Box>
     );
   };

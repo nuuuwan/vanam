@@ -1,7 +1,9 @@
 import React from "react";
 import { Box, Alert, CircularProgress, Typography, Link } from "@mui/material";
-import LocationInfo from "../atoms/LocationInfo";
 import PlantResultsList from "./PlantResultsList";
+import LocationView from "../atoms/LocationView";
+import UserView from "../atoms/UserView";
+import DateTimeView from "../atoms/DateTimeView";
 
 const PlantPhotoView = ({
   plantPhoto,
@@ -44,21 +46,12 @@ const PlantPhotoView = ({
         </Box>
       )}
 
-      {!isLoading && (
-        <LocationInfo
-          gpsData={
-            plantPhoto?.imageLocation
-              ? {
-                  latitude: plantPhoto.imageLocation.latitude,
-                  longitude: plantPhoto.imageLocation.longitude,
-                  accuracy: plantPhoto.imageLocation.accuracy,
-                }
-              : null
-          }
-          imageTimestamp={plantPhoto?.utImageTaken}
-          userId={plantPhoto?.userId}
-          locationSource={plantPhoto?.imageLocation?.source}
-        />
+      {!isLoading && plantPhoto && (
+        <Box sx={{ mb: 2 }}>
+          <DateTimeView timestamp={plantPhoto.utImageTaken} />
+          <LocationView location={plantPhoto.imageLocation} />
+          <UserView userId={plantPhoto.userId} />
+        </Box>
       )}
 
       <PlantResultsList

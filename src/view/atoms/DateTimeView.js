@@ -1,0 +1,47 @@
+import React from "react";
+import { Typography, Box } from "@mui/material";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+
+const DateTimeView = ({ timestamp, variant = "body2", component = "div" }) => {
+  if (!timestamp) return null;
+
+  const getTimeAgo = (timestamp) => {
+    const now = new Date();
+    const past = new Date(timestamp);
+    const diffMs = now - past;
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHour = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHour / 24);
+    const diffMonth = Math.floor(diffDay / 30);
+    const diffYear = Math.floor(diffDay / 365);
+
+    if (diffYear > 0) return `${diffYear} year${diffYear > 1 ? "s" : ""} ago`;
+    if (diffMonth > 0)
+      return `${diffMonth} month${diffMonth > 1 ? "s" : ""} ago`;
+    if (diffDay > 0) return `${diffDay} day${diffDay > 1 ? "s" : ""} ago`;
+    if (diffHour > 0) return `${diffHour} hour${diffHour > 1 ? "s" : ""} ago`;
+    if (diffMin > 0) return `${diffMin} minute${diffMin > 1 ? "s" : ""} ago`;
+    return "just now";
+  };
+
+  return (
+    <Typography variant={variant} color="text.secondary" component={component}>
+      <Box
+        component="span"
+        sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}
+      >
+        <AccessTimeIcon sx={{ fontSize: "1rem" }} />
+        {new Date(timestamp).toLocaleString()}
+        <Box
+          component="span"
+          sx={{ ml: 0.5, opacity: 0.7, fontSize: "0.875em" }}
+        >
+          ({getTimeAgo(timestamp)})
+        </Box>
+      </Box>
+    </Typography>
+  );
+};
+
+export default DateTimeView;
