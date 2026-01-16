@@ -5,6 +5,7 @@ import PlantPhoto from "../../nonview/core/PlantPhoto";
 import LoadingView from "../atoms/LoadingView";
 import PhotoProcessingStatus from "./PhotoProcessingStatus";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 
 const UploadPhotoButton = () => {
   const fileInputRef = React.useRef(null);
@@ -12,6 +13,7 @@ const UploadPhotoButton = () => {
   const [totalFiles, setTotalFiles] = React.useState(0);
   const [processedPhotos, setProcessedPhotos] = React.useState([]);
   const [isComplete, setIsComplete] = React.useState(false);
+  const { addPlantPhoto } = useVanamDataContext();
 
   const handleFileClick = () => {
     fileInputRef.current?.click();
@@ -20,10 +22,11 @@ const UploadPhotoButton = () => {
   const storeResultsToBlob = async (plantPhoto) => {
     try {
       const result = await plantPhoto.save();
+      addPlantPhoto(plantPhoto);
       if (!result.success) {
         if (result.isDuplicate) {
           throw new Error(
-            "DUPLICATE: This plant photo is already in the database",
+            "DUPLICATE: This plant photo is already in the database"
           );
         } else {
           throw new Error(result.message || result.error || "Failed to save");
@@ -39,13 +42,13 @@ const UploadPhotoButton = () => {
     imageData,
     locationPrediction,
     utImageTaken,
-    fileName = "photo",
+    fileName = "photo"
   ) => {
     try {
       const photo = await PlantPhoto.fromImage(
         imageData,
         locationPrediction,
-        utImageTaken,
+        utImageTaken
       );
 
       const hasPlant =
@@ -65,8 +68,8 @@ const UploadPhotoButton = () => {
       photo.status = saveError
         ? "error"
         : hasPlant && hasLocation
-          ? "success"
-          : "warning";
+        ? "success"
+        : "warning";
       photo.species = hasPlant
         ? photo.plantNetPredictions[0].species
         : "No plant identified";
@@ -107,7 +110,7 @@ const UploadPhotoButton = () => {
             result.locationPrediction,
             result.utImageTaken,
             file.name,
-            i,
+            i
           );
           if (i < fileArray.length - 1) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
