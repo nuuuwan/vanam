@@ -45,7 +45,13 @@ const DateTimeView = ({ timestamp, variant = "body2", component = "div" }) => {
         {getTimeAgo(timestamp)}
         <Box
           component="span"
-          sx={{ ml: 0.5, opacity: 0.7, fontSize: "0.75em" }}
+          sx={{
+            mt: 0.5,
+            ml: 0.5,
+            opacity: 0.7,
+            fontSize: "0.75em",
+            alignItems: "center",
+          }}
         >
           {formatDateTime(timestamp)}
         </Box>
