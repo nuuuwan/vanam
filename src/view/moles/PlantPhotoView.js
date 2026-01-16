@@ -8,9 +8,7 @@ import {
   Link,
 } from "@mui/material";
 import PlantResultsList from "./PlantResultsList";
-import LocationView from "../atoms/LocationView";
-import UserView from "../atoms/UserView";
-import DateTimeView from "../atoms/DateTimeView";
+import PhotoMetadataView from "../atoms/PhotoMetadataView";
 
 const PlantPhotoView = ({
   plantPhoto,
@@ -54,11 +52,13 @@ const PlantPhotoView = ({
       )}
 
       {!isLoading && plantPhoto && (
-        <Stack direction="column" spacing={0.5} sx={{ m: 1 }}>
-          <DateTimeView ut={plantPhoto.utImageTaken} />
-          <LocationView location={plantPhoto.imageLocation} />
-          <UserView userId={plantPhoto.userId} />
-        </Stack>
+        <Box sx={{ m: 1 }}>
+          <PhotoMetadataView
+            ut={plantPhoto.utImageTaken}
+            location={plantPhoto.imageLocation}
+            userId={plantPhoto.userId}
+          />
+        </Box>
       )}
 
       <PlantResultsList
