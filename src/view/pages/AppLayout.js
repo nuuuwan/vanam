@@ -54,6 +54,7 @@ const AppLayout = () => {
             <Route path="/home" element={<HomePage />} />
             <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/plantPhoto/:imageHash" element={<PlantPhotoPage />} />
+            <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
         </Container>
         <CustomBottomNavigator>
