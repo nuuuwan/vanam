@@ -39,7 +39,7 @@ const GalleryPage = () => {
     <>
       <List>
         {plantPhotos.map((photo) => (
-          <PlantPhotoListItem key={plantPhotos.imageHash} photo={photo} />
+          <PlantPhotoListItem key={photo.imageHash} photo={photo} />
         ))}
       </List>
     </>
