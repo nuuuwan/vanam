@@ -2,11 +2,11 @@ import React, { useEffect, useMemo } from "react";
 import { Box, CircularProgress, Alert, Typography } from "@mui/material";
 import PlantMapView from "../moles/PlantMapView";
 import { useAppBarTitle } from "./AppLayout";
-import { useVanamData } from "../../nonview/core/VanamDataContext";
+import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 
 const MapPage = () => {
   const { setAppBarTitle } = useAppBarTitle();
-  const { plantPhotos, isLoading, error } = useVanamData();
+  const { plantPhotos, isLoading, error } = useVanamDataContext();
 
   useEffect(() => {
     setAppBarTitle("Map");

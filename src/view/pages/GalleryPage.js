@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import { Box, Typography, List, CircularProgress, Alert } from "@mui/material";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 import { useAppBarTitle } from "../../App";
-import { useVanamData } from "../../nonview/core/VanamDataContext";
+import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 
 const GalleryPage = () => {
   const { setAppBarTitle } = useAppBarTitle();
-  const { plantPhotos, isLoading, error } = useVanamData();
+  const { plantPhotos, isLoading, error } = useVanamDataContext();
 
   useEffect(() => {
     setAppBarTitle("Index");

@@ -3,12 +3,12 @@ import { useParams } from "react-router-dom";
 import { Box, CircularProgress, Alert } from "@mui/material";
 import PlantPhotoView from "../moles/PlantPhotoView";
 import { useAppBarTitle } from "../../App";
-import { useVanamData } from "../../nonview/core/VanamDataContext";
+import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 
 const PlantPhotoPage = () => {
   const { imageHash } = useParams();
   const { setAppBarTitle } = useAppBarTitle();
-  const { getPlantPhotoByHash, isLoading, error } = useVanamData();
+  const { getPlantPhotoByHash, isLoading, error } = useVanamDataContext();
 
   const plantPhoto = getPlantPhotoByHash(imageHash);
 
