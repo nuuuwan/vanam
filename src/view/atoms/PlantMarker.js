@@ -1,8 +1,7 @@
 import React from "react";
 import { Marker, Popup } from "react-leaflet";
-import { Box, Typography, Link } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
 import L from "leaflet";
+import PlantPhotoListItem from "./PlantPhotoListItem";
 
 // Custom marker icon using the plant image
 const createCustomIcon = (imageUrl) => {
@@ -48,36 +47,10 @@ const PlantMarker = ({ photo }) => {
     ? createCustomIcon(photo.imageData)
     : undefined;
 
-  const species = photo.species || "Unknown";
-  const date = new Date(photo.timestamp).toLocaleDateString();
-
   return (
     <Marker position={position} icon={customIcon}>
       <Popup>
-        <Box sx={{ minWidth: 150 }}>
-          <Typography variant="subtitle2" sx={{ fontWeight: "bold", mb: 0.5 }}>
-            {species}
-          </Typography>
-          <Typography variant="caption" color="text.secondary" display="block">
-            {date}
-          </Typography>
-          {photo.imageLocation.accuracy && (
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              display="block"
-            >
-              Accuracy: ±{Math.round(photo.imageLocation.accuracy)}m
-            </Typography>
-          )}
-          <Link
-            component={RouterLink}
-            to={`/plantPhoto/${photo.hash}`}
-            sx={{ fontSize: "0.75rem", mt: 1, display: "block" }}
-          >
-            View Details
-          </Link>
-        </Box>
+        <PlantPhotoListItem photo={photo} />
       </Popup>
     </Marker>
   );
