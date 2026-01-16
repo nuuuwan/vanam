@@ -1,47 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Box, CircularProgress, Alert } from "@mui/material";
-import PlantPhoto from "../../nonview/core/PlantPhoto";
 import PlantPhotoView from "../moles/PlantPhotoView";
 import { useAppBarTitle } from "../../App";
+import { useVanamData } from "../../nonview/core/VanamDataContext";
 
 const PlantPhotoPage = () => {
   const { imageHash } = useParams();
   const { setAppBarTitle } = useAppBarTitle();
-  const [plantPhoto, setPlantPhoto] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { getPlantPhotoByHash, isLoading, error, loadPlantPhotos } =
+    useVanamData();
+
+  const plantPhoto = getPlantPhotoByHash(imageHash);
 
   useEffect(() => {
-    loadPlantPhoto();
+    loadPlantPhotos();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [imageHash]);
+  }, []);
 
-  const loadPlantPhoto = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const result = await PlantPhoto.listAll();
-      if (result.success) {
-        const photo = result.photos.find((p) => p.imageHash === imageHash);
-        if (photo) {
-          setPlantPhoto(photo);
-          const title =
-            photo.plantNetPredictions?.[0]?.species || "Plant Details";
-          setAppBarTitle(title);
-        } else {
-          setError(`Photo with hash ${imageHash} not found`);
-        }
-      } else {
-        setError(result.error || "Failed to load plant photo");
-      }
-    } catch (err) {
-      setError(err.message || "Failed to load plant photo");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
+  useEffect(() => {
+    if (plantPhoto) {
+      const title =
+        plantPhoto.plantNetPredictions?.[0]?.species || "Plant Details";
+      setAppBarTitle(title);
     }
-  };
+  }, [plantPhoto, setAppBarTitle]);
 
   if (isLoading) {
     return (
@@ -66,10 +49,10 @@ const PlantPhotoPage = () => {
     );
   }
 
-  if (!plantPhoto) {
+  if (!isLoading && !plantPhoto) {
     return (
       <Box sx={{ p: 2 }}>
-        <Alert severity="warning">Plant photo not found</Alert>
+        <Alert severity="warning">Photo with hash {imageHash} not found</Alert>
       </Box>
     );
   }

@@ -12,10 +12,10 @@ export const useVanamData = () => {
 export const VanamDataProvider = ({ children }) => {
   const [plantPhotos, setPlantPhotos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [userIdentity] = useState(() => UserIdentity.getInstance());
+  const userIdentity = UserIdentity.getInstance();
 
   const loadPlantPhotos = useCallback(async () => {
-    const plantPhotos = await PlantPhoto.listAll();
+    const plantPhotos = PlantPhoto.listAll();
     setPlantPhotos(plantPhotos);
   }, []);
 

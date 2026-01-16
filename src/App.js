@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import React, { useEffect } from "react";
 import AppLayout from "./view/pages/AppLayout";
 import UserIdentity from "./nonview/core/UserIdentity";
+import { VanamDataProvider } from "./nonview/core/VanamDataContext";
 import theme from "./AppTheme";
 
 export { AppBarTitleContext, useAppBarTitle } from "./view/pages/AppLayout";
@@ -16,9 +17,11 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter basename="/vanam">
-        <AppLayout />
-      </BrowserRouter>
+      <VanamDataProvider>
+        <BrowserRouter basename="/vanam">
+          <AppLayout />
+        </BrowserRouter>
+      </VanamDataProvider>
     </ThemeProvider>
   );
 }

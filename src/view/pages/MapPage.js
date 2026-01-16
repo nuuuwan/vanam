@@ -1,48 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Box, CircularProgress, Alert, Typography } from "@mui/material";
-import PlantPhoto from "../../nonview/core/PlantPhoto";
 import PlantMapView from "../moles/PlantMapView";
 import { useAppBarTitle } from "./AppLayout";
+import { useVanamData } from "../../nonview/core/VanamDataContext";
 
 const MapPage = () => {
   const { setAppBarTitle } = useAppBarTitle();
-  const [plantPhotos, setPlantPhotos] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { plantPhotos, isLoading, error, loadPlantPhotos } = useVanamData();
 
   useEffect(() => {
     setAppBarTitle("Map");
     loadPlantPhotos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setAppBarTitle]);
 
-  const loadPlantPhotos = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const result = await PlantPhoto.listAll();
-      if (result.success) {
-        const formattedPhotos = result.photos.map((photo) => ({
-          species: photo.plantNetPredictions?.[0]?.species || "Unknown",
-          status: "success",
-          hash: photo.imageHash,
-          hasLocation: photo.imageLocation != null,
-          utImageTaken: photo.utImageTaken,
-          imageData: photo.imageData,
-          imageLocation: photo.imageLocation,
-          deviceIPAddress: photo.deviceIPAddress,
-          userId: photo.userId,
-        }));
-        setPlantPhotos(formattedPhotos);
-      } else {
-        setError(result.error || "Failed to load plant photos");
-      }
-    } catch (err) {
-      setError(err.message || "Failed to load plant photos");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const formattedPhotos = useMemo(
+    () =>
+      plantPhotos.map((photo) => ({
+        species: photo.plantNetPredictions?.[0]?.species || "Unknown",
+        status: "success",
+        hash: photo.imageHash,
+        hasLocation: photo.imageLocation != null,
+        utImageTaken: photo.utImageTaken,
+        imageData: photo.imageData,
+        imageLocation: photo.imageLocation,
+        deviceIPAddress: photo.deviceIPAddress,
+        userId: photo.userId,
+      })),
+    [plantPhotos]
+  );
 
   if (isLoading) {
     return (
@@ -67,11 +53,11 @@ const MapPage = () => {
     );
   }
 
-  const photosWithLocation = plantPhotos.filter(
-    (photo) => photo.imageLocation?.latitude && photo.imageLocation?.longitude,
+  const photosWithLocation = formattedPhotos.filter(
+    (photo) => photo.imageLocation?.latitude && photo.imageLocation?.longitude
   );
 
-  if (plantPhotos.length === 0) {
+  if (formattedPhotos.length === 0) {
     return (
       <Box sx={{ p: 2 }}>
         <Typography variant="body1" color="text.secondary">
