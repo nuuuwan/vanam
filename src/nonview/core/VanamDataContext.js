@@ -34,7 +34,7 @@ export const VanamDataProvider = ({ children }) => {
   const value = {
     userIdentity,
     plantPhotos,
-    isLoading: false,
+    isLoading,
     addPlantPhoto,
     getPlantPhotoByHash,
   };

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, Typography, List, CircularProgress, Alert } from "@mui/material";
+import { Box, List, CircularProgress, Alert } from "@mui/material";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 import { useAppBarTitle } from "../../App";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
@@ -11,18 +11,6 @@ const GalleryPage = () => {
   useEffect(() => {
     setAppBarTitle("Index");
   }, [setAppBarTitle]);
-
-  const formattedPhotos = plantPhotos.map((photo) => ({
-    species: photo.plantNetPredictions?.[0]?.species || "Unknown",
-    status: "success",
-    hash: photo.imageHash,
-    hasLocation: photo.imageLocation != null,
-    utImageTaken: photo.utImageTaken,
-    imageData: photo.imageData,
-    imageLocation: photo.imageLocation,
-    deviceIPAddress: photo.deviceIPAddress,
-    userId: photo.userId,
-  }));
 
   if (isLoading) {
     return (
@@ -49,17 +37,11 @@ const GalleryPage = () => {
 
   return (
     <>
-      {formattedPhotos.length === 0 ? (
-        <Typography variant="body1" color="text.secondary">
-          No plant photos found. Start by identifying a plant!
-        </Typography>
-      ) : (
-        <List>
-          {formattedPhotos.map((photo, index) => (
-            <PlantPhotoListItem key={photo.hash || index} photo={photo} />
-          ))}
-        </List>
-      )}
+      <List>
+        {plantPhotos.map((photo) => (
+          <PlantPhotoListItem key={plantPhotos.imageHash} photo={photo} />
+        ))}
+      </List>
     </>
   );
 };

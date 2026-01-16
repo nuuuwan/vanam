@@ -15,57 +15,32 @@ import DateTimeView from "./DateTimeView";
 const PlantPhotoListItem = ({ photo }) => {
   const navigate = useNavigate();
 
-  const isClickable = photo.status === "success";
-
-  const getSecondaryContent = () => {
-    if (photo.status === "error") {
-      return photo.error || "Processing failed";
-    }
-
-    if (photo.status === "warning") {
-      return `${!photo.hasLocation ? "No location data" : "Not saved"}`;
-    }
-
-    return (
-      <Stack direction="column" spacing={0.5}>
-        <DateTimeView ut={photo.utImageTaken} />
-        <LocationView location={photo.imageLocation} />
-        <UserView userId={photo.userId} />
-      </Stack>
-    );
-  };
-
-  const content = (
-    <>
-      {photo.imageData && (
+  return (
+    <ListItem disablePadding>
+      <ListItemButton
+        onClick={() => {
+          if (photo.hash) {
+            navigate(`/plantPhoto/${photo.hash}`);
+          }
+        }}
+      >
         <ListItemAvatar>
           <Avatar src={photo.imageData} alt={photo.species || photo.name} />
         </ListItemAvatar>
-      )}
-      <ListItemText
-        primary={photo.species || photo.name}
-        secondary={getSecondaryContent()}
-      />
-    </>
+
+        <ListItemText
+          primary={photo.species || photo.name}
+          secondary={
+            <Stack direction="column" spacing={0.5}>
+              <DateTimeView ut={photo.utImageTaken} />
+              <LocationView location={photo.imageLocation} />
+              <UserView userId={photo.userId} />
+            </Stack>
+          }
+        />
+      </ListItemButton>
+    </ListItem>
   );
-
-  if (isClickable) {
-    return (
-      <ListItem disablePadding>
-        <ListItemButton
-          onClick={() => {
-            if (photo.hash) {
-              navigate(`/plantPhoto/${photo.hash}`);
-            }
-          }}
-        >
-          {content}
-        </ListItemButton>
-      </ListItem>
-    );
-  }
-
-  return <ListItem>{content}</ListItem>;
 };
 
 export default PlantPhotoListItem;
