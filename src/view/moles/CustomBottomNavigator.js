@@ -31,26 +31,23 @@ const CustomBottomNavigator = ({ currentView, onViewChange }) => {
           mx: "auto",
         }}
       >
-        {navigationButtons.map(({ id, title, Icon }) => (
-          <Tooltip key={id} title={title}>
-            <span>
+        {navigationButtons.map(({ id, title, Icon }) => {
+          const isSelected = currentView === id;
+          return (
+            <Tooltip key={id} title={title}>
               <IconButton
-                color={currentView === id ? "primary" : "default"}
                 onClick={() => onViewChange(id)}
-                size="large"
-                disabled={currentView === id}
-                sx={{
-                  bgcolor: currentView === id ? "primary.light" : "transparent",
-                  "&:hover": {
-                    bgcolor: currentView === id ? "primary.light" : undefined,
-                  },
-                }}
+                disabled={isSelected}
               >
-                <Icon />
+                <Icon
+                  sx={{
+                    color: isSelected ? "primary.main" : "secondary.light",
+                  }}
+                />
               </IconButton>
-            </span>
-          </Tooltip>
-        ))}
+            </Tooltip>
+          );
+        })}
       </Stack>
     </Paper>
   );
