@@ -20,8 +20,6 @@ const PlantPhotoDBWriteMixin = (Base) =>
       }
 
       const dataToStore = this.toJSON();
-      console.debug("Storing data to blob:", dataToStore);
-      console.debug("utImageTaken", this.utImageTaken);
       try {
         const response = await fetch(
           "https://vanam-teal.vercel.app/api/store-metadata-and-photo",
@@ -31,10 +29,8 @@ const PlantPhotoDBWriteMixin = (Base) =>
               "Content-Type": "application/json",
             },
             body: JSON.stringify(dataToStore),
-          },
+          }
         );
-        console.debug("store-metadata-and-photo response", response);
-
         if (!response.ok) {
           try {
             const errorData = await response.json();
@@ -42,7 +38,7 @@ const PlantPhotoDBWriteMixin = (Base) =>
               "Failed to store results. Status:",
               response.status,
               "Response:",
-              errorData,
+              errorData
             );
             // Return meaningful error message from server
             return {
@@ -60,7 +56,7 @@ const PlantPhotoDBWriteMixin = (Base) =>
               "Failed to store results. Status:",
               response.status,
               "Response:",
-              errorText,
+              errorText
             );
             return { success: false, error: `HTTP ${response.status}` };
           }
