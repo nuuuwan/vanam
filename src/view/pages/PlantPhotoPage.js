@@ -29,7 +29,6 @@ const PlantPhotoPage = () => {
           const title =
             photo.plantNetPredictions?.[0]?.species || "Plant Details";
           setAppBarTitle(title);
-          document.title = title;
         } else {
           setError(`Photo with hash ${imageHash} not found`);
         }

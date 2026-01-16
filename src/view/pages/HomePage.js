@@ -8,8 +8,7 @@ const HomePage = () => {
   const { setAppBarTitle } = useAppBarTitle();
 
   useEffect(() => {
-    setAppBarTitle("Vanam");
-    document.title = "Vanam";
+    setAppBarTitle("Home");
   }, [setAppBarTitle]);
 
   return (

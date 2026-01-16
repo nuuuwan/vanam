@@ -6,6 +6,7 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
+import ListIcon from "@mui/icons-material/List";
 import React, { useState, createContext, useContext } from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
@@ -78,7 +79,7 @@ const AppLayout = () => {
               onClick={() => handleViewChange(1)}
               size="large"
             >
-              <PhotoLibraryIcon />
+              <ListIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Map View">

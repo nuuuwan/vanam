@@ -11,7 +11,7 @@ const GalleryPage = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setAppBarTitle("Plant Photo Gallery");
+    setAppBarTitle("Index");
     loadPlantPhotos();
   }, [setAppBarTitle]);
 

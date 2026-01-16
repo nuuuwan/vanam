@@ -3,7 +3,8 @@ import { AppBar, Toolbar, Typography, Box, Avatar } from "@mui/material";
 import CustomMenu from "./CustomMenu";
 import UserButton from "./UserButton";
 
-const CustomAppBar = ({ title = "Vanam" }) => {
+const CustomAppBar = ({ title }) => {
+  document.title = title;
   return (
     <AppBar position="sticky" color="primary" elevation={2}>
       <Toolbar>

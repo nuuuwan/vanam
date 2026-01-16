@@ -11,8 +11,7 @@ const MapPage = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setAppBarTitle("Plant Map");
-    document.title = "Plant Map - Vanam";
+    setAppBarTitle("Map");
     loadPlantPhotos();
   }, [setAppBarTitle]);
 
