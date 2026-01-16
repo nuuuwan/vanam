@@ -47,6 +47,7 @@ export default async function handler(req, res) {
       jsonMetadataBlobs.map(async (blob) => {
         try {
           const response = await fetch(blob.url);
+          console.debug("list-metadata:", blob.url);
           if (!response.ok) {
             console.error(`Failed to fetch ${blob.url}: ${response.status}`);
             return null;

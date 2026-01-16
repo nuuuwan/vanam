@@ -12,6 +12,7 @@ class PlantNetClient {
       }
 
       const response = await fetch(imageBase64);
+      console.debug("plantnet:", response);
       const blob = await response.blob();
 
       const extension = mimeType.split("/")[1] || "jpg";
@@ -28,7 +29,7 @@ class PlantNetClient {
         {
           method: "POST",
           body: formData,
-        },
+        }
       );
 
       if (!apiResponse.ok) {
@@ -36,12 +37,12 @@ class PlantNetClient {
 
         if (apiResponse.status === 404) {
           throw new Error(
-            "No plant species could be identified in this image. Please try a clearer photo showing distinctive features like flowers, leaves, or bark.",
+            "No plant species could be identified in this image. Please try a clearer photo showing distinctive features like flowers, leaves, or bark."
           );
         }
 
         throw new Error(
-          `PlantNet API error (${apiResponse.status}): ${errorText}`,
+          `PlantNet API error (${apiResponse.status}): ${errorText}`
         );
       }
 
