@@ -8,13 +8,13 @@ import {
   Avatar,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+
 import UserIdentity from "../../nonview/core/UserIdentity";
+import UserView from "../atoms/UserView";
 
 const UserButton = () => {
   const [menuAnchor, setMenuAnchor] = useState(null);
-  const [copied, setCopied] = useState(false);
-  const userId = UserIdentity.getInstance().getShortUserId();
+  const userId = UserIdentity.getInstance().getUserId();
 
   const handleMenuOpen = (event) => {
     setMenuAnchor(event.currentTarget);
@@ -22,16 +22,6 @@ const UserButton = () => {
 
   const handleMenuClose = () => {
     setMenuAnchor(null);
-  };
-
-  const handleCopyUserId = async () => {
-    try {
-      await navigator.clipboard.writeText(userId);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy user ID:", err);
-    }
   };
 
   return (
@@ -49,34 +39,8 @@ const UserButton = () => {
         onClose={handleMenuClose}
       >
         <Box sx={{ px: 2, py: 1, minWidth: 200, maxWidth: 250 }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-            <PersonIcon fontSize="small" color="action" />
-            <Typography variant="subtitle2" color="text.primary">
-              User ID
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography
-              variant="body2"
-              sx={{
-                fontFamily: "monospace",
-                fontSize: "0.75rem",
-                wordBreak: "break-all",
-                flexGrow: 1,
-              }}
-            >
-              {userId}
-            </Typography>
-            <Tooltip title={copied ? "Copied!" : "Copy to clipboard"}>
-              <IconButton
-                size="small"
-                onClick={handleCopyUserId}
-                sx={{ p: 0.5 }}
-              >
-                <ContentCopyIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          </Box>
+          <UserView userId={userId} />
+
           <Typography
             variant="caption"
             color="text.secondary"
