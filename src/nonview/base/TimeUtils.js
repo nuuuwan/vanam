@@ -32,4 +32,9 @@ export default class TimeUtils {
     if (diffMin > 0) return `${diffMin} minute${diffMin > 1 ? "s" : ""} ago`;
     return "just now";
   }
+
+  static getTimestamp(expirationSeconds) {
+    const now = Math.floor(Date.now() / 1000);
+    return Math.floor(now / expirationSeconds);
+  }
 }

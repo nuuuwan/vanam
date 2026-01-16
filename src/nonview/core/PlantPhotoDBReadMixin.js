@@ -1,6 +1,7 @@
 import WWW from "../base/WWW";
 import UserIdentity from "./UserIdentity";
 import TimeUtils from "../base/TimeUtils";
+import Cache from "../base/Cache";
 
 const PlantPhotoDBReadMixin = (Base) =>
   class extends Base {
@@ -21,7 +22,7 @@ const PlantPhotoDBReadMixin = (Base) =>
       return { success: true, metadata: metadataResult.metadata };
     }
 
-    static async fetchPhotoData(imageHash) {
+    static async fetchPhotoDataHot(imageHash) {
       try {
         const ut = TimeUtils.getUnixTime();
         const photoResult = await WWW.fetchJSON(
@@ -38,7 +39,12 @@ const PlantPhotoDBReadMixin = (Base) =>
       return null;
     }
 
-    static async listAll() {
+    static fetchPhotoData(imageHash) {
+      return Cache.getAsync("plant-photo-data-" + imageHash, async () => {
+        return await this.fetchPhotoDataHot(imageHash);
+      });
+    }
+    static async listAllHot() {
       const userId = UserIdentity.getInstance().getUserId();
       const metadataResult = await this.fetchMetadata(userId);
 
@@ -60,6 +66,15 @@ const PlantPhotoDBReadMixin = (Base) =>
       });
 
       return sortedPlantPhotos;
+    }
+
+    static async listAll() {
+      return await Cache.getAsync(
+        "plant-photo-list-all-" + TimeUtils.getTimestamp(60),
+        async () => {
+          return await this.listAllHot();
+        }
+      );
     }
   };
 
