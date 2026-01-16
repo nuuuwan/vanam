@@ -1,11 +1,12 @@
-import exifr from "exifr";
+import LocationPrediction from "./LocationPrediction";
+import EXIFUtils from "./EXIFUtils";
 
 class ImageUtils {
   static async compressImage(
     imageDataUrl,
     maxWidth = 256,
     maxHeight = 256,
-    quality = 0.8,
+    quality = 0.8
   ) {
     return new Promise((resolve) => {
       const img = new Image();
@@ -45,66 +46,23 @@ class ImageUtils {
     });
   }
 
-  static async extractGPSDataFromFile(file) {
-    try {
-      const exifData = await exifr.parse(file, {
-        gps: true,
-        tiff: true,
-        xmp: false,
-        icc: false,
-        iptc: false,
-        jfif: false,
-      });
-
-      let gpsData = null;
-      if (
-        exifData &&
-        exifData.latitude !== undefined &&
-        exifData.longitude !== undefined
-      ) {
-        gpsData = {
-          latitude: exifData.latitude,
-          longitude: exifData.longitude,
-          altitude: exifData.GPSAltitude || null,
-        };
-      }
-
-      let timestamp = null;
-      if (exifData) {
-        timestamp =
-          exifData.DateTimeOriginal ||
-          exifData.DateTime ||
-          exifData.CreateDate ||
-          exifData.ModifyDate;
-      }
-
-      return { success: true, gpsData, timestamp };
-    } catch (err) {
-      console.error("Error extracting GPS data:", err);
-      return {
-        success: false,
-        error: err.message,
-        gpsData: null,
-        timestamp: null,
-      };
-    }
-  }
-
   static async loadFromFile(file) {
     try {
-      const gpsResult = await ImageUtils.extractGPSDataFromFile(file);
+      const locationPrediction = await LocationPrediction.fromFile(file);
+      const utImageTaken = await EXIFUtils.getUnixTimeUpdated(file);
 
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = async (e) => {
           const compressedImageData = await ImageUtils.compressImage(
-            e.target?.result,
+            e.target?.result
           );
           resolve({
             success: true,
             imageData: compressedImageData,
-            gpsData: gpsResult.gpsData || null,
-            timestamp: gpsResult.timestamp || null,
+            locationPrediction: locationPrediction,
+            utImageTaken:
+              utImageTaken || (new Date().getTime() / 1000).toFixed(0),
           });
         };
         reader.onerror = (error) => {

@@ -1,32 +1,11 @@
-import LocationPrediction from "./LocationPrediction";
 import PlantNetPrediction from "./PlantNetPrediction";
 import PlantNetClient from "./PlantNetClient";
 import UserIdentity from "./UserIdentity";
-import exifr from "exifr";
 
 const PlantPhotoFromImageMixin = (Base) =>
   class extends Base {
-    static async fromImage(imageData) {
+    static async fromImage(imageData, locationPrediction, utImageTaken) {
       const imageHash = await this.hashImageData(imageData);
-
-      const blob = await fetch(imageData).then((r) => r.blob());
-
-      const locationPrediction = await LocationPrediction.fromImageBlob(blob);
-
-      const exifData = await exifr.parse(blob, {
-        tiff: true,
-        xmp: false,
-        icc: false,
-        iptc: false,
-        jfif: false,
-      });
-
-      const utImageTaken =
-        exifData?.DateTimeOriginal ||
-        exifData?.DateTime ||
-        exifData?.CreateDate ||
-        exifData?.ModifyDate ||
-        Date.now();
 
       const result = await PlantNetClient.identifyPlant(imageData, {
         organs: "auto",
@@ -48,8 +27,8 @@ const PlantPhotoFromImageMixin = (Base) =>
                 r.gbif?.id,
                 r.powo?.id,
                 r.iucn?.id,
-                r.iucn?.category,
-              ),
+                r.iucn?.category
+              )
           ) || [];
 
       // Get device IP address
@@ -72,7 +51,7 @@ const PlantPhotoFromImageMixin = (Base) =>
         utImageTaken,
         plantNetPredictions,
         deviceIPAddress,
-        userId,
+        userId
       );
     }
 

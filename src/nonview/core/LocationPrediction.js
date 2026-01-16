@@ -1,4 +1,4 @@
-import exifr from "exifr";
+import EXIFUtils from "./EXIFUtils";
 
 export default class LocationPrediction {
   constructor(latitude, longitude, accuracy, source = "browser") {
@@ -23,8 +23,8 @@ export default class LocationPrediction {
               position.coords.latitude,
               position.coords.longitude,
               position.coords.accuracy,
-              "browser",
-            ),
+              "browser"
+            )
           );
         },
         (error) => {
@@ -37,7 +37,7 @@ export default class LocationPrediction {
             "- Position unavailable:",
             error.code === 2,
             "- Timeout:",
-            error.code === 3,
+            error.code === 3
           );
           resolve(null);
         },
@@ -45,34 +45,21 @@ export default class LocationPrediction {
           enableHighAccuracy: true,
           timeout: 10000,
           maximumAge: 0,
-        },
+        }
       );
     });
   }
 
-  static async fromImageBlob(blob) {
-    const exifData = await exifr.parse(blob, {
-      gps: true,
-      tiff: true,
-      xmp: false,
-      icc: false,
-      iptc: false,
-      jfif: false,
-    });
-
-    if (
-      exifData &&
-      exifData.latitude !== undefined &&
-      exifData.longitude !== undefined
-    ) {
-      return new LocationPrediction(
-        exifData.latitude,
-        exifData.longitude,
-        exifData.GPSAltitude || null,
-        "exif",
+  static async fromFile(file) {
+    const locationData = await EXIFUtils.getLocation(file);
+    if (!locationData) {
+      console.warn(
+        "No GPS data found in EXIF metadata of the image blob. Defaulting to browser location."
       );
+      return await LocationPrediction.fromBrowser();
     }
 
-    return await LocationPrediction.fromBrowser();
+    const { latitude, longitude, accuracy } = locationData;
+    return new LocationPrediction(latitude, longitude, accuracy, "exif");
   }
 }

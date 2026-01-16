@@ -35,9 +35,18 @@ const UploadPhotoButton = () => {
     }
   };
 
-  const identifyPlantFromImage = async (imageData, fileName = "photo") => {
+  const identifyPlantFromImage = async (
+    imageData,
+    locationPrediction,
+    utImageTaken,
+    fileName = "photo"
+  ) => {
     try {
-      const photo = await PlantPhoto.fromImage(imageData);
+      const photo = await PlantPhoto.fromImage(
+        imageData,
+        locationPrediction,
+        utImageTaken
+      );
 
       const hasPlant =
         photo.plantNetPredictions && photo.plantNetPredictions.length > 0;
@@ -93,7 +102,13 @@ const UploadPhotoButton = () => {
       try {
         const result = await ImageUtils.loadFromFile(file);
         if (result.success) {
-          await identifyPlantFromImage(result.imageData, file.name, i);
+          await identifyPlantFromImage(
+            result.imageData,
+            result.locationPrediction,
+            result.utImageTaken,
+            file.name,
+            i
+          );
           if (i < fileArray.length - 1) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
           }
