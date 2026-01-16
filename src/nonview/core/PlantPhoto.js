@@ -11,7 +11,7 @@ class PlantPhotoBase {
     utImageTaken,
     plantNetPredictions,
     deviceIPAddress,
-    userId
+    userId,
   ) {
     this.imageHash = imageHash;
     this.imageData = imageData;
@@ -28,8 +28,8 @@ class PlantPhotoBase {
 
 const PlantPhoto = PlantPhotoDBReadMixin(
   PlantPhotoDBWriteMixin(
-    PlantPhotoFromJSONMixin(PlantPhotoFromImageMixin(PlantPhotoBase))
-  )
+    PlantPhotoFromJSONMixin(PlantPhotoFromImageMixin(PlantPhotoBase)),
+  ),
 );
 
 export default PlantPhoto;

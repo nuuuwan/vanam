@@ -9,8 +9,8 @@ const PlantPhotoDBReadMixin = (Base) =>
       const ut = TimeUtils.getUnixTime();
       const metadataResult = await WWW.fetchJSON(
         `https://vanam-teal.vercel.app/api/list-metadata?userId=${encodeURIComponent(
-          userId
-        )}&ut=${ut}`
+          userId,
+        )}&ut=${ut}`,
       );
       console.debug("list-metadata:", metadataResult);
 
@@ -27,7 +27,7 @@ const PlantPhotoDBReadMixin = (Base) =>
         "plant-photo-metadata-" + userId + "-" + TimeUtils.getTimestamp(600),
         async () => {
           return await this.fetchMetadataHot(userId);
-        }
+        },
       );
     }
 
@@ -35,7 +35,7 @@ const PlantPhotoDBReadMixin = (Base) =>
       try {
         const ut = TimeUtils.getUnixTime();
         const photoResult = await WWW.fetchJSON(
-          `https://vanam-teal.vercel.app/api/get-photo?hash=${imageHash}&ut=${ut}`
+          `https://vanam-teal.vercel.app/api/get-photo?hash=${imageHash}&ut=${ut}`,
         );
         console.debug("get-photo:", photoResult);
 
@@ -65,7 +65,7 @@ const PlantPhotoDBReadMixin = (Base) =>
         metadataResult.metadata.map(async (metadata) => {
           const imageData = await this.fetchPhotoData(metadata.imageHash);
           return this.fromJSON({ ...metadata, imageData });
-        })
+        }),
       );
 
       const sortedPlantPhotos = plantPhotos.sort((a, b) => {

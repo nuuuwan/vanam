@@ -36,7 +36,7 @@ export default class Cache {
         console.warn(
           `⚠️[Cache] ${(payloadSize / 1_000_000.0).toFixed(3)}MB/${(
             Cache.LOCAL_CACHE_SIZE / 1_000_000.0
-          ).toFixed(1)}MB: "${cacheKey}"`
+          ).toFixed(1)}MB: "${cacheKey}"`,
         );
       }
     } catch (error) {
