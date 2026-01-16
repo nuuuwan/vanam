@@ -20,15 +20,13 @@ const PlantPhotoDBReadMixin = (Base) =>
 
     static async fetchPhotoData(imageHash) {
       try {
-        const photoResponse = await WWW.fetchBlob(
+        const photoResult = await WWW.fetchJSON(
           `https://vanam-teal.vercel.app/api/get-photo?hash=${imageHash}`
         );
-        console.debug("get-photo:", photoResponse);
-        if (photoResponse.ok) {
-          const photoResult = await photoResponse.json();
-          if (photoResult.success && photoResult.photo) {
-            return photoResult.photo.imageData;
-          }
+        console.debug("get-photo:", photoResult);
+
+        if (photoResult.success && photoResult.photo) {
+          return photoResult.photo.imageData;
         }
       } catch (err) {
         console.error(`Failed to fetch photo ${imageHash}:`, err);
