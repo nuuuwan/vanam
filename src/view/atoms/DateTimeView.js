@@ -5,6 +5,16 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 const DateTimeView = ({ timestamp, variant = "body2", component = "div" }) => {
   if (!timestamp) return null;
 
+  const formatDateTime = (timestamp) => {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  };
+
   const getTimeAgo = (timestamp) => {
     const now = new Date();
     const past = new Date(timestamp);
@@ -32,12 +42,12 @@ const DateTimeView = ({ timestamp, variant = "body2", component = "div" }) => {
         sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}
       >
         <AccessTimeIcon sx={{ fontSize: "1rem" }} />
-        {new Date(timestamp).toLocaleString()}
+        {getTimeAgo(timestamp)}
         <Box
           component="span"
-          sx={{ ml: 0.5, opacity: 0.7, fontSize: "0.875em" }}
+          sx={{ ml: 0.5, opacity: 0.7, fontSize: "0.75em" }}
         >
-          ({getTimeAgo(timestamp)})
+          {formatDateTime(timestamp)}
         </Box>
       </Box>
     </Typography>
