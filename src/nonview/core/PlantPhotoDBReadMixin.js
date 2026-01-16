@@ -5,7 +5,7 @@ import Cache from "../base/Cache";
 
 const PlantPhotoDBReadMixin = (Base) =>
   class extends Base {
-    static async fetchMetadata(userId) {
+    static async fetchMetadataHot(userId) {
       const ut = TimeUtils.getUnixTime();
       const metadataResult = await WWW.fetchJSON(
         `https://vanam-teal.vercel.app/api/list-metadata?userId=${encodeURIComponent(
@@ -20,6 +20,15 @@ const PlantPhotoDBReadMixin = (Base) =>
       }
 
       return { success: true, metadata: metadataResult.metadata };
+    }
+
+    static async fetchMetadata(userId) {
+      return Cache.getAsync(
+        "plant-photo-metadata-" + userId + "-" + TimeUtils.getTimestamp(600),
+        async () => {
+          return await this.fetchMetadataHot(userId);
+        }
+      );
     }
 
     static async fetchPhotoDataHot(imageHash) {
@@ -40,11 +49,11 @@ const PlantPhotoDBReadMixin = (Base) =>
     }
 
     static fetchPhotoData(imageHash) {
-      return Cache.getAsync("plant-photo-data-" + imageHash, async () => {
+      return Cache.getAsync("plant-photo-data" + imageHash, async () => {
         return await this.fetchPhotoDataHot(imageHash);
       });
     }
-    static async listAllHot() {
+    static async listAll() {
       const userId = UserIdentity.getInstance().getUserId();
       const metadataResult = await this.fetchMetadata(userId);
 
@@ -66,15 +75,6 @@ const PlantPhotoDBReadMixin = (Base) =>
       });
 
       return sortedPlantPhotos;
-    }
-
-    static async listAll() {
-      return await Cache.getAsync(
-        "plant-photo-list-all-" + TimeUtils.getTimestamp(60),
-        async () => {
-          return await this.listAllHot();
-        }
-      );
     }
   };
 
