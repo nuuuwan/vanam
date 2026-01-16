@@ -8,8 +8,7 @@ const PlantMapView = ({ plantPhotos }) => {
   // Calculate the bounds of all photos with location
   const { center, bounds } = useMemo(() => {
     const photosWithLocation = plantPhotos.filter(
-      (photo) =>
-        photo.imageLocation?.latitude && photo.imageLocation?.longitude,
+      (photo) => photo.imageLocation?.latitude && photo.imageLocation?.longitude
     );
 
     if (photosWithLocation.length === 0) {
@@ -77,7 +76,7 @@ const PlantMapView = ({ plantPhotos }) => {
           className="grayscale-tiles"
         />
         {plantPhotos.map((photo, index) => (
-          <PlantMarker key={photo.hash || index} photo={photo} />
+          <PlantMarker key={photo.imageHash} photo={photo} />
         ))}
       </MapContainer>
     </Box>
