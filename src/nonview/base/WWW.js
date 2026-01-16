@@ -29,12 +29,24 @@ export default class WWW {
     });
   }
 
+  static async fetchPNG(url) {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const blob = await response.blob();
+    return blob;
+  }
+
   static async fetch(url) {
     if (url.endsWith(".json")) {
       return await this.fetchJSON(url);
     }
     if (url.endsWith(".tsv")) {
       return await this.fetchTSV(url);
+    }
+    if (url.endsWith(".png")) {
+      return await this.fetchPNG(url);
     }
     throw new Error(`Unsupported file format for URL: ${url}`);
   }
