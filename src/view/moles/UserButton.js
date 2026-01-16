@@ -14,7 +14,7 @@ import UserIdentity from "../../nonview/core/UserIdentity";
 const UserButton = () => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [copied, setCopied] = useState(false);
-  const userId = UserIdentity.getInstance().getUserId().substring(0, 8);
+  const userId = UserIdentity.getInstance().getShortUserId();
 
   const handleMenuOpen = (event) => {
     setMenuAnchor(event.currentTarget);

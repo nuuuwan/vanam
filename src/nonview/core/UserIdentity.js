@@ -30,6 +30,14 @@ export default class UserIdentity {
     return this.userId;
   }
 
+  static shorten(userId) {
+    return userId.substring(0, 8);
+  }
+
+  getShortUserId() {
+    return UserIdentity.shorten(this.userId);
+  }
+
   static reset() {
     localStorage.removeItem(UserIdentity.STORAGE_KEY);
     UserIdentity.instance = null;

@@ -7,6 +7,7 @@ import {
   ListItemAvatar,
   Avatar,
 } from "@mui/material";
+import UserIdentity from "../../nonview/core/UserIdentity";
 
 const PlantPhotoListItem = ({ photo }) => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const PlantPhotoListItem = ({ photo }) => {
     }
 
     if (photo.userId) {
-      parts.push(photo.userId.substring(0, 8));
+      parts.push(UserIdentity.shorten(photo.userId));
     }
 
     return parts.length > 0 ? parts.join(" • ") : "Saved successfully";
