@@ -9,8 +9,10 @@ import {
 import React, { useState, createContext, useContext } from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
+import MapIcon from "@mui/icons-material/Map";
 import HomePage from "./HomePage";
 import GalleryPage from "./GalleryPage";
+import MapPage from "./MapPage";
 import PlantPhotoPage from "./PlantPhotoPage";
 import CustomAppBar from "../moles/CustomAppBar";
 import CustomBottomNavigator from "../moles/CustomBottomNavigator";
@@ -34,12 +36,14 @@ const AppLayout = () => {
   const getCurrentView = () => {
     if (location.pathname === "/home") return 0;
     if (location.pathname === "/gallery") return 1;
+    if (location.pathname === "/map") return 2;
     return -1;
   };
 
   const handleViewChange = (view) => {
     if (view === 0) navigate("/home");
     if (view === 1) navigate("/gallery");
+    if (view === 2) navigate("/map");
   };
 
   return (
@@ -53,6 +57,7 @@ const AppLayout = () => {
             <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/gallery" element={<GalleryPage />} />
+            <Route path="/map" element={<MapPage />} />
             <Route path="/plantPhoto/:imageHash" element={<PlantPhotoPage />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
@@ -74,6 +79,15 @@ const AppLayout = () => {
               size="large"
             >
               <PhotoLibraryIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Map View">
+            <IconButton
+              color={getCurrentView() === 2 ? "primary" : "default"}
+              onClick={() => handleViewChange(2)}
+              size="large"
+            >
+              <MapIcon />
             </IconButton>
           </Tooltip>
         </CustomBottomNavigator>
