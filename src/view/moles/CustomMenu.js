@@ -8,23 +8,17 @@ import {
   Typography,
   Divider,
   Box,
-  Tooltip,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import BugReportIcon from "@mui/icons-material/BugReport";
 import InfoIcon from "@mui/icons-material/Info";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import PersonIcon from "@mui/icons-material/Person";
 import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";
 import VERSION from "../../nonview/cons/VERSION";
-import UserIdentity from "../../nonview/core/UserIdentity";
 
 const CustomMenu = () => {
   const [menuAnchor, setMenuAnchor] = useState(null);
-  const [copied, setCopied] = useState(false);
-  const userId = UserIdentity.getInstance().getUserId();
 
   const handleMenuOpen = (event) => {
     setMenuAnchor(event.currentTarget);
@@ -53,16 +47,6 @@ const CustomMenu = () => {
       window.location.reload();
     }
     handleMenuClose();
-  };
-
-  const handleCopyUserId = async () => {
-    try {
-      await navigator.clipboard.writeText(userId);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy user ID:", err);
-    }
   };
 
   return (
@@ -104,7 +88,7 @@ const CustomMenu = () => {
         <MenuItem
           onClick={() =>
             handleMenuItemClick(
-              "https://github.com/nuuuwan/vanam/blob/main/README.privacy.md",
+              "https://github.com/nuuuwan/vanam/blob/main/README.privacy.md"
             )
           }
         >
@@ -119,35 +103,6 @@ const CustomMenu = () => {
           </ListItemIcon>
           <ListItemText>Clear Cache</ListItemText>
         </MenuItem>
-        <Divider />
-        <Box sx={{ px: 2, py: 1 }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}>
-            <PersonIcon fontSize="small" color="action" />
-            <Typography variant="caption" color="text.secondary">
-              User ID:
-            </Typography>
-            <Tooltip title={copied ? "Copied!" : "Copy to clipboard"}>
-              <IconButton
-                size="small"
-                onClick={handleCopyUserId}
-                sx={{ ml: "auto", p: 0.5 }}
-              >
-                <ContentCopyIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          </Box>
-          <Typography
-            variant="caption"
-            sx={{
-              fontFamily: "monospace",
-              fontSize: "0.7rem",
-              display: "block",
-              wordBreak: "break-all",
-            }}
-          >
-            {userId.substring(0, 8)}
-          </Typography>
-        </Box>
         <Divider />
         <Box sx={{ px: 2, py: 1 }}>
           <Typography variant="caption" color="text.secondary">

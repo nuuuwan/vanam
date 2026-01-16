@@ -1,6 +1,7 @@
 import React from "react";
 import { AppBar, Toolbar, Typography, Box, Avatar } from "@mui/material";
 import CustomMenu from "./CustomMenu";
+import UserButton from "./UserButton";
 
 const CustomAppBar = ({ title = "Vanam" }) => {
   return (
@@ -14,7 +15,8 @@ const CustomAppBar = ({ title = "Vanam" }) => {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           {title}
         </Typography>
-        <Box>
+        <Box sx={{ display: "flex", gap: 1 }}>
+          <UserButton />
           <CustomMenu />
         </Box>
       </Toolbar>
