@@ -1,4 +1,4 @@
-import { Container, Box, IconButton, Tooltip } from "@mui/material";
+import { Container, Box } from "@mui/material";
 import {
   Routes,
   Route,
@@ -6,11 +6,7 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
-import ListIcon from "@mui/icons-material/List";
 import React, { useState, createContext, useContext } from "react";
-import HomeIcon from "@mui/icons-material/Home";
-import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
-import MapIcon from "@mui/icons-material/Map";
 import HomePage from "./HomePage";
 import GalleryPage from "./GalleryPage";
 import MapPage from "./MapPage";
@@ -63,35 +59,10 @@ const AppLayout = () => {
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
         </Container>
-        <CustomBottomNavigator>
-          <Tooltip title="Home">
-            <IconButton
-              color={getCurrentView() === 0 ? "primary" : "default"}
-              onClick={() => handleViewChange(0)}
-              size="large"
-            >
-              <HomeIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Gallery View">
-            <IconButton
-              color={getCurrentView() === 1 ? "primary" : "default"}
-              onClick={() => handleViewChange(1)}
-              size="large"
-            >
-              <ListIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Map View">
-            <IconButton
-              color={getCurrentView() === 2 ? "primary" : "default"}
-              onClick={() => handleViewChange(2)}
-              size="large"
-            >
-              <MapIcon />
-            </IconButton>
-          </Tooltip>
-        </CustomBottomNavigator>
+        <CustomBottomNavigator
+          currentView={getCurrentView()}
+          onViewChange={handleViewChange}
+        />
       </Box>
     </AppBarTitleContext.Provider>
   );
