@@ -11,7 +11,7 @@ export default class UserIdentity {
 
   static getInstance() {
     if (!UserIdentity.instance) {
-      let userId = "24dcf511" || localStorage.getItem(UserIdentity.STORAGE_KEY);
+      let userId = localStorage.getItem(UserIdentity.STORAGE_KEY);
 
       if (!userId) {
         userId = uuidv4().substring(0, UserIdentity.USER_ID_LENGTH);
