@@ -1,28 +1,30 @@
 export default class Cache {
-  static SALT = "v1";
-  static CACHE_DURATION_MS = 10 * 60 * 1000;
+  static CACHE_VERSION = "v1";
   static LOCAL_CACHE = {};
   static LOCAL_CACHE_SIZE = 0;
 
-  static get(key, callback) {
-    const roundedTimestamp = Math.floor(Date.now() / this.CACHE_DURATION_MS);
-    const cacheKey = `${key}-${roundedTimestamp}-${this.SALT}`;
+  static _getCacheKey(key) {
+    return `${key}-${this.CACHE_VERSION}`;
+  }
 
+  static _readFromCache(cacheKey) {
     if (Cache.LOCAL_CACHE[cacheKey] !== undefined) {
-      return Cache.LOCAL_CACHE[cacheKey];
+      return { found: true, value: Cache.LOCAL_CACHE[cacheKey] };
     }
 
     try {
       const cachedValue = localStorage.getItem(cacheKey);
       if (cachedValue !== null) {
-        return JSON.parse(cachedValue);
+        return { found: true, value: JSON.parse(cachedValue) };
       }
     } catch (error) {
       console.error(`Error reading from cache for key "${cacheKey}":`, error);
     }
 
-    const value = callback();
+    return { found: false };
+  }
 
+  static _writeToCache(cacheKey, value) {
     try {
       const payload = JSON.stringify(value);
       const payloadSize = payload.length;
@@ -41,7 +43,31 @@ export default class Cache {
       console.error(`Error writing to cache for key "${cacheKey}":`, error);
       localStorage.clear();
     }
+  }
 
+  static get(key, callback) {
+    const cacheKey = this._getCacheKey(key);
+    const cached = this._readFromCache(cacheKey);
+
+    if (cached.found) {
+      return cached.value;
+    }
+
+    const value = callback();
+    this._writeToCache(cacheKey, value);
+    return value;
+  }
+
+  static async getAsync(key, callback) {
+    const cacheKey = this._getCacheKey(key);
+    const cached = this._readFromCache(cacheKey);
+
+    if (cached.found) {
+      return cached.value;
+    }
+
+    const value = await callback();
+    this._writeToCache(cacheKey, value);
     return value;
   }
 }
