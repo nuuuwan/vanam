@@ -6,25 +6,18 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
+  Box,
+  Typography,
 } from "@mui/material";
-import UserIdentity from "../../nonview/core/UserIdentity";
+import LocationView from "./LocationView";
+import UserView from "./UserView";
 
 const PlantPhotoListItem = ({ photo }) => {
   const navigate = useNavigate();
 
   const isClickable = photo.status === "success";
 
-  const formatLocation = (location) => {
-    if (!location) return null;
-    const lat = Math.abs(location.latitude).toFixed(4);
-    const lng = Math.abs(location.longitude).toFixed(4);
-    const latDir = location.latitude >= 0 ? "N" : "S";
-    const lngDir = location.longitude >= 0 ? "E" : "W";
-    return `${lat}${latDir}, ${lng}${lngDir}`;
-  };
-
-  const getSecondaryText = () => {
-    console.debug(photo);
+  const getSecondaryContent = () => {
     if (photo.status === "error") {
       return photo.error || "Processing failed";
     }
@@ -33,22 +26,23 @@ const PlantPhotoListItem = ({ photo }) => {
       return `${!photo.hasLocation ? "No location data" : "Not saved"}`;
     }
 
-    // Success status - show location and IP
-    const parts = [];
-
-    if (photo.timestamp) {
-      parts.push(photo.timestamp.toLocaleString());
-    }
-
-    if (photo.imageLocation) {
-      parts.push(formatLocation(photo.imageLocation));
-    }
-
-    if (photo.userId) {
-      parts.push(UserIdentity.shorten(photo.userId));
-    }
-
-    return parts.length > 0 ? parts.join(" • ") : "Saved successfully";
+    // Success status - show location and IP on separate lines
+    return (
+      <Box component="span">
+        {photo.timestamp && (
+          <Typography variant="body2" color="text.secondary" component="div">
+            {photo.timestamp.toLocaleString()}
+          </Typography>
+        )}
+        <LocationView location={photo.imageLocation} />
+        <UserView userId={photo.userId} />
+        {!photo.timestamp && !photo.imageLocation && !photo.userId && (
+          <Typography variant="body2" color="text.secondary" component="div">
+            Saved successfully
+          </Typography>
+        )}
+      </Box>
+    );
   };
 
   const content = (
@@ -60,7 +54,7 @@ const PlantPhotoListItem = ({ photo }) => {
       )}
       <ListItemText
         primary={photo.species || photo.name}
-        secondary={getSecondaryText()}
+        secondary={getSecondaryContent()}
       />
     </>
   );
