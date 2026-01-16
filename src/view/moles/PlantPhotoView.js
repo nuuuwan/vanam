@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, Alert, CircularProgress, Typography, Link } from "@mui/material";
-import MapView from "./MapView";
 import LocationInfo from "../atoms/LocationInfo";
 import PlantResultsList from "./PlantResultsList";
 
@@ -14,18 +13,36 @@ const PlantPhotoView = ({
 }) => {
   return (
     <Box>
-      <MapView
-        gpsData={
-          plantPhoto?.imageLocation
-            ? {
-                latitude: plantPhoto.imageLocation.latitude,
-                longitude: plantPhoto.imageLocation.longitude,
-                accuracy: plantPhoto.imageLocation.accuracy,
-              }
-            : null
-        }
-        imageData={imageData}
-      />
+      {imageData && (
+        <Box
+          sx={{
+            width: "100vw",
+            position: "relative",
+            left: "50%",
+            right: "50%",
+            marginLeft: "-50vw",
+            marginRight: "-50vw",
+            marginTop: "-16px",
+            mb: 2,
+            height: "calc(50vh - 64px)",
+            overflow: "hidden",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-end",
+          }}
+        >
+          <img
+            src={imageData}
+            alt="Plant"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+            }}
+          />
+        </Box>
+      )}
 
       {!isLoading && (
         <LocationInfo
