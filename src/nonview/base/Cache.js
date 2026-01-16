@@ -4,7 +4,7 @@ export default class Cache {
   static LOCAL_CACHE = {};
   static LOCAL_CACHE_SIZE = 0;
 
-  static async get(key, callback) {
+  static get(key, callback) {
     const roundedTimestamp = Math.floor(Date.now() / this.CACHE_DURATION_MS);
     const cacheKey = `${key}-${roundedTimestamp}-${this.SALT}`;
 
@@ -21,7 +21,7 @@ export default class Cache {
       console.error(`Error reading from cache for key "${cacheKey}":`, error);
     }
 
-    const value = await callback();
+    const value = callback();
 
     try {
       const payload = JSON.stringify(value);
@@ -43,16 +43,5 @@ export default class Cache {
     }
 
     return value;
-  }
-
-  static clear(key) {
-    if (key) {
-      localStorage.removeItem(key);
-      Cache.LOCAL_CACHE[key] = undefined;
-    } else {
-      localStorage.clear();
-      Cache.LOCAL_CACHE = {};
-      Cache.LOCAL_CACHE_SIZE = 0;
-    }
   }
 }
