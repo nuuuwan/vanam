@@ -1,4 +1,4 @@
-# Privacy Policy for vanam
+# Privacy Policy for **vanam**
 
 **Last updated:** 10 January 2026
 

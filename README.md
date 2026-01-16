@@ -13,3 +13,8 @@ The goal is simple: make it easy to build accurate, geo-referenced tree inventor
 The name *vanam* comes from Sanskrit, meaning forest, and is also the root of the Sinhala word *vanaya* (වනය) and the Tamil word *vanam* (வனம்), both meaning forest.
 
 Live app: <https://nuuuwan.github.io/vanam>
+
+## See Also
+
+- [Long-Term Roadmap](README.roadmap.md)
+- [Privacy Policy](README.privacy.md)
