@@ -6,15 +6,18 @@ import {
   Box,
   Tooltip,
   Avatar,
+  Badge,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 
 import UserIdentity from "../../nonview/core/UserIdentity";
 import UserView from "../atoms/UserView";
+import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 
 const UserButton = () => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const userId = UserIdentity.getInstance().getUserId();
+  const { plantPhotos } = useVanamDataContext();
 
   const handleMenuOpen = (event) => {
     setMenuAnchor(event.currentTarget);
