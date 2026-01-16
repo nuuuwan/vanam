@@ -9,7 +9,7 @@ import {
 import React, { useState, createContext, useContext } from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
-import AddPage from "./AddPage";
+import HomePage from "./HomePage";
 import GalleryPage from "./GalleryPage";
 import PlantPhotoPage from "./PlantPhotoPage";
 import CustomAppBar from "../moles/CustomAppBar";
@@ -32,13 +32,13 @@ const AppLayout = () => {
   const [appBarTitle, setAppBarTitle] = useState("Vanam");
 
   const getCurrentView = () => {
-    if (location.pathname === "/add") return 0;
+    if (location.pathname === "/home") return 0;
     if (location.pathname === "/gallery") return 1;
     return -1;
   };
 
   const handleViewChange = (view) => {
-    if (view === 0) navigate("/add");
+    if (view === 0) navigate("/home");
     if (view === 1) navigate("/gallery");
   };
 
@@ -50,8 +50,8 @@ const AppLayout = () => {
         <CustomAppBar title={appBarTitle} />
         <Container maxWidth="lg" sx={{ flexGrow: 1, pb: 10, pt: 2 }}>
           <Routes>
-            <Route path="/" element={<Navigate to="/add" replace />} />
-            <Route path="/add" element={<AddPage />} />
+            <Route path="/" element={<Navigate to="/home" replace />} />
+            <Route path="/home" element={<HomePage />} />
             <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/plantPhoto/:imageHash" element={<PlantPhotoPage />} />
           </Routes>
