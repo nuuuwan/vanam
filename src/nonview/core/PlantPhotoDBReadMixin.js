@@ -1,27 +1,10 @@
 const PlantPhotoDBReadMixin = (Base) =>
   class extends Base {
-    static cachedPhotos = null;
-    static cacheTimestamp = null;
-    static CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
-
-    static async listAll(forceRefresh = false) {
-      // Check if we have valid cached data
-      const now = Date.now();
-      if (
-        !forceRefresh &&
-        this.cachedPhotos &&
-        this.cacheTimestamp &&
-        now - this.cacheTimestamp < this.CACHE_DURATION
-      ) {
-        return { success: true, photos: this.cachedPhotos, cached: true };
-      }
-
+    static async listAll() {
       try {
-        // Get current user ID
         const UserIdentity = (await import("./UserIdentity")).default;
         const userId = UserIdentity.getInstance().getUserId();
 
-        // Fetch metadata for current user
         const metadataResponse = await fetch(
           `https://vanam-teal.vercel.app/api/list-metadata?userId=${encodeURIComponent(
             userId
@@ -74,20 +57,11 @@ const PlantPhotoDBReadMixin = (Base) =>
           })
         );
 
-        // Cache the results
-        this.cachedPhotos = plantPhotos;
-        this.cacheTimestamp = now;
-
-        return { success: true, photos: plantPhotos, cached: false };
+        return { success: true, photos: plantPhotos };
       } catch (error) {
         console.error("Error listing results from blob:", error);
         return { success: false, error: error.message };
       }
-    }
-
-    static clearCache() {
-      this.cachedPhotos = null;
-      this.cacheTimestamp = null;
     }
   };
 
