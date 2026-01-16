@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default class UserIdentity {
   static STORAGE_KEY = "vanam_user_id";
+  static USER_ID_LENGTH = 8;
   static instance = null;
 
   constructor(userId) {
@@ -10,10 +11,10 @@ export default class UserIdentity {
 
   static getInstance() {
     if (!UserIdentity.instance) {
-      let userId = localStorage.getItem(UserIdentity.STORAGE_KEY);
+      let userId = "24dcf511" || localStorage.getItem(UserIdentity.STORAGE_KEY);
 
       if (!userId) {
-        userId = uuidv4();
+        userId = uuidv4().substring(0, UserIdentity.USER_ID_LENGTH);
         localStorage.setItem(UserIdentity.STORAGE_KEY, userId);
         console.log("Generated new user ID:", userId);
       } else {
@@ -28,14 +29,6 @@ export default class UserIdentity {
 
   getUserId() {
     return this.userId;
-  }
-
-  static shorten(userId) {
-    return userId.substring(0, 8);
-  }
-
-  getShortUserId() {
-    return UserIdentity.shorten(this.userId);
   }
 
   static reset() {

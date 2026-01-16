@@ -13,7 +13,7 @@ const UserView = ({ userId, variant = "body2", component = "div" }) => {
         sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}
       >
         <PersonIcon sx={{ fontSize: "1rem" }} />
-        {UserIdentity.shorten(userId)}
+        {userId}
       </Box>
     </Typography>
   );
