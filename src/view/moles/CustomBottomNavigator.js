@@ -34,15 +34,7 @@ const CustomBottomNavigator = ({ currentView, onViewChange }) => {
             <HomeIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Gallery View">
-          <IconButton
-            color={currentView === 1 ? "primary" : "default"}
-            onClick={() => onViewChange(1)}
-            size="large"
-          >
-            <ListIcon />
-          </IconButton>
-        </Tooltip>
+
         <Tooltip title="Map View">
           <IconButton
             color={currentView === 2 ? "primary" : "default"}
@@ -50,6 +42,16 @@ const CustomBottomNavigator = ({ currentView, onViewChange }) => {
             size="large"
           >
             <MapIcon />
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title="Gallery View">
+          <IconButton
+            color={currentView === 1 ? "primary" : "default"}
+            onClick={() => onViewChange(1)}
+            size="large"
+          >
+            <ListIcon />
           </IconButton>
         </Tooltip>
       </Stack>
