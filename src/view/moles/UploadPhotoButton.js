@@ -23,7 +23,7 @@ const UploadPhotoButton = () => {
       if (!result.success) {
         if (result.isDuplicate) {
           throw new Error(
-            "DUPLICATE: This plant photo is already in the database"
+            "DUPLICATE: This plant photo is already in the database",
           );
         } else {
           throw new Error(result.message || result.error || "Failed to save");
@@ -39,13 +39,13 @@ const UploadPhotoButton = () => {
     imageData,
     locationPrediction,
     utImageTaken,
-    fileName = "photo"
+    fileName = "photo",
   ) => {
     try {
       const photo = await PlantPhoto.fromImage(
         imageData,
         locationPrediction,
-        utImageTaken
+        utImageTaken,
       );
 
       const hasPlant =
@@ -65,8 +65,8 @@ const UploadPhotoButton = () => {
       photo.status = saveError
         ? "error"
         : hasPlant && hasLocation
-        ? "success"
-        : "warning";
+          ? "success"
+          : "warning";
       photo.species = hasPlant
         ? photo.plantNetPredictions[0].species
         : "No plant identified";
@@ -107,7 +107,7 @@ const UploadPhotoButton = () => {
             result.locationPrediction,
             result.utImageTaken,
             file.name,
-            i
+            i,
           );
           if (i < fileArray.length - 1) {
             await new Promise((resolve) => setTimeout(resolve, 1000));

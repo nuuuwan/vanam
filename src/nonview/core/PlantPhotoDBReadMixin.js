@@ -24,8 +24,8 @@ const PlantPhotoDBReadMixin = (Base) =>
         // Fetch metadata for current user
         const metadataResponse = await fetch(
           `https://vanam-teal.vercel.app/api/list-metadata?userId=${encodeURIComponent(
-            userId
-          )}`
+            userId,
+          )}`,
         );
 
         if (!metadataResponse.ok) {
@@ -34,7 +34,7 @@ const PlantPhotoDBReadMixin = (Base) =>
             "Failed to list metadata. Status:",
             metadataResponse.status,
             "Response:",
-            errorText
+            errorText,
           );
           return { success: false, error: `HTTP ${metadataResponse.status}` };
         }
@@ -51,7 +51,7 @@ const PlantPhotoDBReadMixin = (Base) =>
             let imageData = null;
             try {
               const photoResponse = await fetch(
-                `https://vanam-teal.vercel.app/api/get-photo?hash=${metadata.imageHash}`
+                `https://vanam-teal.vercel.app/api/get-photo?hash=${metadata.imageHash}`,
               );
               if (photoResponse.ok) {
                 const photoResult = await photoResponse.json();
@@ -62,7 +62,7 @@ const PlantPhotoDBReadMixin = (Base) =>
             } catch (err) {
               console.error(
                 `Failed to fetch photo ${metadata.imageHash}:`,
-                err
+                err,
               );
             }
 
@@ -70,7 +70,7 @@ const PlantPhotoDBReadMixin = (Base) =>
               ...metadata,
               imageData,
             });
-          })
+          }),
         );
 
         // Cache the results

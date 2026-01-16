@@ -23,8 +23,8 @@ export default class LocationPrediction {
               position.coords.latitude,
               position.coords.longitude,
               position.coords.accuracy,
-              "browser"
-            )
+              "browser",
+            ),
           );
         },
         (error) => {
@@ -37,7 +37,7 @@ export default class LocationPrediction {
             "- Position unavailable:",
             error.code === 2,
             "- Timeout:",
-            error.code === 3
+            error.code === 3,
           );
           resolve(null);
         },
@@ -45,7 +45,7 @@ export default class LocationPrediction {
           enableHighAccuracy: true,
           timeout: 10000,
           maximumAge: 0,
-        }
+        },
       );
     });
   }
@@ -54,7 +54,7 @@ export default class LocationPrediction {
     const locationData = await EXIFUtils.getLocation(file);
     if (!locationData) {
       console.warn(
-        "No GPS data found in EXIF metadata of the image blob. Defaulting to browser location."
+        "No GPS data found in EXIF metadata of the image blob. Defaulting to browser location.",
       );
       return await LocationPrediction.fromBrowser();
     }
