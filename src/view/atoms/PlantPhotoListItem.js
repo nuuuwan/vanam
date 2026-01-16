@@ -70,7 +70,7 @@ const PlantPhotoListItem = ({ photo }) => {
         <ListItemButton
           onClick={() => {
             if (photo.hash) {
-              navigate(`/${photo.hash}`);
+              navigate(`/plantPhoto/${photo.hash}`);
             }
           }}
         >

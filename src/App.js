@@ -78,7 +78,7 @@ const AppLayout = () => {
             <Route path="/" element={<Navigate to="/add" replace />} />
             <Route path="/add" element={<AddPage />} />
             <Route path="/gallery" element={<GalleryPage />} />
-            <Route path="/:imageHash" element={<PlantPhotoPage />} />
+            <Route path="/plantPhoto/:imageHash" element={<PlantPhotoPage />} />
           </Routes>
         </Container>
         <CustomBottomNavigator>
