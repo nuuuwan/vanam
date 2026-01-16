@@ -6,12 +6,10 @@ import { useVanamData } from "../../nonview/core/VanamDataContext";
 
 const GalleryPage = () => {
   const { setAppBarTitle } = useAppBarTitle();
-  const { plantPhotos, isLoading, error, loadPlantPhotos } = useVanamData();
+  const { plantPhotos, isLoading, error } = useVanamData();
 
   useEffect(() => {
     setAppBarTitle("Index");
-    loadPlantPhotos();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setAppBarTitle]);
 
   const formattedPhotos = plantPhotos.map((photo) => ({

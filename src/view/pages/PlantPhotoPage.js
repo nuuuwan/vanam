@@ -8,15 +8,9 @@ import { useVanamData } from "../../nonview/core/VanamDataContext";
 const PlantPhotoPage = () => {
   const { imageHash } = useParams();
   const { setAppBarTitle } = useAppBarTitle();
-  const { getPlantPhotoByHash, isLoading, error, loadPlantPhotos } =
-    useVanamData();
+  const { getPlantPhotoByHash, isLoading, error } = useVanamData();
 
   const plantPhoto = getPlantPhotoByHash(imageHash);
-
-  useEffect(() => {
-    loadPlantPhotos();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (plantPhoto) {

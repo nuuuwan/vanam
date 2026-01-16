@@ -1,46 +1,80 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import PlantPhoto from "./PlantPhoto";
 import UserIdentity from "./UserIdentity";
 
-const VanamDataContext = createContext(null);
+const VanamDataContext = createContext();
 
 export const useVanamData = () => {
-  const context = useContext(VanamDataContext);
-  return context;
+  return useContext(VanamDataContext);
 };
 
 export const VanamDataProvider = ({ children }) => {
   const [plantPhotos, setPlantPhotos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const userIdentity = UserIdentity.getInstance();
+  const [error, setError] = useState(null);
+  const [userIdentity] = useState(() => UserIdentity.getInstance());
 
-  const loadPlantPhotos = useCallback(async () => {
-    const plantPhotos = PlantPhoto.listAll();
-    setPlantPhotos(plantPhotos);
+  useEffect(() => {
+    const loadPlantPhotos = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const result = await PlantPhoto.listAll();
+        if (result.success) {
+          const sortedPhotos = result.photos.sort((a, b) => {
+            const dateA = new Date(a.utImageTaken).getTime();
+            const dateB = new Date(b.utImageTaken).getTime();
+            return dateB - dateA;
+          });
+          setPlantPhotos(sortedPhotos);
+        } else {
+          setError(result.error || "Failed to load plant photos");
+        }
+      } catch (err) {
+        setError(err.message || "Failed to load plant photos");
+        console.error("Error loading plant photos:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPlantPhotos();
   }, []);
 
-  const addPlantPhoto = useCallback((photo) => {
+  const addPlantPhoto = (photo) => {
     setPlantPhotos((prev) => [photo, ...prev]);
-  }, []);
+  };
 
-  const getPlantPhotoByHash = useCallback(
-    (hash) => {
-      return plantPhotos.find((photo) => photo.imageHash === hash);
-    },
-    [plantPhotos]
-  );
+  const getPlantPhotoByHash = (hash) => {
+    return plantPhotos.find((photo) => photo.imageHash === hash);
+  };
 
-  if (plantPhotos) {
+  const getPhotosWithLocation = () => {
+    return plantPhotos.filter(
+      (photo) => photo.imageLocation?.latitude && photo.imageLocation?.longitude
+    );
+  };
+
+  const clearError = () => {
+    setError(null);
+  };
+
+  const reset = () => {
+    setPlantPhotos([]);
+    setError(null);
     setIsLoading(false);
-  }
+  };
 
   const value = {
-    isLoading,
     userIdentity,
     plantPhotos,
-    loadPlantPhotos,
+    isLoading,
+    error,
     addPlantPhoto,
     getPlantPhotoByHash,
+    getPhotosWithLocation,
+    clearError,
+    reset,
   };
 
   return (

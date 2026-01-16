@@ -6,12 +6,10 @@ import { useVanamData } from "../../nonview/core/VanamDataContext";
 
 const MapPage = () => {
   const { setAppBarTitle } = useAppBarTitle();
-  const { plantPhotos, isLoading, error, loadPlantPhotos } = useVanamData();
+  const { plantPhotos, isLoading, error } = useVanamData();
 
   useEffect(() => {
     setAppBarTitle("Map");
-    loadPlantPhotos();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setAppBarTitle]);
 
   const formattedPhotos = useMemo(
