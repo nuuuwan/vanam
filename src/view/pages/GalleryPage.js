@@ -7,14 +7,13 @@ import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 const GalleryPage = () => {
   const { setAppBarTitle } = useAppBarTitle();
   const {
-    plantPhotos: allPhotos,
+    plantPhotos,
     isLoading,
     error,
-    userIdentity,
   } = useVanamDataContext();
 
   useEffect(() => {
-    setAppBarTitle("Your Plants");
+    setAppBarTitle("Plants");
   }, [setAppBarTitle]);
 
   if (isLoading) {
@@ -40,10 +39,6 @@ const GalleryPage = () => {
     );
   }
 
-  const userId = userIdentity?.userId;
-  const plantPhotos = allPhotos.filter((p) => p.userId === userId);
-  const allCompleted = allPhotos.filter((p) => !p.pending);
-  const uniqueUsers = new Set(allCompleted.map((p) => p.userId)).size;
   const completedPhotos = plantPhotos.filter((p) => !p.pending);
   const pendingPhotos = plantPhotos.filter((p) => p.pending);
   const lowConfPhotos = plantPhotos.filter(
@@ -57,7 +52,7 @@ const GalleryPage = () => {
     <>
       {plantPhotos.length === 0 && (
         <Alert severity="warning" sx={{ mb: 1, fontWeight: "normal" }}>
-          You have no plants uploaded yet.
+          No plants found.
         </Alert>
       )}
       <Stack direction="row" gap={1} alignItems="center" sx={{ mb: 0.5 }}>
@@ -88,10 +83,7 @@ const GalleryPage = () => {
           <PlantPhotoListItem key={photo.imageHash} photo={photo} />
         ))}
       </List>
-      <Alert severity="info" sx={{ mt: 1, fontSize: "0.5rem" }}>
-        This app only displays your plants. The Vanam database has a total of{" "}
-        {allCompleted.length} plants from {uniqueUsers} users.
-      </Alert>
+
     </>
   );
 };
