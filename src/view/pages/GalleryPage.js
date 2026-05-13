@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, List, CircularProgress, Alert, Stack, Chip } from "@mui/material";
+import { Box, CircularProgress, Alert, Stack, Chip } from "@mui/material";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 import { useAppBarTitle } from "../../App";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
@@ -74,11 +74,11 @@ const GalleryPage = () => {
           />
         )}
       </Stack>
-      <List>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
         {plantPhotos.map((photo) => (
           <PlantPhotoListItem key={photo.imageHash} photo={photo} />
         ))}
-      </List>
+      </Box>
     </>
   );
 };

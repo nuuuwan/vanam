@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Avatar, Stack, Typography, Chip } from "@mui/material";
+import { Box, Card, CardActionArea, Stack, Typography, Chip } from "@mui/material";
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import PhotoMetadataView from "./PhotoMetadataView";
 
@@ -8,26 +8,30 @@ const PlantPhotoListItem = ({ photo }) => {
   const navigate = useNavigate();
 
   return (
-    <Box
-      onClick={() => {
-        navigate(`/plant/${photo.imageHash}`);
-      }}
-      sx={{
-        cursor: "pointer",
-        margin: 1,
-        padding: 1,
-        borderRadius: 1,
-        "&:hover": {
-          backgroundColor: "action.hover",
-        },
-      }}
+    <Card
+      onClick={() => navigate(`/plant/${photo.imageHash}`)}
+      sx={{ cursor: "pointer", borderRadius: 0, overflow: "hidden" }}
     >
-      <Stack direction="row" spacing={2} alignItems="center">
-        <Avatar src={photo.imageData} alt={photo.mostLikelySpecies} />
-
-        <Stack direction="column" sx={{ flexGrow: 1 }}>
+      <CardActionArea>
+        <Stack direction="row" sx={{ alignItems: "stretch" }}>
+          <Box
+            sx={{
+              width: 100,
+              flexShrink: 0,
+              overflow: "hidden",
+              alignSelf: "stretch",
+            }}
+          >
+            <Box
+              component="img"
+              src={photo.imageData}
+              alt={photo.mostLikelySpecies}
+              sx={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            />
+          </Box>
+          <Stack direction="column" sx={{ p: 1, flexGrow: 1, overflow: "hidden" }}>
           {photo.mostLikelySpecies && (
-            <Typography variant="body2" color="text.primary">
+            <Typography variant="body2" color="text.primary" noWrap>
               {photo.mostLikelySpecies}
             </Typography>
           )}
@@ -41,7 +45,7 @@ const PlantPhotoListItem = ({ photo }) => {
                   bgcolor: "error.main",
                   color: "white",
                   alignSelf: "flex-start",
-                  mb: 0.5,
+                  mt: 0.5,
                 }}
               />
             )}
@@ -51,7 +55,7 @@ const PlantPhotoListItem = ({ photo }) => {
               size="small"
               color="warning"
               icon={<HourglassEmptyIcon />}
-              sx={{ alignSelf: "flex-start", mb: 0.5 }}
+              sx={{ alignSelf: "flex-start", mt: 0.5 }}
             />
           )}
           <PhotoMetadataView
@@ -60,8 +64,9 @@ const PlantPhotoListItem = ({ photo }) => {
             userId={photo.userId}
           />
         </Stack>
-      </Stack>
-    </Box>
+        </Stack>
+      </CardActionArea>
+    </Card>
   );
 };
 
