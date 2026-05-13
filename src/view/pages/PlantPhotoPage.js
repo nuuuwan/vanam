@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { Box, CircularProgress, Alert } from "@mui/material";
+import { useParams, useNavigate } from "react-router-dom";
+import { Box, CircularProgress, Alert, IconButton, Tooltip } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PlantPhotoView from "../moles/PlantPhotoView";
 import { useAppBarTitle } from "../../App";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 
 const PlantPhotoPage = () => {
   const { imageHash } = useParams();
+  const navigate = useNavigate();
   const { setAppBarTitle } = useAppBarTitle();
   const { getPlantPhotoByHash, isLoading, error } = useVanamDataContext();
 
@@ -51,6 +53,21 @@ const PlantPhotoPage = () => {
 
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", position: "relative" }}>
+      <Tooltip title="Back to list">
+        <IconButton
+          onClick={() => navigate("/plants")}
+          sx={{
+            position: "absolute",
+            top: 8,
+            left: 8,
+            zIndex: 10,
+            bgcolor: "rgba(255,255,255,0.5)",
+            "&:hover": { bgcolor: "rgba(255,255,255,0.75)" },
+          }}
+        >
+          <ArrowBackIcon />
+        </IconButton>
+      </Tooltip>
       <PlantPhotoView
         plantPhoto={plantPhoto}
         imageData={plantPhoto.imageData}
