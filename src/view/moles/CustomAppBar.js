@@ -7,7 +7,7 @@ const CustomAppBar = ({ title }) => {
   const navigate = useNavigate();
   document.title = title;
   return (
-    <AppBar position="sticky" color="primary" elevation={2}>
+    <AppBar position="fixed" color="primary" elevation={2}>
       <Toolbar>
         <Avatar
           src={`${process.env.PUBLIC_URL}/favicon.ico`}

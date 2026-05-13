@@ -1,4 +1,4 @@
-import { Container, Box, CircularProgress } from "@mui/material";
+import { Container, Box, CircularProgress, Toolbar } from "@mui/material";
 import { Routes, Route, Navigate } from "react-router-dom";
 import React, { useState, createContext, useContext, useRef } from "react";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
@@ -60,6 +60,7 @@ const AppLayout = () => {
         onTouchEnd={handleTouchEnd}
       >
         <CustomAppBar title={appBarTitle} />
+        <Toolbar />
         <Box
           sx={{
             display: "flex",
