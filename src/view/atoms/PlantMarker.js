@@ -1,10 +1,10 @@
 import React from "react";
-import { Marker, Popup } from "react-leaflet";
+import { Marker } from "react-leaflet";
+import { useNavigate } from "react-router-dom";
 import L from "leaflet";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
-import PlantPhotoListItem from "./PlantPhotoListItem";
 
 const defaultIcon = L.icon({
   iconUrl: markerIcon,
@@ -71,6 +71,8 @@ const createCustomIcon = (imageUrl, pending = false) => {
 };
 
 const PlantMarker = ({ photo }) => {
+  const navigate = useNavigate();
+
   if (!photo.imageLocation?.latitude || !photo.imageLocation?.longitude) {
     return null;
   }
@@ -86,11 +88,11 @@ const PlantMarker = ({ photo }) => {
       : defaultIcon;
 
   return (
-    <Marker position={position} icon={icon}>
-      <Popup>
-        <PlantPhotoListItem photo={photo} />
-      </Popup>
-    </Marker>
+    <Marker
+      position={position}
+      icon={icon}
+      eventHandlers={{ click: () => navigate(`/plant/${photo.imageHash}`) }}
+    />
   );
 };
 
