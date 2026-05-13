@@ -49,6 +49,11 @@ const GalleryPage = () => {
 
   return (
     <>
+      {plantPhotos.length === 0 && (
+        <Alert severity="warning" sx={{ mb: 1, fontWeight: "normal" }}>
+          You have no plants uploaded yet.
+        </Alert>
+      )}
       <Stack direction="row" gap={1} alignItems="center" sx={{ mb: 0.5 }}>
         {completedPhotos.length > 0 && (
           <Chip

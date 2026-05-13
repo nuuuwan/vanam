@@ -57,7 +57,17 @@ const CustomMenu = () => {
           <ListItemIcon>
             <GitHubIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>GitHub Repository</ListItemText>
+          <ListItemText>Frontend Repo (vanam)</ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() =>
+            handleMenuItemClick("https://github.com/nuuuwan/vanam_py")
+          }
+        >
+          <ListItemIcon>
+            <GitHubIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Backend Repo (vanam_py)</ListItemText>
         </MenuItem>
         <MenuItem
           onClick={() =>
