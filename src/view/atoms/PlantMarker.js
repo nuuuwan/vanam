@@ -1,7 +1,20 @@
 import React from "react";
 import { Marker, Popup } from "react-leaflet";
 import L from "leaflet";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import PlantPhotoListItem from "./PlantPhotoListItem";
+
+const defaultIcon = L.icon({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
 
 // Custom marker icon using the plant image
 const createCustomIcon = (imageUrl) => {
@@ -43,12 +56,12 @@ const PlantMarker = ({ photo }) => {
     photo.imageLocation.latitude,
     photo.imageLocation.longitude,
   ];
-  const customIcon = photo.imageData
+  const icon = photo.imageData
     ? createCustomIcon(photo.imageData)
-    : undefined;
+    : defaultIcon;
 
   return (
-    <Marker position={position} icon={customIcon}>
+    <Marker position={position} icon={icon}>
       <Popup>
         <PlantPhotoListItem photo={photo} />
       </Popup>

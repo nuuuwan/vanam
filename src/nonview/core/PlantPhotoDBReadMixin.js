@@ -1,80 +1,30 @@
-import WWW from "../base/WWW";
-import UserIdentity from "./UserIdentity";
-import TimeUtils from "../base/TimeUtils";
-import Cache from "../base/Cache";
+const ALL_JSON_URL =
+  "https://raw.githubusercontent.com/nuuuwan/vanam_py/refs/heads/main/data/aggregated/all.json";
+
+const IMAGE_BASE_URL =
+  "https://raw.githubusercontent.com/nuuuwan/vanam_py/refs/heads/main/data/images";
+
+const getImageUrl = (imageHash) => {
+  const subfolder = imageHash.substring(0, 4);
+  return `${IMAGE_BASE_URL}/${subfolder}/${imageHash}.png`;
+};
 
 const PlantPhotoDBReadMixin = (Base) =>
   class extends Base {
-    static async fetchMetadataHot(userId) {
-      const ut = TimeUtils.getUnixTime();
-      const metadataResult = await WWW.fetchJSON(
-        `https://vanam-teal.vercel.app/api/list-metadata?userId=${encodeURIComponent(
-          userId,
-        )}&ut=${ut}`,
-      );
-      console.debug("list-metadata:", metadataResult);
-
-      if (!metadataResult.success || !metadataResult.metadata) {
-        console.error("Failed to list metadata:", metadataResult.error);
-        return { success: false, error: metadataResult.error };
-      }
-
-      return { success: true, metadata: metadataResult.metadata };
-    }
-
-    static async fetchMetadata(userId) {
-      return Cache.getAsync(
-        "plant-photo-metadata-" + userId + "-" + TimeUtils.getTimestamp(600),
-        async () => {
-          return await this.fetchMetadataHot(userId);
-        },
-      );
-    }
-
-    static async fetchPhotoDataHot(imageHash) {
-      try {
-        const ut = TimeUtils.getUnixTime();
-        const photoResult = await WWW.fetchJSON(
-          `https://vanam-teal.vercel.app/api/get-photo?hash=${imageHash}&ut=${ut}`,
-        );
-        console.debug("get-photo:", photoResult);
-
-        if (photoResult.success && photoResult.photo) {
-          return photoResult.photo.imageData;
-        }
-      } catch (err) {
-        console.error(`Failed to fetch photo ${imageHash}:`, err);
-      }
-      return null;
-    }
-
-    static fetchPhotoData(imageHash) {
-      return Cache.getAsync("plant-photo-data" + imageHash, async () => {
-        return await this.fetchPhotoDataHot(imageHash);
-      });
-    }
     static async listAll() {
-      const userId = UserIdentity.getInstance().getUserId();
-      const metadataResult = await this.fetchMetadata(userId);
-
-      if (!metadataResult.success) {
-        return metadataResult;
+      const response = await fetch(ALL_JSON_URL);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch all.json: ${response.status}`);
       }
+      const records = await response.json();
 
-      const plantPhotos = await Promise.all(
-        metadataResult.metadata.map(async (metadata) => {
-          const imageData = await this.fetchPhotoData(metadata.imageHash);
-          return this.fromJSON({ ...metadata, imageData });
-        }),
+      const plantPhotos = records.map((record) =>
+        this.fromJSON({ ...record, imageData: getImageUrl(record.imageHash) }),
       );
 
-      const sortedPlantPhotos = plantPhotos.sort((a, b) => {
-        const dateA = new Date(a.utImageTaken).getTime();
-        const dateB = new Date(b.utImageTaken).getTime();
-        return dateB - dateA;
+      return plantPhotos.sort((a, b) => {
+        return Number(b.utImageTaken) - Number(a.utImageTaken);
       });
-
-      return sortedPlantPhotos;
     }
   };
 

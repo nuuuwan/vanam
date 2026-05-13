@@ -11,17 +11,24 @@ export const useVanamDataContext = () => {
 export const VanamDataProvider = ({ children }) => {
   const [plantPhotos, setPlantPhotos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const userIdentity = UserIdentity.getInstance();
 
   useEffect(() => {
     const loadPlantPhotos = async () => {
-      const plantPhotos = await PlantPhoto.listAll();
-      console.debug(`Loaded ${plantPhotos.length} plant photos.`);
-      setPlantPhotos(plantPhotos);
+      try {
+        const photos = await PlantPhoto.listAll();
+        console.debug(`Loaded ${photos.length} plant photos.`);
+        setPlantPhotos(photos);
+      } catch (err) {
+        console.error("Failed to load plant photos:", err);
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     loadPlantPhotos();
-    setIsLoading(false);
   }, []);
 
   const addPlantPhoto = (photo) => {
@@ -36,6 +43,7 @@ export const VanamDataProvider = ({ children }) => {
     userIdentity,
     plantPhotos,
     isLoading,
+    error,
     addPlantPhoto,
     getPlantPhotoByHash,
   };

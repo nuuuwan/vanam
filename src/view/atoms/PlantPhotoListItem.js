@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Avatar, Stack } from "@mui/material";
+import { Box, Avatar, Stack, Typography } from "@mui/material";
 import PhotoMetadataView from "./PhotoMetadataView";
 
 const PlantPhotoListItem = ({ photo }) => {
@@ -25,6 +25,11 @@ const PlantPhotoListItem = ({ photo }) => {
         <Avatar src={photo.imageData} alt={photo.mostLikelySpecies} />
 
         <Stack direction="column" sx={{ flexGrow: 1 }}>
+          {photo.mostLikelySpecies && (
+            <Typography variant="body2" color="text.primary">
+              {photo.mostLikelySpecies}
+            </Typography>
+          )}
           <PhotoMetadataView
             ut={photo.utImageTaken}
             location={photo.imageLocation}
