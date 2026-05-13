@@ -6,7 +6,6 @@ import {
   Stack,
   Chip,
   IconButton,
-  Tooltip,
 } from "@mui/material";
 import MapIcon from "@mui/icons-material/Map";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
@@ -86,23 +85,23 @@ const GalleryPage = () => {
           )}
         </Stack>
       </Stack>
-      <Tooltip title="Map View">
-        <IconButton
-          onClick={() => navigate("/map")}
-          size="small"
-          sx={{
-            position: "fixed",
-            top: 64,
-            right: 8,
-            zIndex: 1000,
-            bgcolor: "background.paper",
-            boxShadow: 2,
-            "&:hover": { bgcolor: "grey.100" },
-          }}
-        >
-          <MapIcon sx={{ color: "secondary.light" }} />
-        </IconButton>
-      </Tooltip>
+
+      <IconButton
+        onClick={() => navigate("/map")}
+        size="small"
+        sx={{
+          position: "fixed",
+          top: 64,
+          right: 8,
+          zIndex: 1000,
+          bgcolor: "background.paper",
+          boxShadow: 2,
+          "&:hover": { bgcolor: "grey.100" },
+        }}
+      >
+        <MapIcon sx={{ color: "secondary.light" }} />
+      </IconButton>
+
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
         {plantPhotos.map((photo) => (
           <PlantPhotoListItem key={photo.imageHash} photo={photo} />
