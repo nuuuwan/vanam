@@ -4,7 +4,11 @@ import HomeIcon from "@mui/icons-material/Home";
 import ListIcon from "@mui/icons-material/List";
 import MapIcon from "@mui/icons-material/Map";
 
-const CustomBottomNavigator = ({ currentView, onViewChange, pendingCount = 0 }) => {
+const CustomBottomNavigator = ({
+  currentView,
+  onViewChange,
+  pendingCount = 0,
+}) => {
   const navigationButtons = [
     { id: 0, title: "Home", Icon: HomeIcon },
     { id: 2, title: "Map View", Icon: MapIcon },
@@ -40,7 +44,10 @@ const CustomBottomNavigator = ({ currentView, onViewChange, pendingCount = 0 }) 
                 onClick={() => onViewChange(id)}
                 disabled={isSelected}
               >
-                <Badge badgeContent={showBadge ? pendingCount : 0} color="warning">
+                <Badge
+                  badgeContent={showBadge ? pendingCount : 0}
+                  color="warning"
+                >
                   <Icon
                     sx={{
                       color: isSelected ? "primary.main" : "secondary.light",
