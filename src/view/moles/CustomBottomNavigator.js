@@ -1,15 +1,10 @@
 import React from "react";
-import { Paper, Stack, IconButton, Tooltip } from "@mui/material";
+import { Paper, Stack, Box, IconButton, Tooltip } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
 import MapIcon from "@mui/icons-material/Map";
 import UploadPhotoButton from "./UploadPhotoButton";
 
 const CustomBottomNavigator = ({ currentView, onViewChange }) => {
-  const navigationButtons = [
-    { id: 2, title: "Map View", Icon: MapIcon },
-    { id: 1, title: "Gallery View", Icon: ListIcon },
-  ];
-
   return (
     <Paper
       sx={{
@@ -23,31 +18,29 @@ const CustomBottomNavigator = ({ currentView, onViewChange }) => {
     >
       <Stack
         direction="row"
-        spacing={2}
         sx={{
-          justifyContent: "center",
+          justifyContent: "space-between",
           maxWidth: 600,
           mx: "auto",
+          px: 2,
         }}
       >
+        {/* Left: List / Map view toggle */}
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Tooltip title="List View">
+            <IconButton onClick={() => onViewChange(1)} disabled={currentView === 1}>
+              <ListIcon sx={{ color: currentView === 1 ? "primary.main" : "secondary.light" }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Map View">
+            <IconButton onClick={() => onViewChange(2)} disabled={currentView === 2}>
+              <MapIcon sx={{ color: currentView === 2 ? "primary.main" : "secondary.light" }} />
+            </IconButton>
+          </Tooltip>
+        </Box>
+
+        {/* Right: Camera */}
         <UploadPhotoButton iconOnly />
-        {navigationButtons.map(({ id, title, Icon }) => {
-          const isSelected = currentView === id;
-          return (
-            <Tooltip key={id} title={title}>
-              <IconButton
-                onClick={() => onViewChange(id)}
-                disabled={isSelected}
-              >
-                <Icon
-                  sx={{
-                    color: isSelected ? "primary.main" : "secondary.light",
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
-          );
-        })}
       </Stack>
     </Paper>
   );
