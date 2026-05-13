@@ -1,5 +1,5 @@
 import { Container, Box, CircularProgress, Toolbar } from "@mui/material";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import React, { useState, createContext, useContext, useRef } from "react";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 import GalleryPage from "./GalleryPage";
@@ -27,13 +27,17 @@ const AppLayout = () => {
   const touchStartY = useRef(0);
   const isPulling = useRef(false);
   const { refresh } = useVanamDataContext();
+  const location = useLocation();
+  const isPullToRefreshEnabled = location.pathname === "/plants";
 
   const handleTouchStart = (e) => {
+    if (!isPullToRefreshEnabled) return;
     touchStartY.current = e.touches[0].clientY;
     isPulling.current = false;
   };
 
   const handleTouchMove = (e) => {
+    if (!isPullToRefreshEnabled) return;
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
     if (scrollTop > 0) return;
     const delta = e.touches[0].clientY - touchStartY.current;
