@@ -46,6 +46,9 @@ const GalleryPage = () => {
   const uniqueUsers = new Set(allCompleted.map((p) => p.userId)).size;
   const completedPhotos = plantPhotos.filter((p) => !p.pending);
   const pendingPhotos = plantPhotos.filter((p) => p.pending);
+  const lowConfPhotos = plantPhotos.filter(
+    (p) => !p.pending && p.topPrediction?.confidence != null && p.topPrediction.confidence < 0.2
+  );
 
   return (
     <>
@@ -67,6 +70,13 @@ const GalleryPage = () => {
             label={`${pendingPhotos.length} pending`}
             size="small"
             sx={{ bgcolor: "warning.main", color: "white" }}
+          />
+        )}
+        {lowConfPhotos.length > 0 && (
+          <Chip
+            label={`${lowConfPhotos.length} <20% confidence`}
+            size="small"
+            sx={{ bgcolor: "error.main", color: "white" }}
           />
         )}
       </Stack>
