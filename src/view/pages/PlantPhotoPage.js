@@ -14,7 +14,7 @@ const PlantPhotoPage = () => {
 
   useEffect(() => {
     if (plantPhoto) {
-      setAppBarTitle("Plant Photo");
+      setAppBarTitle(plantPhoto.topPrediction?.species || "Plant Photo");
     }
   }, [plantPhoto, setAppBarTitle]);
 

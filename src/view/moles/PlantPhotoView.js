@@ -1,6 +1,19 @@
 import React from "react";
 import { Box, Alert } from "@mui/material";
 import PhotoMetadataView from "../atoms/PhotoMetadataView";
+import PlantResultItem from "./PlantResultItem";
+
+const toResultItem = (p) => ({
+  score: p.confidence,
+  species: p.species,
+  genus: p.genus,
+  family: p.family,
+  commonNames: p.commonNames || [],
+  gbif_id: p.gbifId || "",
+  powo_id: p.powoId || "",
+  iucn_id: p.iucnId || "",
+  iucn_category: p.iucnCategory || "",
+});
 
 const PlantPhotoView = ({ plantPhoto, imageData, error }) => {
   return (
@@ -43,6 +56,11 @@ const PlantPhotoView = ({ plantPhoto, imageData, error }) => {
             location={plantPhoto.imageLocation}
             userId={plantPhoto.userId}
           />
+          {plantPhoto.topPrediction && (
+            <Box sx={{ mt: 2 }}>
+              <PlantResultItem result={toResultItem(plantPhoto.topPrediction)} />
+            </Box>
+          )}
         </Box>
       )}
 
