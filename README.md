@@ -2,6 +2,10 @@
 
 **Vanam** is a system for identifying and cataloguing flora and fauna.
 
+- [Vanam App](https://nuuuwan.github.io/vanam/home)
+
+- [Data](data/README.md)
+
 ---
 
 ## Architecture
