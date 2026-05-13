@@ -9,12 +9,14 @@ import {
   Tooltip,
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import { useNavigate } from "react-router-dom";
 import CustomMenu from "./CustomMenu";
 import UserButton from "./UserButton";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 
 const CustomAppBar = ({ title }) => {
   const { refresh, isLoading } = useVanamDataContext();
+  const navigate = useNavigate();
   document.title = title;
   return (
     <AppBar position="sticky" color="primary" elevation={2}>
@@ -22,7 +24,8 @@ const CustomAppBar = ({ title }) => {
         <Avatar
           src={`${process.env.PUBLIC_URL}/favicon.ico`}
           alt="Vanam"
-          sx={{ width: 32, height: 32, mr: 1.5 }}
+          onClick={() => navigate("/")}
+          sx={{ width: 32, height: 32, mr: 1.5, cursor: "pointer" }}
         />
         <Typography variant="body2" sx={{ flexGrow: 1 }}>
           {title}

@@ -47,7 +47,10 @@ const GalleryPage = () => {
   const completedPhotos = plantPhotos.filter((p) => !p.pending);
   const pendingPhotos = plantPhotos.filter((p) => p.pending);
   const lowConfPhotos = plantPhotos.filter(
-    (p) => !p.pending && p.topPrediction?.confidence != null && p.topPrediction.confidence < 0.2
+    (p) =>
+      !p.pending &&
+      p.topPrediction?.confidence != null &&
+      p.topPrediction.confidence < 0.2,
   );
 
   return (
