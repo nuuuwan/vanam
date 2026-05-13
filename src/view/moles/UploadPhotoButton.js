@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import ImageUtils from "../../nonview/core/ImageUtils";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
 import LoadingView from "../atoms/LoadingView";
@@ -8,6 +9,7 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 
 const UploadPhotoButton = () => {
+  const navigate = useNavigate();
   const fileInputRef = React.useRef(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [totalFiles, setTotalFiles] = React.useState(0);
@@ -134,6 +136,7 @@ const UploadPhotoButton = () => {
     }
 
     setIsLoading(false);
+    navigate("/gallery");
   };
 
   const handleFileChange = (event) => {
