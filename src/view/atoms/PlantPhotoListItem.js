@@ -23,7 +23,13 @@ const PlantPhotoListItem = ({ photo }) => {
   return (
     <Card
       onClick={() => navigate(`/plant/${photo.imageHash}`)}
-      sx={{ cursor: "pointer", borderRadius: 0, overflow: "hidden", boxShadow: "none", border: "none" }}
+      sx={{
+        cursor: "pointer",
+        borderRadius: 0,
+        overflow: "hidden",
+        boxShadow: "none",
+        border: "none",
+      }}
     >
       <CardActionArea>
         <Stack direction="row" sx={{ alignItems: "stretch" }}>
