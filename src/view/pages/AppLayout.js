@@ -73,7 +73,9 @@ const AppLayout = () => {
           {pullDistance > 0 && (
             <CircularProgress
               size={24}
-              variant={pullDistance >= PULL_THRESHOLD ? "indeterminate" : "determinate"}
+              variant={
+                pullDistance >= PULL_THRESHOLD ? "indeterminate" : "determinate"
+              }
               value={(pullDistance / PULL_THRESHOLD) * 100}
               color={pullDistance >= PULL_THRESHOLD ? "primary" : "inherit"}
             />
