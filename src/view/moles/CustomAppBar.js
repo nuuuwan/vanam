@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Avatar,
-} from "@mui/material";
+import { AppBar, Toolbar, Typography, Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CustomMenu from "./CustomMenu";
 

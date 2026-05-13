@@ -98,8 +98,19 @@ const CustomMenu = () => {
           <ListItemText>Refresh</ListItemText>
         </MenuItem>
         <Divider />
-        <Box sx={{ px: 2, py: 1, display: "flex", alignItems: "flex-start", gap: 1 }}>
-          <PersonIcon fontSize="small" sx={{ mt: 0.3, color: "text.secondary" }} />
+        <Box
+          sx={{
+            px: 2,
+            py: 1,
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 1,
+          }}
+        >
+          <PersonIcon
+            fontSize="small"
+            sx={{ mt: 0.3, color: "text.secondary" }}
+          />
           <Box>
             <UserView userId={userId} />
             <Typography
