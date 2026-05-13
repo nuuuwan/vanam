@@ -31,6 +31,20 @@ const PlantPhotoListItem = ({ photo }) => {
               {photo.mostLikelySpecies}
             </Typography>
           )}
+          {!photo.pending &&
+            photo.topPrediction?.confidence != null &&
+            photo.topPrediction.confidence <= 0.5 && (
+              <Chip
+                label="Low Conf"
+                size="small"
+                sx={{
+                  bgcolor: "error.main",
+                  color: "white",
+                  alignSelf: "flex-start",
+                  mb: 0.5,
+                }}
+              />
+            )}
           {photo.pending && (
             <Chip
               label="Pending"
