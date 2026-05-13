@@ -33,7 +33,7 @@ const AppLayout = () => {
 
   const { plantPhotos, userIdentity } = useVanamDataContext();
   const pendingCount = plantPhotos.filter(
-    (p) => p.pending && p.userId === userIdentity?.userId
+    (p) => p.pending && p.userId === userIdentity?.userId,
   ).length;
 
   const getCurrentView = () => {
