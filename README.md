@@ -24,7 +24,7 @@ Vanam is split into two parts:
 3. **Ingestion:** The backend periodically checks the temporary storage and downloads both images (`data/images`) and their associated metadata (`data/image-metadata`) into permanent storage.
 4. **Identification:** The backend submits each image to the [PlantNet API](https://my.plantnet.org/) — an AI-powered plant identification service — and saves the results (`data/identifications`). PlantNet analyses the visual features of a plant photo and returns a ranked list of likely species matches.
 5. **Aggregation:** The backend produces summary files (`data/aggregated/`) consolidating all identifications.
-6. **Display:** The identified plants and their images are made available to the frontend app for browsing and searching.
+6. **Display:** The identified plants and their images are made available to the frontend app. The Gallery and Map views show only the current user's plants.
 7. **Cleanup:** The backend purges processed blobs from the Vercel temporary storage.
 
 ---
