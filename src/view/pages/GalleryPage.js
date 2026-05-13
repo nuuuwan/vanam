@@ -1,11 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  Box,
-  CircularProgress,
-  Alert,
-  Stack,
-  Chip,
-} from "@mui/material";
+import { Box, CircularProgress, Alert, Stack, Chip } from "@mui/material";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 import { useAppBarTitle } from "../../App";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
