@@ -35,7 +35,7 @@ const PlantPhotoListItem = ({ photo }) => {
             photo.topPrediction?.confidence != null &&
             photo.topPrediction.confidence < 0.2 && (
               <Chip
-                label="<20% Confidence"
+                label="<20% Conf."
                 size="small"
                 sx={{
                   bgcolor: "error.main",

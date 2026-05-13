@@ -68,7 +68,7 @@ const GalleryPage = () => {
         )}
         {lowConfPhotos.length > 0 && (
           <Chip
-            label={`${lowConfPhotos.length} <20% confidence`}
+            label={`${lowConfPhotos.length} <20% conf.`}
             size="small"
             sx={{ bgcolor: "error.main", color: "white" }}
           />
