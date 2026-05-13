@@ -1,54 +1,45 @@
-import React, { useMemo } from "react";
-import { MapContainer, TileLayer } from "react-leaflet";
+import React, { useMemo, useEffect } from "react";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import { Box } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import PlantMarker from "../atoms/PlantMarker";
 
-const PlantMapView = ({ plantPhotos }) => {
-  // Calculate the bounds of all photos with location
-  const { center, bounds } = useMemo(() => {
-    const photosWithLocation = plantPhotos.filter(
-      (photo) =>
-        photo.imageLocation?.latitude && photo.imageLocation?.longitude,
-    );
+// Keeps the map viewport in sync whenever plantPhotos changes
+const MapBoundsUpdater = ({ plantPhotos }) => {
+  const map = useMap();
 
-    if (photosWithLocation.length === 0) {
-      // Default to a world view
-      return { center: [0, 0], bounds: null };
-    }
+  useEffect(() => {
+    const photosWithLocation = plantPhotos.filter(
+      (p) => p.imageLocation?.latitude && p.imageLocation?.longitude,
+    );
+    if (photosWithLocation.length === 0) return;
 
     if (photosWithLocation.length === 1) {
-      // Single photo - center on it
-      return {
-        center: [
+      map.setView(
+        [
           photosWithLocation[0].imageLocation.latitude,
           photosWithLocation[0].imageLocation.longitude,
         ],
-        bounds: null,
-      };
+        15,
+      );
+      return;
     }
 
-    // Multiple photos - calculate bounding box
-    const latitudes = photosWithLocation.map((p) => p.imageLocation.latitude);
-    const longitudes = photosWithLocation.map((p) => p.imageLocation.longitude);
-
-    const minLat = Math.min(...latitudes);
-    const maxLat = Math.max(...latitudes);
-    const minLng = Math.min(...longitudes);
-    const maxLng = Math.max(...longitudes);
-
-    const avgLat = (minLat + maxLat) / 2;
-    const avgLng = (minLng + maxLng) / 2;
-
-    return {
-      center: [avgLat, avgLng],
-      bounds: [
-        [minLat, minLng],
-        [maxLat, maxLng],
+    const lats = photosWithLocation.map((p) => p.imageLocation.latitude);
+    const lngs = photosWithLocation.map((p) => p.imageLocation.longitude);
+    map.fitBounds(
+      [
+        [Math.min(...lats), Math.min(...lngs)],
+        [Math.max(...lats), Math.max(...lngs)],
       ],
-    };
-  }, [plantPhotos]);
+      { padding: [40, 40] },
+    );
+  }, [plantPhotos, map]);
 
+  return null;
+};
+
+const PlantMapView = ({ plantPhotos }) => {
   return (
     <Box
       sx={{
@@ -64,9 +55,8 @@ const PlantMapView = ({ plantPhotos }) => {
       }}
     >
       <MapContainer
-        center={center}
-        bounds={bounds}
-        zoom={bounds ? undefined : 15}
+        center={[0, 0]}
+        zoom={2}
         style={{ height: "100%", width: "100%" }}
         maxZoom={18}
         minZoom={2}
@@ -76,7 +66,8 @@ const PlantMapView = ({ plantPhotos }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           className="grayscale-tiles"
         />
-        {plantPhotos.map((photo, index) => (
+        <MapBoundsUpdater plantPhotos={plantPhotos} />
+        {plantPhotos.map((photo) => (
           <PlantMarker key={photo.imageHash} photo={photo} />
         ))}
       </MapContainer>
