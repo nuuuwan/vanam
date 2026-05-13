@@ -21,16 +21,6 @@ export default async function handler(req, res) {
       .json({ success: false, error: "Method not allowed" });
   }
 
-  // Get userId from query parameters
-  const { userId } = req.query;
-
-  if (!userId) {
-    return res.status(400).json({
-      success: false,
-      error: "userId query parameter is required",
-    });
-  }
-
   try {
     // List metadata files
     const { blobs: metadataBlobs } = await list({
@@ -60,10 +50,8 @@ export default async function handler(req, res) {
       }),
     );
 
-    // Filter by userId and remove null values
-    const validMetadata = metadata.filter(
-      (data) => data !== null && data.userId === userId,
-    );
+    // Remove null values
+    const validMetadata = metadata.filter((data) => data !== null);
 
     return res.status(200).json({
       success: true,
