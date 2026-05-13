@@ -15,38 +15,38 @@ const toResultItem = (p) => ({
   iucn_category: p.iucnCategory || "",
 });
 
+const IMAGE_HEIGHT = "calc(50vh - 56px)";
+const APPBAR_HEIGHT = 56;
+
 const PlantPhotoView = ({ plantPhoto, imageData, error }) => {
   return (
     <Box>
       {imageData && (
-        <Box
-          sx={{
-            width: "100vw",
-            position: "relative",
-            left: "50%",
-            right: "50%",
-            marginLeft: "-50vw",
-            marginRight: "-50vw",
-            marginTop: "-16px",
-            mb: 2,
-            height: "calc(50vh - 64px)",
-            overflow: "hidden",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "flex-end",
-          }}
-        >
-          <img
-            src={imageData}
-            alt="Plant"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
+        <>
+          <Box
+            sx={{
+              position: "fixed",
+              top: APPBAR_HEIGHT,
+              left: 0,
+              right: 0,
+              height: IMAGE_HEIGHT,
+              overflow: "hidden",
+              zIndex: 5,
             }}
-          />
-        </Box>
+          >
+            <img
+              src={imageData}
+              alt="Plant"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                display: "block",
+              }}
+            />
+          </Box>
+          <Box sx={{ height: IMAGE_HEIGHT, mb: 2 }} />
+        </>
       )}
 
       {plantPhoto && (

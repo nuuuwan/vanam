@@ -63,8 +63,8 @@ const PlantPhotoPage = () => {
         <IconButton
           onClick={() => navigate("/plants")}
           sx={{
-            position: "absolute",
-            top: 8,
+            position: "fixed",
+            top: 64,
             left: 8,
             zIndex: 10,
             bgcolor: "rgba(255,255,255,0.5)",
