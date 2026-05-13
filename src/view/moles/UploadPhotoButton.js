@@ -155,7 +155,9 @@ const UploadPhotoButton = ({ iconOnly = false }) => {
         <Tooltip title="Upload Photo">
           <span>
             <IconButton onClick={handleFileClick} disabled={isLoading}>
-              <AddAPhotoIcon sx={{ color: isLoading ? "secondary.light" : "inherit" }} />
+              <AddAPhotoIcon
+                sx={{ color: isLoading ? "secondary.light" : "inherit" }}
+              />
             </IconButton>
           </span>
         </Tooltip>

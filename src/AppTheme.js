@@ -11,7 +11,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Afacad", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Ubuntu Mono", monospace',
   },
   components: {
     MuiLink: {

@@ -1,7 +1,7 @@
 body {
   margin: 0;
   overflow-x: hidden;
-  font-family: "Afacad", sans-serif;
+  font-family: "Ubuntu Mono", monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
