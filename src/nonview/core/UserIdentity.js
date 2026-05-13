@@ -16,7 +16,7 @@ export default class UserIdentity {
 
   static getBrowserUserId() {
     return Cache.get(UserIdentity.CACHE_KEY, () =>
-      UserIdentity.getBrowserUserIdHot()
+      UserIdentity.getBrowserUserIdHot(),
     );
   }
 
