@@ -1,5 +1,3 @@
-import UserIdentity from "./UserIdentity";
-
 const ALL_JSON_URL =
   "https://raw.githubusercontent.com/nuuuwan/vanam_py/refs/heads/main/data/aggregated/all.json";
 
@@ -16,8 +14,6 @@ const getImageUrl = (imageHash) => {
 const PlantPhotoDBReadMixin = (Base) =>
   class extends Base {
     static async listAll() {
-      const userId = UserIdentity.getInstance().getUserId();
-
       // Fetch identified photos from GitHub aggregated file
       const bustAll = ALL_JSON_URL + "?t=" + Date.now();
       const response = await fetch(bustAll);
