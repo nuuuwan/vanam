@@ -33,43 +33,47 @@ const PhotoProcessingStatus = ({ totalFiles, processedPhotos }) => {
       </Box>
       {isComplete && (
         <List>
-        {processedPhotos.map((photo, index) => {
-          const hasError = photo.status === "error" || photo.error;
-          const Icon = hasError ? CancelIcon : CheckCircleIcon;
-          const iconColor = hasError ? "error" : "success";
+          {processedPhotos.map((photo, index) => {
+            const hasError = photo.status === "error" || photo.error;
+            const Icon = hasError ? CancelIcon : CheckCircleIcon;
+            const iconColor = hasError ? "error" : "success";
 
-          return (
-            <Box key={index}>
-              <Stack direction="row" alignItems="center" sx={{ mt: 1 }}>
-                <Typography variant="body2" sx={{ mr: 2 }}>
-                  {index + 1}.
-                </Typography>
-                {hasError ? (
-                  <Stack direction="row" alignItems="center" sx={{ mt: 1 }}>
-                    <Icon color={iconColor} sx={{ mr: 2 }} />
-                    <Stack direction="column">
-                      <Typography
-                        variant="caption"
-                        color="error"
-                        sx={{ mr: 2 }}
-                      >
-                        {photo.name}
-                      </Typography>
-                      <Typography variant="body2" color="error" sx={{ mr: 2 }}>
-                        {photo.error || "Unknown error"}
-                      </Typography>
+            return (
+              <Box key={index}>
+                <Stack direction="row" alignItems="center" sx={{ mt: 1 }}>
+                  <Typography variant="body2" sx={{ mr: 2 }}>
+                    {index + 1}.
+                  </Typography>
+                  {hasError ? (
+                    <Stack direction="row" alignItems="center" sx={{ mt: 1 }}>
+                      <Icon color={iconColor} sx={{ mr: 2 }} />
+                      <Stack direction="column">
+                        <Typography
+                          variant="caption"
+                          color="error"
+                          sx={{ mr: 2 }}
+                        >
+                          {photo.name}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="error"
+                          sx={{ mr: 2 }}
+                        >
+                          {photo.error || "Unknown error"}
+                        </Typography>
+                      </Stack>
                     </Stack>
-                  </Stack>
-                ) : (
-                  <Box sx={{ flexGrow: 1 }}>
-                    <PlantPhotoListItem photo={photo} />
-                  </Box>
-                )}
-              </Stack>
-            </Box>
-          );
-        })}
-      </List>
+                  ) : (
+                    <Box sx={{ flexGrow: 1 }}>
+                      <PlantPhotoListItem photo={photo} />
+                    </Box>
+                  )}
+                </Stack>
+              </Box>
+            );
+          })}
+        </List>
       )}
     </Box>
   );
