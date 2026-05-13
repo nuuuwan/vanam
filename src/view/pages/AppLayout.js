@@ -1,6 +1,7 @@
-import { Container, Box } from "@mui/material";
+import { Container, Box, CircularProgress } from "@mui/material";
 import { Routes, Route, Navigate } from "react-router-dom";
-import React, { useState, createContext, useContext } from "react";
+import React, { useState, createContext, useContext, useRef } from "react";
+import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 import GalleryPage from "./GalleryPage";
 import MapPage from "./MapPage";
 import PlantPhotoPage from "./PlantPhotoPage";

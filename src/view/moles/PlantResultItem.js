@@ -1,5 +1,5 @@
 import React from "react";
-import { Paper, Stack, Box, Typography, Link } from "@mui/material";
+import { Paper, Box, Typography, Link } from "@mui/material";
 import CommonNamesChips from "../atoms/CommonNamesChips";
 import TaxonomySection from "./TaxonomySection";
 import DatabaseReferencesSection from "./DatabaseReferencesSection";
