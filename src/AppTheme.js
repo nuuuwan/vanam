@@ -11,7 +11,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Recursive", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Afacad", "Roboto", "Helvetica", "Arial", sans-serif',
   },
   components: {
     MuiLink: {
