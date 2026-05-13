@@ -136,7 +136,7 @@ const UploadPhotoButton = () => {
     }
 
     setIsLoading(false);
-    navigate("/gallery");
+    navigate("/plants");
   };
 
   const handleFileChange = (event) => {

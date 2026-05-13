@@ -6,10 +6,10 @@ import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 
 const GalleryPage = () => {
   const { setAppBarTitle } = useAppBarTitle();
-  const { plantPhotos, isLoading, error } = useVanamDataContext();
+  const { plantPhotos: allPhotos, isLoading, error, userIdentity } = useVanamDataContext();
 
   useEffect(() => {
-    setAppBarTitle("Gallery");
+    setAppBarTitle("Your Plants");
   }, [setAppBarTitle]);
 
   if (isLoading) {
@@ -35,9 +35,12 @@ const GalleryPage = () => {
     );
   }
 
+  const userId = userIdentity?.userId;
+  const plantPhotos = allPhotos.filter((p) => p.userId === userId);
+  const allCompleted = allPhotos.filter((p) => !p.pending);
+  const uniqueUsers = new Set(allCompleted.map((p) => p.userId)).size;
   const completedPhotos = plantPhotos.filter((p) => !p.pending);
   const pendingPhotos = plantPhotos.filter((p) => p.pending);
-  const uniqueUsers = new Set(completedPhotos.map((p) => p.userId)).size;
 
   return (
     <>
@@ -62,9 +65,9 @@ const GalleryPage = () => {
           <PlantPhotoListItem key={photo.imageHash} photo={photo} />
         ))}
       </List>
-      <Alert severity="info" sx={{ mt: 1 }}>
+      <Alert severity="info" sx={{ mt: 1, fontSize: "0.5rem" }}>
         This app only displays your plants. The Vanam database has a total of{" "}
-        {completedPhotos.length} plants from {uniqueUsers} users.
+        {allCompleted.length} plants from {uniqueUsers} users.
       </Alert>
     </>
   );

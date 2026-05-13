@@ -32,14 +32,14 @@ const AppLayout = () => {
 
   const getCurrentView = () => {
     if (location.pathname === "/home") return 0;
-    if (location.pathname === "/gallery") return 1;
+    if (location.pathname === "/plants") return 1;
     if (location.pathname === "/map") return 2;
     return -1;
   };
 
   const handleViewChange = (view) => {
     if (view === 0) navigate("/home");
-    if (view === 1) navigate("/gallery");
+    if (view === 1) navigate("/plants");
     if (view === 2) navigate("/map");
   };
 
@@ -53,7 +53,7 @@ const AppLayout = () => {
           <Routes>
             <Route path="/" element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<HomePage />} />
-            <Route path="/gallery" element={<GalleryPage />} />
+            <Route path="/plants" element={<GalleryPage />} />
             <Route path="/map" element={<MapPage />} />
             <Route path="/plant/:imageHash" element={<PlantPhotoPage />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
