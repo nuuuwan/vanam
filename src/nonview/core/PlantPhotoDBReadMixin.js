@@ -19,7 +19,8 @@ const PlantPhotoDBReadMixin = (Base) =>
       const userId = UserIdentity.getInstance().getUserId();
 
       // Fetch identified photos from GitHub aggregated file
-      const response = await fetch(ALL_JSON_URL);
+      const bustAll = ALL_JSON_URL + "?t=" + Date.now();
+      const response = await fetch(bustAll);
       if (!response.ok) {
         throw new Error(`Failed to fetch all.json: ${response.status}`);
       }
@@ -37,7 +38,7 @@ const PlantPhotoDBReadMixin = (Base) =>
       let pendingPhotos = [];
       try {
         const metaRes = await fetch(
-          `${VERCEL_API_BASE}/list-metadata?userId=${encodeURIComponent(userId)}`,
+          `${VERCEL_API_BASE}/list-metadata?t=${Date.now()}`,
         );
         if (metaRes.ok) {
           const metaData = await metaRes.json();
@@ -53,7 +54,7 @@ const PlantPhotoDBReadMixin = (Base) =>
                 if (!imageData) {
                   try {
                     const photoRes = await fetch(
-                      `${VERCEL_API_BASE}/get-photo?hash=${m.imageHash}`,
+                      `${VERCEL_API_BASE}/get-photo?hash=${m.imageHash}&t=${Date.now()}`,
                     );
                     if (photoRes.ok) {
                       const photoData = await photoRes.json();
