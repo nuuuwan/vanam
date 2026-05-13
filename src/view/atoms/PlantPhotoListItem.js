@@ -50,20 +50,6 @@ const PlantPhotoListItem = ({ photo }) => {
                 {photo.mostLikelySpecies}
               </Typography>
             )}
-            {!photo.pending &&
-              photo.topPrediction?.confidence != null &&
-              photo.topPrediction.confidence < 0.2 && (
-                <Chip
-                  label="<20% Conf."
-                  size="small"
-                  sx={{
-                    bgcolor: "error.main",
-                    color: "white",
-                    alignSelf: "flex-start",
-                    mt: 0.5,
-                  }}
-                />
-              )}
             {photo.pending && (
               <Chip
                 label="Pending"
@@ -78,6 +64,13 @@ const PlantPhotoListItem = ({ photo }) => {
               location={photo.imageLocation}
               userId={photo.userId}
             />
+            {!photo.pending &&
+              photo.topPrediction?.confidence != null &&
+              photo.topPrediction.confidence < 0.2 && (
+                <Typography variant="caption" color="error" sx={{ mt: 0.5, fontSize: "0.65rem" }}>
+                  &lt;20% Confidence
+                </Typography>
+              )}
           </Stack>
         </Stack>
       </CardActionArea>

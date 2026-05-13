@@ -1,14 +1,12 @@
 import React from "react";
 import { Box } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
 
 const UserView = ({ userId }) => {
   if (!userId) return null;
 
   return (
     <Box sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}>
-      <PersonIcon sx={{ fontSize: "1rem" }} />
-      {userId}
+      Photo by {userId}
     </Box>
   );
 };
