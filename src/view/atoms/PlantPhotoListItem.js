@@ -67,7 +67,11 @@ const PlantPhotoListItem = ({ photo }) => {
             {!photo.pending &&
               photo.topPrediction?.confidence != null &&
               photo.topPrediction.confidence < 0.2 && (
-                <Typography variant="caption" color="error" sx={{ mt: 0.5, fontSize: "0.65rem" }}>
+                <Typography
+                  variant="caption"
+                  color="error"
+                  sx={{ mt: 0.5, fontSize: "0.65rem" }}
+                >
                   &lt;20% Confidence
                 </Typography>
               )}

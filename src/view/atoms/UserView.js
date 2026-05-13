@@ -6,7 +6,7 @@ const UserView = ({ userId }) => {
 
   return (
     <Box sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}>
-      Photo by {userId}
+      By {userId}
     </Box>
   );
 };
