@@ -1,5 +1,14 @@
 import React from "react";
-import { Box, Button, IconButton, Tooltip } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ImageUtils from "../../nonview/core/ImageUtils";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
@@ -14,6 +23,7 @@ const UploadPhotoButton = ({ iconOnly = false }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [totalFiles, setTotalFiles] = React.useState(0);
   const [processedPhotos, setProcessedPhotos] = React.useState([]);
+  const [modalOpen, setModalOpen] = React.useState(false);
   const { addPlantPhoto, getPlantPhotoByHash } = useVanamDataContext();
 
   const handleFileClick = () => {
@@ -85,6 +95,7 @@ const UploadPhotoButton = ({ iconOnly = false }) => {
     setIsLoading(true);
     setTotalFiles(fileArray.length);
     setProcessedPhotos([]);
+    setModalOpen(true);
 
     for (let i = 0; i < fileArray.length; i++) {
       const file = fileArray[i];
@@ -138,7 +149,6 @@ const UploadPhotoButton = ({ iconOnly = false }) => {
     }
 
     setIsLoading(false);
-    navigate("/plants");
   };
 
   const handleFileChange = (event) => {
@@ -148,6 +158,35 @@ const UploadPhotoButton = ({ iconOnly = false }) => {
       event.target.value = "";
     }
   };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+    navigate("/plants");
+  };
+
+  const uploadModal = (
+    <Dialog
+      open={modalOpen}
+      fullWidth
+      maxWidth="sm"
+      disableEscapeKeyDown={isLoading}
+    >
+      <DialogTitle>Uploading Photos</DialogTitle>
+      <DialogContent>
+        <PhotoProcessingStatus
+          totalFiles={totalFiles}
+          processedPhotos={processedPhotos}
+        />
+      </DialogContent>
+      {!isLoading && (
+        <DialogActions>
+          <Button onClick={handleModalClose} variant="contained">
+            Done
+          </Button>
+        </DialogActions>
+      )}
+    </Dialog>
+  );
 
   if (iconOnly) {
     return (
@@ -169,6 +208,7 @@ const UploadPhotoButton = ({ iconOnly = false }) => {
           style={{ display: "none" }}
           onChange={handleFileChange}
         />
+        {uploadModal}
       </>
     );
   }
