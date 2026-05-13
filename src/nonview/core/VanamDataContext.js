@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import PlantPhoto from "./PlantPhoto";
 import UserIdentity from "./UserIdentity";
+import Cache from "../base/Cache";
 
 const VanamDataContext = createContext();
 
@@ -20,7 +21,10 @@ export const VanamDataProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const userIdentity = UserIdentity.getInstance();
 
-  const loadPlantPhotos = useCallback(async () => {
+  const loadPlantPhotos = useCallback(async (clearCache = false) => {
+    if (clearCache) {
+      Cache.clear();
+    }
     setIsLoading(true);
     setError(null);
     try {
@@ -54,7 +58,7 @@ export const VanamDataProvider = ({ children }) => {
     error,
     addPlantPhoto,
     getPlantPhotoByHash,
-    refresh: loadPlantPhotos,
+    refresh: () => loadPlantPhotos(true),
   };
 
   return (

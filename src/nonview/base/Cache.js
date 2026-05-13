@@ -58,6 +58,12 @@ export default class Cache {
     return value;
   }
 
+  static clear() {
+    localStorage.clear();
+    Cache.LOCAL_CACHE = {};
+    Cache.LOCAL_CACHE_SIZE = 0;
+  }
+
   static async getAsync(key, callback) {
     const cacheKey = this._getCacheKey(key);
     const cached = this._readFromCache(cacheKey);
