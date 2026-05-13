@@ -4,10 +4,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import ListIcon from "@mui/icons-material/List";
 import MapIcon from "@mui/icons-material/Map";
 
-const CustomBottomNavigator = ({
-  currentView,
-  onViewChange,
-}) => {
+const CustomBottomNavigator = ({ currentView, onViewChange }) => {
   const navigationButtons = [
     { id: 0, title: "Home", Icon: HomeIcon },
     { id: 2, title: "Map View", Icon: MapIcon },
