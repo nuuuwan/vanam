@@ -7,6 +7,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import React, { useState, createContext, useContext } from "react";
+import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 import HomePage from "./HomePage";
 import GalleryPage from "./GalleryPage";
 import MapPage from "./MapPage";
@@ -29,6 +30,11 @@ const AppLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [appBarTitle, setAppBarTitle] = useState("Vanam");
+
+  const { plantPhotos, userIdentity } = useVanamDataContext();
+  const pendingCount = plantPhotos.filter(
+    (p) => p.pending && p.userId === userIdentity?.userId
+  ).length;
 
   const getCurrentView = () => {
     if (location.pathname === "/home") return 0;
@@ -62,6 +68,7 @@ const AppLayout = () => {
         <CustomBottomNavigator
           currentView={getCurrentView()}
           onViewChange={handleViewChange}
+          pendingCount={pendingCount}
         />
       </Box>
     </AppBarTitleContext.Provider>

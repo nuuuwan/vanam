@@ -6,7 +6,12 @@ import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 
 const GalleryPage = () => {
   const { setAppBarTitle } = useAppBarTitle();
-  const { plantPhotos: allPhotos, isLoading, error, userIdentity } = useVanamDataContext();
+  const {
+    plantPhotos: allPhotos,
+    isLoading,
+    error,
+    userIdentity,
+  } = useVanamDataContext();
 
   useEffect(() => {
     setAppBarTitle("Your Plants");
