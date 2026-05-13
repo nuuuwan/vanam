@@ -7,11 +7,8 @@ import {
   Stack,
   Typography,
   Chip,
-  IconButton,
-  Tooltip,
 } from "@mui/material";
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
-import MapIcon from "@mui/icons-material/Map";
 import PhotoMetadataView from "./PhotoMetadataView";
 
 const getConfidenceColor = (confidence) => {
@@ -78,23 +75,6 @@ const PlantPhotoListItem = ({ photo }) => {
                 {Math.round(photo.topPrediction.confidence * 100)}% confidence
               </Typography>
             )}
-            {photo.imageLocation?.latitude &&
-              photo.imageLocation?.longitude && (
-                <Tooltip title="View on map">
-                  <IconButton
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate("/map", {
-                        state: { focusHash: photo.imageHash },
-                      });
-                    }}
-                    sx={{ alignSelf: "flex-end", mt: "auto", p: 0.25 }}
-                  >
-                    <MapIcon fontSize="small" color="action" />
-                  </IconButton>
-                </Tooltip>
-              )}
           </Stack>
         </Stack>
       </CardActionArea>

@@ -5,16 +5,12 @@ import {
   Alert,
   Stack,
   Chip,
-  IconButton,
 } from "@mui/material";
-import MapIcon from "@mui/icons-material/Map";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 import { useAppBarTitle } from "../../App";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
-import { useNavigate } from "react-router-dom";
 
 const GalleryPage = () => {
-  const navigate = useNavigate();
   const { setAppBarTitle } = useAppBarTitle();
   const { plantPhotos, isLoading, error } = useVanamDataContext();
 
@@ -85,22 +81,6 @@ const GalleryPage = () => {
           )}
         </Stack>
       </Stack>
-
-      <IconButton
-        onClick={() => navigate("/map")}
-        size="small"
-        sx={{
-          position: "fixed",
-          top: 64,
-          right: 8,
-          zIndex: 1000,
-          bgcolor: "background.paper",
-          boxShadow: 2,
-          "&:hover": { bgcolor: "grey.100" },
-        }}
-      >
-        <MapIcon sx={{ color: "secondary.light" }} />
-      </IconButton>
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
         {plantPhotos.map((photo) => (
