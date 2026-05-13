@@ -58,7 +58,7 @@ const AppLayout = () => {
   return (
     <AppBarTitleContext.Provider value={{ appBarTitle, setAppBarTitle }}>
       <Box
-        sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+        sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", overflowX: "hidden", maxWidth: "100vw" }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
