@@ -85,7 +85,6 @@ const UploadPhotoButton = () => {
     setIsLoading(true);
     setTotalFiles(fileArray.length);
     setProcessedPhotos([]);
-    let successCount = 0;
 
     for (let i = 0; i < fileArray.length; i++) {
       const file = fileArray[i];
@@ -103,14 +102,13 @@ const UploadPhotoButton = () => {
               "Duplicate. This plant photo is already in the database";
             setProcessedPhotos((prev) => [...prev, existingPhoto]);
           } else {
-            const ok = await processAndSavePhoto(
+            await processAndSavePhoto(
               result.imageData,
               result.locationPrediction,
               result.utImageTaken,
               file.name,
               i,
             );
-            if (ok) successCount++;
           }
 
           if (i < fileArray.length - 1) {
