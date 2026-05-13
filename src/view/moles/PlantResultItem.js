@@ -1,27 +1,29 @@
 import React from "react";
-import { Paper, Stack, Box, Typography, Link, useTheme } from "@mui/material";
-import { Gauge } from "@mui/x-charts/Gauge";
+import { Paper, Stack, Box, Typography, Link } from "@mui/material";
 import CommonNamesChips from "../atoms/CommonNamesChips";
 import TaxonomySection from "./TaxonomySection";
 import DatabaseReferencesSection from "./DatabaseReferencesSection";
 
-const PlantResultItem = ({ result }) => {
-  const theme = useTheme();
-  const scorePercent = result.score * 100;
-  const getGaugeColor = (score) => {
-    if (score > 75) return theme.palette.success.main;
-    if (score > 50) return theme.palette.warning.main;
-    return theme.palette.error.main;
-  };
+const getConfidenceColor = (score) => {
+  if (score < 0.2) return "error.main";
+  if (score < 0.5) return "warning.main";
+  return "success.main";
+};
 
+const PlantResultItem = ({ result }) => {
   return (
     <Paper elevation={5} sx={{ p: 2, mb: 2 }}>
-      <Stack direction="row" spacing={2} alignItems="flex-start">
-        <Box sx={{ flex: 1 }}>
+      <Box>
+        <Typography
+            variant="caption"
+            sx={{ color: getConfidenceColor(result.score), fontSize: "0.75rem" }}
+          >
+            {Math.round(result.score * 100)}% confidence
+          </Typography>
           <Typography
             variant="subtitle1"
             fontStyle="italic"
-            sx={{ mb: 1, color: getGaugeColor(scorePercent) }}
+            sx={{ mb: 1 }}
           >
             <Link
               href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
@@ -49,37 +51,7 @@ const PlantResultItem = ({ result }) => {
             iucn={{ id: result.iucn_id, category: result.iucn_category }}
           />
         </Box>
-        <Box sx={{ position: "relative", width: 100, height: 100 }}>
-          <Gauge
-            width={100}
-            height={100}
-            value={scorePercent}
-            valueMin={0}
-            valueMax={100}
-            text={({ value }) => `${Math.round(value)}%`}
-            sx={{
-              [`& .MuiGauge-valueArc`]: {
-                fill: getGaugeColor(scorePercent),
-              },
-            }}
-          />
-          <Typography
-            variant="caption"
-            sx={{
-              position: "absolute",
-              bottom: 28,
-              left: "50%",
-              transform: "translateX(-50%)",
-              fontSize: "0.5rem",
-              color: theme.palette.text.secondary,
-              fontWeight: 300,
-            }}
-          >
-            Conf.
-          </Typography>
-        </Box>
-      </Stack>
-    </Paper>
+      </Paper>
   );
 };
 

@@ -63,17 +63,14 @@ const PlantPhotoListItem = ({ photo }) => {
               location={photo.imageLocation}
               userId={photo.userId}
             />
-            {!photo.pending &&
-              photo.topPrediction?.confidence != null &&
-              photo.topPrediction.confidence < 0.2 && (
-                <Typography
-                  variant="caption"
-                  color="error"
-                  sx={{ mt: 0.5, fontSize: "0.65rem" }}
-                >
-                  &lt;20% Confidence
-                </Typography>
-              )}
+            {!photo.pending && photo.topPrediction?.confidence != null && (
+              <Typography
+                variant="caption"
+                sx={{ mt: 0.5, fontSize: "0.65rem", color: getConfidenceColor(photo.topPrediction.confidence) }}
+              >
+                {Math.round(photo.topPrediction.confidence * 100)}% confidence
+              </Typography>
+            )}
           </Stack>
         </Stack>
       </CardActionArea>
