@@ -18,6 +18,9 @@ const UserButton = () => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const userId = UserIdentity.getInstance().getUserId();
   const { plantPhotos } = useVanamDataContext();
+  const pendingCount = plantPhotos.filter(
+    (p) => p.pending && p.userId === userId
+  ).length;
 
   const handleMenuOpen = (event) => {
     setMenuAnchor(event.currentTarget);
@@ -32,7 +35,7 @@ const UserButton = () => {
       <Tooltip title="User Info">
         <IconButton onClick={handleMenuOpen} color="inherit">
           <Badge
-            badgeContent={plantPhotos.length}
+            badgeContent={pendingCount}
             color="primary"
             sx={{
               "& .MuiBadge-badge": {

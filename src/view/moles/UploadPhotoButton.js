@@ -66,6 +66,7 @@ const UploadPhotoButton = () => {
       photo.error = saveError;
 
       setProcessedPhotos((prev) => [...prev, photo]);
+      return !saveError;
     } catch (err) {
       console.error(err);
       const errorPhoto = {
@@ -75,6 +76,7 @@ const UploadPhotoButton = () => {
         timestamp: new Date(),
       };
       setProcessedPhotos((prev) => [...prev, errorPhoto]);
+      return false;
     }
   };
 
@@ -83,6 +85,7 @@ const UploadPhotoButton = () => {
     setIsLoading(true);
     setTotalFiles(fileArray.length);
     setProcessedPhotos([]);
+    let successCount = 0;
 
     for (let i = 0; i < fileArray.length; i++) {
       const file = fileArray[i];
@@ -100,13 +103,14 @@ const UploadPhotoButton = () => {
               "Duplicate. This plant photo is already in the database";
             setProcessedPhotos((prev) => [...prev, existingPhoto]);
           } else {
-            await processAndSavePhoto(
+            const ok = await processAndSavePhoto(
               result.imageData,
               result.locationPrediction,
               result.utImageTaken,
               file.name,
               i,
             );
+            if (ok) successCount++;
           }
 
           if (i < fileArray.length - 1) {
@@ -136,7 +140,9 @@ const UploadPhotoButton = () => {
     }
 
     setIsLoading(false);
-    navigate("/plants");
+    if (successCount > 0) {
+      navigate("/plants");
+    }
   };
 
   const handleFileChange = (event) => {
