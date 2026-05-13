@@ -1,12 +1,11 @@
 import React from "react";
 import { Paper, Stack, IconButton, Tooltip } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
 import ListIcon from "@mui/icons-material/List";
 import MapIcon from "@mui/icons-material/Map";
+import UploadPhotoButton from "./UploadPhotoButton";
 
 const CustomBottomNavigator = ({ currentView, onViewChange }) => {
   const navigationButtons = [
-    { id: 0, title: "Home", Icon: HomeIcon },
     { id: 2, title: "Map View", Icon: MapIcon },
     { id: 1, title: "Gallery View", Icon: ListIcon },
   ];
@@ -31,6 +30,7 @@ const CustomBottomNavigator = ({ currentView, onViewChange }) => {
           mx: "auto",
         }}
       >
+        <UploadPhotoButton iconOnly />
         {navigationButtons.map(({ id, title, Icon }) => {
           const isSelected = currentView === id;
           return (

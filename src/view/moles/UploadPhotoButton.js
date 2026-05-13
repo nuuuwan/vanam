@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, IconButton, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ImageUtils from "../../nonview/core/ImageUtils";
 import PlantPhoto from "../../nonview/core/PlantPhoto";
@@ -8,7 +8,7 @@ import PhotoProcessingStatus from "./PhotoProcessingStatus";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 
-const UploadPhotoButton = () => {
+const UploadPhotoButton = ({ iconOnly = false }) => {
   const navigate = useNavigate();
   const fileInputRef = React.useRef(null);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -148,6 +148,28 @@ const UploadPhotoButton = () => {
       event.target.value = "";
     }
   };
+
+  if (iconOnly) {
+    return (
+      <>
+        <Tooltip title="Upload Photo">
+          <span>
+            <IconButton onClick={handleFileClick} disabled={isLoading}>
+              <AddAPhotoIcon sx={{ color: isLoading ? "secondary.light" : "inherit" }} />
+            </IconButton>
+          </span>
+        </Tooltip>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          style={{ display: "none" }}
+          onChange={handleFileChange}
+        />
+      </>
+    );
+  }
 
   return (
     <Box sx={{ mt: 2 }}>

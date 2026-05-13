@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 import React, { useState, createContext, useContext } from "react";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
-import HomePage from "./HomePage";
 import GalleryPage from "./GalleryPage";
 import MapPage from "./MapPage";
 import PlantPhotoPage from "./PlantPhotoPage";
@@ -37,14 +36,12 @@ const AppLayout = () => {
   ).length;
 
   const getCurrentView = () => {
-    if (location.pathname === "/home") return 0;
     if (location.pathname === "/plants") return 1;
     if (location.pathname === "/map") return 2;
     return -1;
   };
 
   const handleViewChange = (view) => {
-    if (view === 0) navigate("/home");
     if (view === 1) navigate("/plants");
     if (view === 2) navigate("/map");
   };
@@ -57,12 +54,12 @@ const AppLayout = () => {
         <CustomAppBar title={appBarTitle} />
         <Container maxWidth="lg" sx={{ flexGrow: 1, pb: 10, pt: 2 }}>
           <Routes>
-            <Route path="/" element={<Navigate to="/home" replace />} />
-            <Route path="/home" element={<HomePage />} />
+            <Route path="/" element={<Navigate to="/plants" replace />} />
+            <Route path="/home" element={<Navigate to="/plants" replace />} />
             <Route path="/plants" element={<GalleryPage />} />
             <Route path="/map" element={<MapPage />} />
             <Route path="/plant/:imageHash" element={<PlantPhotoPage />} />
-            <Route path="*" element={<Navigate to="/home" replace />} />
+            <Route path="*" element={<Navigate to="/plants" replace />} />
           </Routes>
         </Container>
         <CustomBottomNavigator
