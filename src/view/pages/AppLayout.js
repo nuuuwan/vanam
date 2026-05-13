@@ -62,11 +62,7 @@ const AppLayout = () => {
             <Route path="*" element={<Navigate to="/plants" replace />} />
           </Routes>
         </Container>
-        <CustomBottomNavigator
-          currentView={getCurrentView()}
-          onViewChange={handleViewChange}
-          pendingCount={pendingCount}
-        />
+        <CustomBottomNavigator />
       </Box>
     </AppBarTitleContext.Provider>
   );

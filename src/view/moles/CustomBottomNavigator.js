@@ -1,10 +1,8 @@
 import React from "react";
-import { Paper, Stack, Box, IconButton, Tooltip } from "@mui/material";
-import ListIcon from "@mui/icons-material/List";
-import MapIcon from "@mui/icons-material/Map";
+import { Paper, Stack } from "@mui/material";
 import UploadPhotoButton from "./UploadPhotoButton";
 
-const CustomBottomNavigator = ({ currentView, onViewChange }) => {
+const CustomBottomNavigator = () => {
   return (
     <Paper
       sx={{
@@ -18,28 +16,14 @@ const CustomBottomNavigator = ({ currentView, onViewChange }) => {
     >
       <Stack
         direction="row"
+        alignItems="center"
         sx={{
-          justifyContent: "space-between",
-          maxWidth: 600,
+          justifyContent: "center",
+          maxWidth: 640,
           mx: "auto",
           px: 2,
         }}
       >
-        {/* Left: List / Map view toggle */}
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Tooltip title="List View">
-            <IconButton onClick={() => onViewChange(1)} disabled={currentView === 1}>
-              <ListIcon sx={{ color: currentView === 1 ? "primary.main" : "secondary.light" }} />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Map View">
-            <IconButton onClick={() => onViewChange(2)} disabled={currentView === 2}>
-              <MapIcon sx={{ color: currentView === 2 ? "primary.main" : "secondary.light" }} />
-            </IconButton>
-          </Tooltip>
-        </Box>
-
-        {/* Right: Camera */}
         <UploadPhotoButton iconOnly />
       </Stack>
     </Paper>

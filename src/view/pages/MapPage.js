@@ -9,16 +9,20 @@ import {
   IconButton,
   Stack,
   Chip,
+  Tooltip,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
+import ListIcon from "@mui/icons-material/List";
 import PlantMapView from "../moles/PlantMapView";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 import { useAppBarTitle } from "./AppLayout";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
+import { useNavigate } from "react-router-dom";
 
 const MapPage = () => {
+  const navigate = useNavigate();
   const { setAppBarTitle } = useAppBarTitle();
   const { plantPhotos, isLoading } = useVanamDataContext();
   const [expanded, setExpanded] = useState(false);
@@ -60,6 +64,22 @@ const MapPage = () => {
   return (
     <Box sx={{ position: "fixed", top: 48, left: 0, right: 0, bottom: 48 }}>
       <PlantMapView plantPhotos={plantPhotos} />
+      <Tooltip title="List View">
+        <IconButton
+          onClick={() => navigate("/plants")}
+          sx={{
+            position: "fixed",
+            top: 64,
+            right: 8,
+            zIndex: 1000,
+            bgcolor: "background.paper",
+            boxShadow: 2,
+            "&:hover": { bgcolor: "grey.100" },
+          }}
+        >
+          <ListIcon sx={{ color: "secondary.light" }} />
+        </IconButton>
+      </Tooltip>
 
       {unlocatedPending.length > 0 && (
         <Paper
