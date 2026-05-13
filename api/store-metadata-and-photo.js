@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     const data = req.body;
 
     // Check if this imageHash already exists
-    const metadataFilename = `plant-metadata/${data.imageHash}.json`;
+    const metadataFilename = `plant-image-metadata/${data.imageHash}.json`;
     try {
       await head(metadataFilename);
       // If head() succeeds, the file exists
@@ -40,8 +40,6 @@ export default async function handler(req, res) {
       imageHash: data.imageHash,
       imageLocation: data.imageLocation,
       utImageTaken: data.utImageTaken,
-      plantNetPredictions: data.plantNetPredictions,
-      deviceIPAddress: data.deviceIPAddress,
       userId: data.userId,
     };
 

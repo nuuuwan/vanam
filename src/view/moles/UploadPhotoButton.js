@@ -37,7 +37,7 @@ const UploadPhotoButton = () => {
     }
   };
 
-  const identifyPlantFromImage = async (
+  const processAndSavePhoto = async (
     imageData,
     locationPrediction,
     utImageTaken,
@@ -50,29 +50,15 @@ const UploadPhotoButton = () => {
         utImageTaken,
       );
 
-      const hasPlant =
-        photo.plantNetPredictions && photo.plantNetPredictions.length > 0;
-      const hasLocation = photo.imageLocation;
-
       let saveError = null;
-      if (hasPlant && hasLocation) {
-        try {
-          await storeResultsToBlob(photo);
-        } catch (saveErr) {
-          saveError = saveErr.message;
-        }
+      try {
+        await storeResultsToBlob(photo);
+      } catch (saveErr) {
+        saveError = saveErr.message;
       }
 
       photo.name = fileName;
-      photo.status = saveError
-        ? "error"
-        : hasPlant && hasLocation
-          ? "success"
-          : "warning";
-      photo.species = hasPlant
-        ? photo.plantNetPredictions[0].species
-        : "No plant identified";
-      photo.hasLocation = hasLocation;
+      photo.status = saveError ? "error" : "success";
       photo.hash = photo.imageHash;
       photo.timestamp = new Date();
       photo.error = saveError;
@@ -84,7 +70,6 @@ const UploadPhotoButton = () => {
         name: fileName,
         status: "error",
         error: err.message,
-        species: "Error",
         timestamp: new Date(),
       };
       setProcessedPhotos((prev) => [...prev, errorPhoto]);
@@ -113,7 +98,7 @@ const UploadPhotoButton = () => {
               "Duplicate. This plant photo is already in the database";
             setProcessedPhotos((prev) => [...prev, existingPhoto]);
           } else {
-            await identifyPlantFromImage(
+            await processAndSavePhoto(
               result.imageData,
               result.locationPrediction,
               result.utImageTaken,

@@ -6,8 +6,6 @@ const PlantPhotoDBWriteMixin = (Base) =>
         imageData: this.imageData,
         imageLocation: this.imageLocation,
         utImageTaken: this.utImageTaken,
-        plantNetPredictions: this.plantNetPredictions,
-        deviceIPAddress: this.deviceIPAddress,
         userId: this.userId,
       };
     }

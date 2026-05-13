@@ -14,9 +14,7 @@ const PlantPhotoPage = () => {
 
   useEffect(() => {
     if (plantPhoto) {
-      const title =
-        plantPhoto.plantNetPredictions?.[0]?.species || "Plant Details";
-      setAppBarTitle(title);
+      setAppBarTitle("Plant Photo");
     }
   }, [plantPhoto, setAppBarTitle]);
 
@@ -56,9 +54,6 @@ const PlantPhotoPage = () => {
       <PlantPhotoView
         plantPhoto={plantPhoto}
         imageData={plantPhoto.imageData}
-        isLoading={false}
-        isStoring={false}
-        blobUrl={null}
         error={null}
       />
     </Box>

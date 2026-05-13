@@ -34,7 +34,7 @@ export default async function handler(req, res) {
   try {
     // List metadata files
     const { blobs: metadataBlobs } = await list({
-      prefix: "plant-metadata/",
+      prefix: "plant-image-metadata/",
     });
 
     // Filter only JSON files

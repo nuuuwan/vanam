@@ -1,5 +1,4 @@
 import LocationPrediction from "./LocationPrediction";
-import PlantNetPrediction from "./PlantNetPrediction";
 
 const PlantPhotoFromJSONMixin = (Base) =>
   class extends Base {
@@ -13,29 +12,11 @@ const PlantPhotoFromJSONMixin = (Base) =>
           )
         : null;
 
-      const plantNetPredictions =
-        json.plantNetPredictions?.map(
-          (p) =>
-            new PlantNetPrediction(
-              p.confidence,
-              p.species,
-              p.genus,
-              p.family,
-              p.commonNames,
-              p.gbifId,
-              p.powoId,
-              p.iucnId,
-              p.iucnCategory,
-            ),
-        ) || [];
-
       return new this(
         json.imageHash,
         json.imageData,
         imageLocation,
         json.utImageTaken,
-        plantNetPredictions,
-        json.deviceIPAddress,
         json.userId,
       );
     }

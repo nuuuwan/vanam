@@ -1,58 +1,11 @@
-import PlantNetPrediction from "./PlantNetPrediction";
-import PlantNetClient from "./PlantNetClient";
 import UserIdentity from "./UserIdentity";
 
 const PlantPhotoFromImageMixin = (Base) =>
   class extends Base {
     static async fromImage(imageData, locationPrediction, utImageTaken) {
       const imageHash = await this.hashImageData(imageData);
-
-      const result = await PlantNetClient.identifyPlant(imageData, {
-        organs: "auto",
-        project: "all",
-      });
-
-      const plantNetPredictions =
-        result.results
-          ?.filter((r) => r.score >= 0.05)
-          .map(
-            (r) =>
-              new PlantNetPrediction(
-                r.score,
-                r.species?.scientificName ||
-                  r.species?.scientificNameWithoutAuthor,
-                r.species?.genus?.scientificName || r.species?.genus,
-                r.species?.family?.scientificName || r.species?.family,
-                r.species?.commonNames || [],
-                r.gbif?.id,
-                r.powo?.id,
-                r.iucn?.id,
-                r.iucn?.category,
-              ),
-          ) || [];
-
-      // Get device IP address
-      let deviceIPAddress = null;
-      try {
-        const ipResponse = await fetch("https://api.ipify.org?format=json");
-        const ipData = await ipResponse.json();
-        deviceIPAddress = ipData.ip;
-      } catch (error) {
-        console.error("Failed to fetch IP address:", error);
-      }
-
-      // Get user ID
       const userId = UserIdentity.getInstance().getUserId();
-
-      return new this(
-        imageHash,
-        imageData,
-        locationPrediction,
-        utImageTaken,
-        plantNetPredictions,
-        deviceIPAddress,
-        userId,
-      );
+      return new this(imageHash, imageData, locationPrediction, utImageTaken, userId);
     }
 
     static async hashImageData(imageData) {
