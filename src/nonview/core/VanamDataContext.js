@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import PlantPhoto from "./PlantPhoto";
 import UserIdentity from "./UserIdentity";
 
@@ -14,22 +14,24 @@ export const VanamDataProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const userIdentity = UserIdentity.getInstance();
 
-  useEffect(() => {
-    const loadPlantPhotos = async () => {
-      try {
-        const photos = await PlantPhoto.listAll();
-        console.debug(`Loaded ${photos.length} plant photos.`);
-        setPlantPhotos(photos);
-      } catch (err) {
-        console.error("Failed to load plant photos:", err);
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadPlantPhotos();
+  const loadPlantPhotos = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const photos = await PlantPhoto.listAll();
+      console.debug(`Loaded ${photos.length} plant photos.`);
+      setPlantPhotos(photos);
+    } catch (err) {
+      console.error("Failed to load plant photos:", err);
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    loadPlantPhotos();
+  }, [loadPlantPhotos]);
 
   const addPlantPhoto = (photo) => {
     setPlantPhotos((prev) => [photo, ...prev]);
@@ -46,6 +48,7 @@ export const VanamDataProvider = ({ children }) => {
     error,
     addPlantPhoto,
     getPlantPhotoByHash,
+    refresh: loadPlantPhotos,
   };
 
   return (

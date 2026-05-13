@@ -1,9 +1,12 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Box, Avatar } from "@mui/material";
+import { AppBar, Toolbar, Typography, Box, Avatar, IconButton, Tooltip } from "@mui/material";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import CustomMenu from "./CustomMenu";
 import UserButton from "./UserButton";
+import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 
 const CustomAppBar = ({ title }) => {
+  const { refresh, isLoading } = useVanamDataContext();
   document.title = title;
   return (
     <AppBar position="sticky" color="primary" elevation={2}>
@@ -19,6 +22,11 @@ const CustomAppBar = ({ title }) => {
         <Box sx={{ display: "flex", gap: 1 }}>
           <UserButton />
           <CustomMenu />
+          <Tooltip title="Refresh">
+            <IconButton color="inherit" onClick={refresh} disabled={isLoading}>
+              <RefreshIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Toolbar>
     </AppBar>
