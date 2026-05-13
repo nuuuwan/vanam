@@ -58,7 +58,9 @@ const PlantPhotoView = ({ plantPhoto, imageData, error }) => {
           />
           {plantPhoto.topPrediction && (
             <Box sx={{ mt: 2 }}>
-              <PlantResultItem result={toResultItem(plantPhoto.topPrediction)} />
+              <PlantResultItem
+                result={toResultItem(plantPhoto.topPrediction)}
+              />
             </Box>
           )}
         </Box>
