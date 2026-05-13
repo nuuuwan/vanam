@@ -27,7 +27,10 @@ export default class UserIdentity {
       h ^= str.charCodeAt(i);
       h = (h * 0x01000193) >>> 0;
     }
-    return h.toString(36).padStart(7, "0").substring(0, UserIdentity.USER_ID_LENGTH);
+    return h
+      .toString(36)
+      .padStart(7, "0")
+      .substring(0, UserIdentity.USER_ID_LENGTH);
   }
 
   static getBrowserUserId() {
