@@ -1,8 +1,5 @@
 import React from "react";
 import { Box } from "@mui/material";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-import PublicIcon from "@mui/icons-material/Public";
 
 const LocationView = ({ location }) => {
   if (!location) return null;
@@ -15,14 +12,10 @@ const LocationView = ({ location }) => {
     return `${lat}${latDir}, ${lng}${lngDir}`;
   };
 
-  // Determine the source icon and text (camera for EXIF, globe for browser)
-  const isExif = location.source === "exif";
-  const SourceIcon = isExif ? PhotoCameraIcon : PublicIcon;
-  const sourceText = isExif ? "EXIF" : "browser";
+  const sourceText = location.source === "exif" ? "EXIF" : "browser";
 
   return (
     <Box sx={{ display: "inline-flex", alignItems: "center", gap: 0.15 }}>
-      <LocationOnIcon sx={{ fontSize: "1rem" }} />
       {formatLocation(location)}
       <Box
         sx={{
@@ -34,7 +27,6 @@ const LocationView = ({ location }) => {
           fontSize: "0.875em",
         }}
       >
-        <SourceIcon sx={{ fontSize: "1em" }} />
         {sourceText}
       </Box>
     </Box>
