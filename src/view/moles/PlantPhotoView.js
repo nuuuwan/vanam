@@ -56,6 +56,12 @@ const PlantPhotoView = ({ plantPhoto, imageData, error }) => {
             location={plantPhoto.imageLocation}
             userId={plantPhoto.userId}
           />
+          {plantPhoto.pending && (
+            <Alert severity="warning" sx={{ mt: 1 }}>
+              Pending identification — this photo has been uploaded and is
+              awaiting processing by the identification system.
+            </Alert>
+          )}
           {plantPhoto.topPrediction && (
             <Box sx={{ mt: 2 }}>
               <PlantResultItem

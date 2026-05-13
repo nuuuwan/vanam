@@ -14,13 +14,12 @@ export default class EXIFUtils {
     if (
       exifData &&
       exifData.latitude !== undefined &&
-      exifData.longitude !== undefined &&
-      exifData.GPSHPositioningError !== undefined
+      exifData.longitude !== undefined
     ) {
       return {
         latitude: exifData.latitude,
         longitude: exifData.longitude,
-        accuracy: exifData.GPSHPositioningError,
+        accuracy: exifData.GPSHPositioningError ?? null,
       };
     }
 

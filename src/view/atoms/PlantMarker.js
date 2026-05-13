@@ -16,8 +16,31 @@ const defaultIcon = L.icon({
   shadowSize: [41, 41],
 });
 
+const createPendingIcon = () =>
+  L.divIcon({
+    className: "pending-plant-marker",
+    html: `
+      <div style="
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #ff9800;
+        border: 3px solid #e65100;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+      ">⏳</div>
+    `,
+    iconSize: [44, 44],
+    iconAnchor: [22, 22],
+    popupAnchor: [0, -22],
+  });
+
 // Custom marker icon using the plant image
-const createCustomIcon = (imageUrl) => {
+const createCustomIcon = (imageUrl, pending = false) => {
+  const border = pending ? "3px solid #ff9800" : "3px solid #008800";
   return L.divIcon({
     className: "custom-plant-marker",
     html: `
@@ -26,7 +49,7 @@ const createCustomIcon = (imageUrl) => {
         height: 50px;
         border-radius: 50%;
         overflow: hidden;
-        border: 3px solid #008800;
+        border: ${border};
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         background: white;
       ">
@@ -57,8 +80,10 @@ const PlantMarker = ({ photo }) => {
     photo.imageLocation.longitude,
   ];
   const icon = photo.imageData
-    ? createCustomIcon(photo.imageData)
-    : defaultIcon;
+    ? createCustomIcon(photo.imageData, photo.pending)
+    : photo.pending
+      ? createPendingIcon()
+      : defaultIcon;
 
   return (
     <Marker position={position} icon={icon}>

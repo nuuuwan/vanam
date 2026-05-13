@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Avatar, Stack, Typography } from "@mui/material";
+import { Box, Avatar, Stack, Typography, Chip } from "@mui/material";
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import PhotoMetadataView from "./PhotoMetadataView";
 
 const PlantPhotoListItem = ({ photo }) => {
@@ -29,6 +30,15 @@ const PlantPhotoListItem = ({ photo }) => {
             <Typography variant="body2" color="text.primary">
               {photo.mostLikelySpecies}
             </Typography>
+          )}
+          {photo.pending && (
+            <Chip
+              label="Pending"
+              size="small"
+              color="warning"
+              icon={<HourglassEmptyIcon />}
+              sx={{ alignSelf: "flex-start", mb: 0.5 }}
+            />
           )}
           <PhotoMetadataView
             ut={photo.utImageTaken}

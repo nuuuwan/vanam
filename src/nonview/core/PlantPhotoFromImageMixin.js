@@ -11,6 +11,8 @@ const PlantPhotoFromImageMixin = (Base) =>
         locationPrediction,
         utImageTaken,
         userId,
+        null,
+        true,
       );
     }
 

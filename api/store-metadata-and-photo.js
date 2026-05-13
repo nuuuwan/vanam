@@ -36,20 +36,21 @@ export default async function handler(req, res) {
     const base64Data = data.imageData.replace(/^data:image\/\w+;base64,/, "");
     const imageBuffer = Buffer.from(base64Data, "base64");
 
+    const imageFilename = `plant-images/${data.imageHash}.png`;
+
+    // Store the image as PNG to Vercel Blob first (so we can include its URL in metadata)
+    const imageBlob = await put(imageFilename, imageBuffer, {
+      access: "public",
+      contentType: "image/png",
+    });
+
     const metadata = {
       imageHash: data.imageHash,
       imageLocation: data.imageLocation,
       utImageTaken: data.utImageTaken,
       userId: data.userId,
+      imageUrl: imageBlob.url,
     };
-
-    const imageFilename = `plant-images/${data.imageHash}.png`;
-
-    // Store the image as PNG to Vercel Blob
-    const imageBlob = await put(imageFilename, imageBuffer, {
-      access: "public",
-      contentType: "image/png",
-    });
 
     // Store the metadata to Vercel Blob
     const metadataBlob = await put(

@@ -11,6 +11,7 @@ class PlantPhotoBase {
     utImageTaken,
     userId,
     topPrediction,
+    pending,
   ) {
     this.imageHash = imageHash;
     this.imageData = imageData;
@@ -18,6 +19,7 @@ class PlantPhotoBase {
     this.utImageTaken = utImageTaken;
     this.userId = userId;
     this.topPrediction = topPrediction || null;
+    this.pending = pending || false;
   }
 
   get mostLikelySpecies() {

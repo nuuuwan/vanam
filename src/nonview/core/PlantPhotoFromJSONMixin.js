@@ -28,6 +28,7 @@ const PlantPhotoFromJSONMixin = (Base) =>
         json.utImageTaken,
         json.userId,
         json.topPrediction || null,
+        json.pending || false,
       );
     }
   };
