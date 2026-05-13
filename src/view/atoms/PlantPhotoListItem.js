@@ -10,7 +10,7 @@ const PlantPhotoListItem = ({ photo }) => {
   return (
     <Box
       onClick={() => {
-        navigate(`/plantPhoto/${photo.imageHash}`);
+        navigate(`/plant/${photo.imageHash}`);
       }}
       sx={{
         cursor: "pointer",
