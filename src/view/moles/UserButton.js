@@ -19,7 +19,7 @@ const UserButton = () => {
   const userId = UserIdentity.getInstance().getUserId();
   const { plantPhotos } = useVanamDataContext();
   const pendingCount = plantPhotos.filter(
-    (p) => p.pending && p.userId === userId
+    (p) => p.pending && p.userId === userId,
   ).length;
 
   const handleMenuOpen = (event) => {
@@ -36,13 +36,7 @@ const UserButton = () => {
         <IconButton onClick={handleMenuOpen} color="inherit">
           <Badge
             badgeContent={pendingCount}
-            color="primary"
-            sx={{
-              "& .MuiBadge-badge": {
-                backgroundColor: "orange",
-                color: "white",
-              },
-            }}
+            color="warning"
           >
             <Avatar sx={{ width: 32, height: 32, bgcolor: "primary.dark" }}>
               <PersonIcon fontSize="small" />
