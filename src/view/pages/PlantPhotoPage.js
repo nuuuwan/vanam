@@ -1,6 +1,12 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Box, CircularProgress, Alert, IconButton, Tooltip } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Alert,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PlantPhotoView from "../moles/PlantPhotoView";
 import { useAppBarTitle } from "../../App";

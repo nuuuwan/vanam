@@ -11,6 +11,12 @@ import {
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import PhotoMetadataView from "./PhotoMetadataView";
 
+const getConfidenceColor = (confidence) => {
+  if (confidence < 0.2) return "error.main";
+  if (confidence < 0.5) return "warning.main";
+  return "success.main";
+};
+
 const PlantPhotoListItem = ({ photo }) => {
   const navigate = useNavigate();
 
