@@ -13,8 +13,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import BugReportIcon from "@mui/icons-material/BugReport";
 import InfoIcon from "@mui/icons-material/Info";
-import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
-import PrivacyTipIcon from "@mui/icons-material/PrivacyTip";
 import VERSION from "../../nonview/cons/VERSION";
 
 const CustomMenu = () => {
@@ -30,12 +28,6 @@ const CustomMenu = () => {
 
   const handleMenuItemClick = (url) => {
     window.open(url, "_blank", "noopener,noreferrer");
-    handleMenuClose();
-  };
-
-  const handleClearCache = () => {
-    localStorage.clear();
-    window.location.reload();
     handleMenuClose();
   };
 
@@ -84,24 +76,6 @@ const CustomMenu = () => {
             <InfoIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>About PlantNet</ListItemText>
-        </MenuItem>
-        <MenuItem
-          onClick={() =>
-            handleMenuItemClick(
-              "https://github.com/nuuuwan/vanam/blob/main/README.privacy.md",
-            )
-          }
-        >
-          <ListItemIcon>
-            <PrivacyTipIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Privacy Policy</ListItemText>
-        </MenuItem>
-        <MenuItem onClick={handleClearCache}>
-          <ListItemIcon>
-            <DeleteSweepIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Clear Cache</ListItemText>
         </MenuItem>
         <Divider />
         <Box sx={{ px: 2, py: 1 }}>
