@@ -51,11 +51,6 @@ const PlantPhotoView = ({ plantPhoto, imageData, error }) => {
 
       {plantPhoto && (
         <Box sx={{ m: 1 }}>
-          <PhotoMetadataView
-            ut={plantPhoto.utImageTaken}
-            location={plantPhoto.imageLocation}
-            userId={plantPhoto.userId}
-          />
           {plantPhoto.pending && (
             <Alert severity="warning" sx={{ mt: 1 }}>
               Pending identification — this photo has been uploaded and is
@@ -69,6 +64,13 @@ const PlantPhotoView = ({ plantPhoto, imageData, error }) => {
               />
             </Box>
           )}
+          <Box sx={{ pl: 1 }}>
+            <PhotoMetadataView
+              ut={plantPhoto.utImageTaken}
+              location={plantPhoto.imageLocation}
+              userId={plantPhoto.userId}
+            />
+          </Box>
         </Box>
       )}
 
