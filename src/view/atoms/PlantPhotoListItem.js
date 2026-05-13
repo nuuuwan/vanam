@@ -21,21 +21,14 @@ const PlantPhotoListItem = ({ photo }) => {
     >
       <CardActionArea>
         <Stack direction="row" sx={{ alignItems: "stretch" }}>
-          <Box
-            sx={{
-              width: 100,
-              flexShrink: 0,
-              overflow: "hidden",
-              alignSelf: "stretch",
-            }}
-          >
+          <Box sx={{ flexShrink: 0 }}>
             <Box
               component="img"
               src={photo.imageData}
               alt={photo.mostLikelySpecies}
               sx={{
-                width: "100%",
-                height: "100%",
+                width: 100,
+                height: 100,
                 objectFit: "cover",
                 display: "block",
               }}
