@@ -25,7 +25,6 @@ const PlantPhotoListItem = ({ photo }) => {
         <Avatar src={photo.imageData} alt={photo.mostLikelySpecies} />
 
         <Stack direction="column" sx={{ flexGrow: 1 }}>
-
           <PhotoMetadataView
             ut={photo.utImageTaken}
             location={photo.imageLocation}

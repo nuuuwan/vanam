@@ -5,7 +5,13 @@ const PlantPhotoFromImageMixin = (Base) =>
     static async fromImage(imageData, locationPrediction, utImageTaken) {
       const imageHash = await this.hashImageData(imageData);
       const userId = UserIdentity.getInstance().getUserId();
-      return new this(imageHash, imageData, locationPrediction, utImageTaken, userId);
+      return new this(
+        imageHash,
+        imageData,
+        locationPrediction,
+        utImageTaken,
+        userId,
+      );
     }
 
     static async hashImageData(imageData) {

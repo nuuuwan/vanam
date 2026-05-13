@@ -1,15 +1,8 @@
 import React from "react";
-import {
-  Box,
-  Alert,
-} from "@mui/material";
+import { Box, Alert } from "@mui/material";
 import PhotoMetadataView from "../atoms/PhotoMetadataView";
 
-const PlantPhotoView = ({
-  plantPhoto,
-  imageData,
-  error,
-}) => {
+const PlantPhotoView = ({ plantPhoto, imageData, error }) => {
   return (
     <Box>
       {imageData && (

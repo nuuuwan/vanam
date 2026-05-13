@@ -39,7 +39,7 @@ export default async function handler(req, res) {
 
     // Filter only JSON files
     const jsonMetadataBlobs = metadataBlobs.filter((blob) =>
-      blob.pathname.endsWith(".json")
+      blob.pathname.endsWith(".json"),
     );
 
     // Fetch all metadata
@@ -57,12 +57,12 @@ export default async function handler(req, res) {
           console.error(`Error fetching metadata blob ${blob.url}:`, error);
           return null;
         }
-      })
+      }),
     );
 
     // Filter by userId and remove null values
     const validMetadata = metadata.filter(
-      (data) => data !== null && data.userId === userId
+      (data) => data !== null && data.userId === userId,
     );
 
     return res.status(200).json({
