@@ -4,8 +4,8 @@ import { Box } from "@mui/material";
 import "leaflet/dist/leaflet.css";
 import PlantMarker from "../atoms/PlantMarker";
 
-// Keeps the map viewport in sync whenever plantPhotos changes
-const MapBoundsUpdater = ({ plantPhotos }) => {
+// Keeps the map viewport in sync whenever plantPhotos or focusPhoto changes
+const MapBoundsUpdater = ({ plantPhotos, focusPhoto }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -14,32 +14,32 @@ const MapBoundsUpdater = ({ plantPhotos }) => {
     );
     if (photosWithLocation.length === 0) return;
 
-    if (photosWithLocation.length === 1) {
+    // Zoom to a specific photo if provided
+    if (
+      focusPhoto?.imageLocation?.latitude &&
+      focusPhoto?.imageLocation?.longitude
+    ) {
       map.setView(
-        [
-          photosWithLocation[0].imageLocation.latitude,
-          photosWithLocation[0].imageLocation.longitude,
-        ],
-        15,
+        [focusPhoto.imageLocation.latitude, focusPhoto.imageLocation.longitude],
+        18,
       );
       return;
     }
 
-    const lats = photosWithLocation.map((p) => p.imageLocation.latitude);
-    const lngs = photosWithLocation.map((p) => p.imageLocation.longitude);
-    map.fitBounds(
-      [
-        [Math.min(...lats), Math.min(...lngs)],
-        [Math.max(...lats), Math.max(...lngs)],
-      ],
-      { padding: [40, 40] },
+    // Zoom to the most recently taken plant
+    const latestPhoto = photosWithLocation.reduce((latest, p) =>
+      (p.utImageTaken || 0) > (latest.utImageTaken || 0) ? p : latest,
     );
-  }, [plantPhotos, map]);
+    map.setView(
+      [latestPhoto.imageLocation.latitude, latestPhoto.imageLocation.longitude],
+      18,
+    );
+  }, [plantPhotos, focusPhoto, map]);
 
   return null;
 };
 
-const PlantMapView = ({ plantPhotos }) => {
+const PlantMapView = ({ plantPhotos, focusPhoto }) => {
   return (
     <Box
       sx={{
@@ -66,7 +66,7 @@ const PlantMapView = ({ plantPhotos }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           className="grayscale-tiles"
         />
-        <MapBoundsUpdater plantPhotos={plantPhotos} />
+        <MapBoundsUpdater plantPhotos={plantPhotos} focusPhoto={focusPhoto} />
         {plantPhotos.map((photo) => (
           <PlantMarker key={photo.imageHash} photo={photo} />
         ))}

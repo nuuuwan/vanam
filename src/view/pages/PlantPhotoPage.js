@@ -8,6 +8,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import MapIcon from "@mui/icons-material/Map";
 import PlantPhotoView from "../moles/PlantPhotoView";
 import { useAppBarTitle } from "../../App";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
@@ -74,6 +75,26 @@ const PlantPhotoPage = () => {
           <ArrowBackIcon />
         </IconButton>
       </Tooltip>
+      {plantPhoto?.imageLocation?.latitude &&
+        plantPhoto?.imageLocation?.longitude && (
+          <Tooltip title="View on map">
+            <IconButton
+              onClick={() =>
+                navigate("/map", { state: { focusHash: plantPhoto.imageHash } })
+              }
+              sx={{
+                position: "fixed",
+                top: 64,
+                right: 8,
+                zIndex: 10,
+                bgcolor: "rgba(255,255,255,0.5)",
+                "&:hover": { bgcolor: "rgba(255,255,255,0.75)" },
+              }}
+            >
+              <MapIcon />
+            </IconButton>
+          </Tooltip>
+        )}
       <PlantPhotoView
         plantPhoto={plantPhoto}
         imageData={plantPhoto.imageData}
