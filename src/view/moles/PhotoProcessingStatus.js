@@ -31,7 +31,8 @@ const PhotoProcessingStatus = ({ totalFiles, processedPhotos }) => {
           </>
         )}
       </Box>
-      <List>
+      {isComplete && (
+        <List>
         {processedPhotos.map((photo, index) => {
           const hasError = photo.status === "error" || photo.error;
           const Icon = hasError ? CancelIcon : CheckCircleIcon;
@@ -69,6 +70,7 @@ const PhotoProcessingStatus = ({ totalFiles, processedPhotos }) => {
           );
         })}
       </List>
+      )}
     </Box>
   );
 };

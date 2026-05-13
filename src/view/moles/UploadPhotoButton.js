@@ -140,9 +140,7 @@ const UploadPhotoButton = () => {
     }
 
     setIsLoading(false);
-    if (successCount > 0) {
-      navigate("/plants");
-    }
+    navigate("/plants");
   };
 
   const handleFileChange = (event) => {
