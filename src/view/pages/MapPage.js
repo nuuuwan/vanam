@@ -20,10 +20,7 @@ import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 
 const MapPage = () => {
   const { setAppBarTitle } = useAppBarTitle();
-  const {
-    plantPhotos,
-    isLoading,
-  } = useVanamDataContext();
+  const { plantPhotos, isLoading } = useVanamDataContext();
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {

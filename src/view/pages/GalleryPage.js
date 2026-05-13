@@ -6,11 +6,7 @@ import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 
 const GalleryPage = () => {
   const { setAppBarTitle } = useAppBarTitle();
-  const {
-    plantPhotos,
-    isLoading,
-    error,
-  } = useVanamDataContext();
+  const { plantPhotos, isLoading, error } = useVanamDataContext();
 
   useEffect(() => {
     setAppBarTitle("Plants");
@@ -83,7 +79,6 @@ const GalleryPage = () => {
           <PlantPhotoListItem key={photo.imageHash} photo={photo} />
         ))}
       </List>
-
     </>
   );
 };
