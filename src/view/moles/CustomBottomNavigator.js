@@ -12,6 +12,7 @@ const CustomBottomNavigator = () => {
         right: 0,
         p: 1,
         zIndex: 1000,
+        bgcolor: "primary.main",
       }}
     >
       <Stack

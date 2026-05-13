@@ -156,7 +156,7 @@ const UploadPhotoButton = ({ iconOnly = false }) => {
           <span>
             <IconButton onClick={handleFileClick} disabled={isLoading}>
               <AddAPhotoIcon
-                sx={{ color: isLoading ? "secondary.light" : "inherit" }}
+                sx={{ color: isLoading ? "secondary.light" : "white" }}
               />
             </IconButton>
           </span>

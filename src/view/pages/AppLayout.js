@@ -3,8 +3,6 @@ import {
   Routes,
   Route,
   Navigate,
-  useNavigate,
-  useLocation,
 } from "react-router-dom";
 import React, { useState, createContext, useContext } from "react";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
@@ -26,25 +24,7 @@ export const useAppBarTitle = () => {
 };
 
 const AppLayout = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [appBarTitle, setAppBarTitle] = useState("Vanam");
-
-  const { plantPhotos, userIdentity } = useVanamDataContext();
-  const pendingCount = plantPhotos.filter(
-    (p) => p.pending && p.userId === userIdentity?.userId,
-  ).length;
-
-  const getCurrentView = () => {
-    if (location.pathname === "/plants") return 1;
-    if (location.pathname === "/map") return 2;
-    return -1;
-  };
-
-  const handleViewChange = (view) => {
-    if (view === 1) navigate("/plants");
-    if (view === 2) navigate("/map");
-  };
 
   return (
     <AppBarTitleContext.Provider value={{ appBarTitle, setAppBarTitle }}>
