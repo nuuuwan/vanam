@@ -28,9 +28,7 @@ const PlantPhotoPage = () => {
       const fullName = plantPhoto.topPrediction?.species || "";
       const binomial = fullName.trim().split(/\s+/).slice(0, 2).join(" ");
       setAppBarTitle(
-        plantPhoto.pending
-          ? "Unidentified plant"
-          : binomial || "Plant Photo",
+        plantPhoto.pending ? "Unidentified plant" : binomial || "Plant Photo",
       );
     }
   }, [plantPhoto, setAppBarTitle]);

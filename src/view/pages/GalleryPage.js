@@ -1,18 +1,26 @@
-import React, { useEffect } from "react";
-import { Box, CircularProgress, Alert, Stack, Chip } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, CircularProgress, Alert, Stack, Chip, Pagination } from "@mui/material";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 import { useAppBarTitle } from "../../App";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
 
+const PAGE_SIZE = 10;
+
 const GalleryPage = () => {
   const { setAppBarTitle } = useAppBarTitle();
   const { plantPhotos, isLoading, error } = useVanamDataContext();
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     setAppBarTitle(
       plantPhotos.length ? `${plantPhotos.length} Plants` : "Plants",
     );
   }, [setAppBarTitle, plantPhotos.length]);
+
+  // Reset to page 1 when data changes
+  useEffect(() => {
+    setPage(1);
+  }, [plantPhotos.length]);
 
   if (isLoading) {
     return (
@@ -39,6 +47,9 @@ const GalleryPage = () => {
 
   const completedPhotos = plantPhotos.filter((p) => !p.pending);
   const pendingPhotos = plantPhotos.filter((p) => p.pending);
+
+  const pageCount = Math.ceil(plantPhotos.length / PAGE_SIZE);
+  const visiblePhotos = plantPhotos.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
     <>
@@ -79,10 +90,22 @@ const GalleryPage = () => {
       </Stack>
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
-        {plantPhotos.map((photo) => (
+        {visiblePhotos.map((photo) => (
           <PlantPhotoListItem key={photo.imageHash} photo={photo} />
         ))}
       </Box>
+
+      {pageCount > 1 && (
+        <Pagination
+          count={pageCount}
+          page={page}
+          onChange={(_, value) => {
+            setPage(value);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          sx={{ mt: 2, display: "flex", justifyContent: "center" }}
+        />
+      )}
     </>
   );
 };
