@@ -64,6 +64,14 @@ const PlantPhotoView = ({ plantPhoto, imageData, error }) => {
           )}
           {plantPhoto.predictions.length > 0 && (
             <Box sx={{ mt: 2 }}>
+              {plantPhoto.predictions.length > 1 && (
+                <Chip
+                  label={`${plantPhoto.predictions.length} species detected`}
+                  size="small"
+                  color="info"
+                  sx={{ mb: 1 }}
+                />
+              )}
               {plantPhoto.predictions.map((p, i) => (
                 <PlantResultItem key={i} result={toResultItem(p)} />
               ))}
