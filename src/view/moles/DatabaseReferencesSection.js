@@ -8,7 +8,15 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
   }
 
   return (
-    <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1, mt: 1 }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexWrap: "wrap",
+        alignItems: "center",
+        gap: 1,
+        mt: 1,
+      }}
+    >
       {gbif?.id && (
         <DatabaseLink
           label="GBIF"
