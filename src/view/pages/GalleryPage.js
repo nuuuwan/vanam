@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Box, CircularProgress, Alert, Stack, Chip, Pagination } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Alert,
+  Stack,
+  Chip,
+  Pagination,
+} from "@mui/material";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 import { useAppBarTitle } from "../../App";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
@@ -49,7 +56,10 @@ const GalleryPage = () => {
   const pendingPhotos = plantPhotos.filter((p) => p.pending);
 
   const pageCount = Math.ceil(plantPhotos.length / PAGE_SIZE);
-  const visiblePhotos = plantPhotos.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const visiblePhotos = plantPhotos.slice(
+    (page - 1) * PAGE_SIZE,
+    page * PAGE_SIZE,
+  );
 
   return (
     <>
