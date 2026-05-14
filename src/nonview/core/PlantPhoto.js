@@ -25,7 +25,22 @@ class PlantPhotoBase {
   }
 
   get mostLikelySpecies() {
+    if (this.predictions?.length > 0) {
+      const best = this.predictions.reduce((a, b) =>
+        (b.confidence ?? 0) > (a.confidence ?? 0) ? b : a,
+      );
+      return best.species || null;
+    }
     return this.topPrediction?.species || null;
+  }
+
+  get mostLikelyConfidence() {
+    if (this.predictions?.length > 0) {
+      return this.predictions.reduce((a, b) =>
+        (b.confidence ?? 0) > (a.confidence ?? 0) ? b : a,
+      ).confidence ?? null;
+    }
+    return this.topPrediction?.confidence ?? null;
   }
 }
 

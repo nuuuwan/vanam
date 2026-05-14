@@ -73,16 +73,16 @@ const PlantPhotoListItem = ({ photo }) => {
               location={photo.imageLocation}
               userId={photo.userId}
             />
-            {!photo.pending && photo.topPrediction?.confidence != null && (
+            {!photo.pending && photo.mostLikelyConfidence != null && (
               <Typography
                 variant="caption"
                 sx={{
                   mt: 0.5,
                   fontSize: "0.65rem",
-                  color: getConfidenceColor(photo.topPrediction.confidence),
+                  color: getConfidenceColor(photo.mostLikelyConfidence),
                 }}
               >
-                {Math.round(photo.topPrediction.confidence * 100)}% confidence
+                {Math.round(photo.mostLikelyConfidence * 100)}% confidence
               </Typography>
             )}
           </Stack>
