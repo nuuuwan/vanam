@@ -92,7 +92,17 @@ const AppLayout = () => {
             />
           )}
         </Box>
-        <Container maxWidth={false} sx={{ maxWidth: 640, mx: "auto", width: "100%", flexGrow: 1, pb: 10, pt: 2 }}>
+        <Container
+          maxWidth={false}
+          sx={{
+            maxWidth: 640,
+            mx: "auto",
+            width: "100%",
+            flexGrow: 1,
+            pb: 10,
+            pt: 2,
+          }}
+        >
           <Routes>
             <Route path="/" element={<Navigate to="/plants" replace />} />
             <Route path="/home" element={<Navigate to="/plants" replace />} />

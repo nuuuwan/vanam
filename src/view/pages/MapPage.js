@@ -67,7 +67,17 @@ const MapPage = () => {
   );
 
   return (
-    <Box sx={{ position: "fixed", top: 48, left: "50%", transform: "translateX(-50%)", width: "100%", maxWidth: 640, bottom: 48 }}>
+    <Box
+      sx={{
+        position: "fixed",
+        top: 48,
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: "100%",
+        maxWidth: 640,
+        bottom: 48,
+      }}
+    >
       <PlantMapView plantPhotos={plantPhotos} focusPhoto={focusPhoto} />
       <IconButton
         onClick={() => navigate("/plants")}
