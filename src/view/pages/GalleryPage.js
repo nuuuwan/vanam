@@ -9,8 +9,10 @@ const GalleryPage = () => {
   const { plantPhotos, isLoading, error } = useVanamDataContext();
 
   useEffect(() => {
-    setAppBarTitle("Plants");
-  }, [setAppBarTitle]);
+    setAppBarTitle(
+      plantPhotos.length ? `${plantPhotos.length} Plants` : "Plants"
+    );
+  }, [setAppBarTitle, plantPhotos.length]);
 
   if (isLoading) {
     return (
