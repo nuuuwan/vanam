@@ -25,7 +25,13 @@ const PlantPhotoPage = () => {
 
   useEffect(() => {
     if (plantPhoto) {
-      setAppBarTitle(plantPhoto.pending ? "Unidentified plant" : (plantPhoto.topPrediction?.species || "Plant Photo"));
+      const fullName = plantPhoto.topPrediction?.species || "";
+      const binomial = fullName.trim().split(/\s+/).slice(0, 2).join(" ");
+      setAppBarTitle(
+        plantPhoto.pending
+          ? "Unidentified plant"
+          : binomial || "Plant Photo",
+      );
     }
   }, [plantPhoto, setAppBarTitle]);
 
