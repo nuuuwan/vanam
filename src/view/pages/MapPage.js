@@ -9,7 +9,6 @@ import {
   IconButton,
   Stack,
   Chip,
-  Tooltip,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -70,22 +69,20 @@ const MapPage = () => {
   return (
     <Box sx={{ position: "fixed", top: 48, left: 0, right: 0, bottom: 48 }}>
       <PlantMapView plantPhotos={plantPhotos} focusPhoto={focusPhoto} />
-      <Tooltip title="List View">
-        <IconButton
-          onClick={() => navigate("/plants")}
-          sx={{
-            position: "fixed",
-            top: 64,
-            right: 8,
-            zIndex: 1000,
-            bgcolor: "background.paper",
-            boxShadow: 2,
-            "&:hover": { bgcolor: "grey.100" },
-          }}
-        >
-          <ListIcon sx={{ color: "secondary.light" }} />
-        </IconButton>
-      </Tooltip>
+      <IconButton
+        onClick={() => navigate("/plants")}
+        sx={{
+          position: "fixed",
+          top: 64,
+          right: 8,
+          zIndex: 1000,
+          bgcolor: "background.paper",
+          boxShadow: 2,
+          "&:hover": { bgcolor: "grey.100" },
+        }}
+      >
+        <ListIcon sx={{ color: "secondary.light" }} />
+      </IconButton>
 
       {unlocatedPending.length > 0 && (
         <Paper

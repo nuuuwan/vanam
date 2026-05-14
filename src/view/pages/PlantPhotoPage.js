@@ -5,7 +5,6 @@ import {
   CircularProgress,
   Alert,
   IconButton,
-  Tooltip,
 } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -78,24 +77,20 @@ const PlantPhotoPage = () => {
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", position: "relative" }}>
       {prevPhoto && (
-        <Tooltip title="Previous plant">
-          <IconButton
-            onClick={() => navigate(`/plant/${prevPhoto.imageHash}`)}
-            sx={{ ...buttonSx, left: 8 }}
-          >
-            <ArrowBackIosNewIcon />
-          </IconButton>
-        </Tooltip>
+        <IconButton
+          onClick={() => navigate(`/plant/${prevPhoto.imageHash}`)}
+          sx={{ ...buttonSx, left: 8 }}
+        >
+          <ArrowBackIosNewIcon />
+        </IconButton>
       )}
       {nextPhoto && (
-        <Tooltip title="Next plant">
-          <IconButton
-            onClick={() => navigate(`/plant/${nextPhoto.imageHash}`)}
-            sx={{ ...buttonSx, right: 8 }}
-          >
-            <ArrowForwardIosIcon />
-          </IconButton>
-        </Tooltip>
+        <IconButton
+          onClick={() => navigate(`/plant/${nextPhoto.imageHash}`)}
+          sx={{ ...buttonSx, right: 8 }}
+        >
+          <ArrowForwardIosIcon />
+        </IconButton>
       )}
       <PlantPhotoView
         plantPhoto={plantPhoto}

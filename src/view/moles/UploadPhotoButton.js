@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   IconButton,
-  Tooltip,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -191,15 +190,13 @@ const UploadPhotoButton = ({ iconOnly = false }) => {
   if (iconOnly) {
     return (
       <>
-        <Tooltip title="Upload Photo">
-          <span>
+        <span>
             <IconButton onClick={handleFileClick} disabled={isLoading}>
               <AddAPhotoIcon
                 sx={{ color: isLoading ? "secondary.light" : "white" }}
               />
             </IconButton>
           </span>
-        </Tooltip>
         <input
           ref={fileInputRef}
           type="file"

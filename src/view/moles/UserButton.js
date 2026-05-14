@@ -4,7 +4,6 @@ import {
   Menu,
   Typography,
   Box,
-  Tooltip,
   Avatar,
   Badge,
 } from "@mui/material";
@@ -32,15 +31,13 @@ const UserButton = () => {
 
   return (
     <>
-      <Tooltip title="User Info">
-        <IconButton onClick={handleMenuOpen} color="inherit">
+      <IconButton onClick={handleMenuOpen} color="inherit">
           <Badge badgeContent={pendingCount} color="warning">
             <Avatar sx={{ width: 32, height: 32, bgcolor: "primary.dark" }}>
               <PersonIcon fontSize="small" />
             </Avatar>
           </Badge>
         </IconButton>
-      </Tooltip>
       <Menu
         anchorEl={menuAnchor}
         open={Boolean(menuAnchor)}
