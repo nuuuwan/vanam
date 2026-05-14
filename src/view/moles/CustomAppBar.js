@@ -30,7 +30,7 @@ const CustomAppBar = ({ title }) => {
     <AppBar position="fixed" color="primary" elevation={2}>
       <Toolbar sx={{ maxWidth: 640, mx: "auto", width: "100%" }}>
         <CustomMenu />
-        <Typography variant="body2" sx={{ flexGrow: 1 }}>
+        <Typography variant="body2" sx={{ flexGrow: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {title}
         </Typography>
         <IconButton
