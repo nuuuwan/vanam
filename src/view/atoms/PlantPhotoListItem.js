@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import PhotoMetadataView from "./PhotoMetadataView";
+import SpeciesNameView from "./SpeciesNameView";
 
 const getConfidenceColor = (confidence) => {
   if (confidence < 0.2) return "error.main";
@@ -51,9 +52,12 @@ const PlantPhotoListItem = ({ photo }) => {
             sx={{ p: 1, flexGrow: 1, overflow: "hidden" }}
           >
             {photo.mostLikelySpecies && (
-              <Typography variant="body2" color="text.primary" noWrap>
-                {photo.mostLikelySpecies}
-              </Typography>
+              <SpeciesNameView
+                species={photo.mostLikelySpecies}
+                variant="body2"
+                sx={{ color: "text.primary" }}
+                noWrap
+              />
             )}
             {photo.pending && (
               <Chip

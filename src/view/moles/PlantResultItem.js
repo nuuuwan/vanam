@@ -1,8 +1,9 @@
 import React from "react";
-import { Paper, Box, Typography, Link } from "@mui/material";
+import { Paper, Box, Typography } from "@mui/material";
 import CommonNamesChips from "../atoms/CommonNamesChips";
 import TaxonomySection from "./TaxonomySection";
 import DatabaseReferencesSection from "./DatabaseReferencesSection";
+import SpeciesNameView from "../atoms/SpeciesNameView";
 
 const getConfidenceColor = (score) => {
   if (score < 0.2) return "error.main";
@@ -20,19 +21,12 @@ const PlantResultItem = ({ result }) => {
         >
           {Math.round(result.score * 100)}% confidence
         </Typography>
-        <Typography variant="subtitle1" fontStyle="italic" sx={{ mb: 1 }}>
-          <Link
-            href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
-              result.species,
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            underline="none"
-            sx={{ color: "inherit" }}
-          >
-            {result.species}
-          </Link>
-        </Typography>
+        <SpeciesNameView
+          species={result.species}
+          variant="subtitle1"
+          sx={{ mb: 1 }}
+          href={`https://en.wikipedia.org/wiki/${encodeURIComponent(result.species)}`}
+        />
 
         <CommonNamesChips commonNames={result.commonNames} />
 
