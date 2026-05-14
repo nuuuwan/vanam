@@ -1,8 +1,12 @@
 import React from "react";
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Toolbar, Typography, IconButton } from "@mui/material";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import MapIcon from "@mui/icons-material/Map";
+import { useNavigate } from "react-router-dom";
 import CustomMenu from "./CustomMenu";
 
 const CustomAppBar = ({ title }) => {
+  const navigate = useNavigate();
   document.title = title;
   return (
     <AppBar position="fixed" color="primary" elevation={2}>
@@ -11,6 +15,12 @@ const CustomAppBar = ({ title }) => {
         <Typography variant="body2" sx={{ flexGrow: 1 }}>
           {title}
         </Typography>
+        <IconButton color="inherit" onClick={() => navigate("/plants")}>
+          <FormatListBulletedIcon />
+        </IconButton>
+        <IconButton color="inherit" onClick={() => navigate("/map")}>
+          <MapIcon />
+        </IconButton>
       </Toolbar>
     </AppBar>
   );
