@@ -23,7 +23,7 @@ const CustomAppBar = ({ title }) => {
 
   return (
     <AppBar position="fixed" color="primary" elevation={2}>
-      <Toolbar>
+      <Toolbar sx={{ maxWidth: 640, mx: "auto", width: "100%" }}>
         <CustomMenu />
         <Typography variant="body2" sx={{ flexGrow: 1 }}>
           {title}
