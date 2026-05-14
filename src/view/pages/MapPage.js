@@ -80,7 +80,13 @@ const MapPage = () => {
     >
       <PlantMapView plantPhotos={plantPhotos} focusPhoto={focusPhoto} />
       <IconButton
-        onClick={() => navigate("/plants")}
+        onClick={() => {
+          const idx = hash
+            ? plantPhotos.findIndex((p) => p.imageHash === hash)
+            : -1;
+          const page = idx === -1 ? 1 : Math.ceil((idx + 1) / 10);
+          navigate(`/plants/${page}`);
+        }}
         sx={{
           position: "fixed",
           top: 64,
