@@ -36,9 +36,11 @@ class PlantPhotoBase {
 
   get mostLikelyConfidence() {
     if (this.predictions?.length > 0) {
-      return this.predictions.reduce((a, b) =>
-        (b.confidence ?? 0) > (a.confidence ?? 0) ? b : a,
-      ).confidence ?? null;
+      return (
+        this.predictions.reduce((a, b) =>
+          (b.confidence ?? 0) > (a.confidence ?? 0) ? b : a,
+        ).confidence ?? null
+      );
     }
     return this.topPrediction?.confidence ?? null;
   }

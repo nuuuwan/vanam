@@ -111,7 +111,7 @@ const PlantMarker = ({ photo, onSelect }) => {
     ? createCustomIcon(
         photo.imageData,
         photo.pending,
-        getInitials(photo.topPrediction?.species),
+        getInitials(photo.mostLikelySpecies),
       )
     : photo.pending
       ? createPendingIcon()
