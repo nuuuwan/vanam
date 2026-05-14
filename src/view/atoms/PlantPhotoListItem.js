@@ -33,7 +33,7 @@ const PlantPhotoListItem = ({ photo }) => {
       }}
     >
       <CardActionArea>
-        <Stack direction="row" sx={{ alignItems: "stretch" }}>
+        <Stack direction="row" sx={{ alignItems: "flex-start" }}>
           <Box sx={{ flexShrink: 0 }}>
             <Box
               component="img"
@@ -49,7 +49,7 @@ const PlantPhotoListItem = ({ photo }) => {
           </Box>
           <Stack
             direction="column"
-            sx={{ p: 1, flexGrow: 1, overflow: "hidden" }}
+            sx={{ pt: 0, pb: 1, px: 1, flexGrow: 1, overflow: "hidden" }}
           >
             {photo.mostLikelySpecies && (
               <SpeciesNameView

@@ -1,5 +1,5 @@
 import React from "react";
-import { Stack } from "@mui/material";
+import { Stack, Box } from "@mui/material";
 import DateTimeView from "./DateTimeView";
 import LocationView from "./LocationView";
 import UserView from "./UserView";
@@ -12,9 +12,11 @@ const PhotoMetadataView = ({ ut, location, userId }) => {
       sx={{ fontSize: "0.75em", opacity: 0.5 }}
       color="text.secondary"
     >
-      <DateTimeView ut={ut} />
+      <Box sx={{ display: "inline-flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
+        <DateTimeView ut={ut} />
+        <UserView userId={userId} />
+      </Box>
       <LocationView location={location} />
-      <UserView userId={userId} />
     </Stack>
   );
 };
