@@ -8,7 +8,8 @@ import {
   Tooltip,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import MapIcon from "@mui/icons-material/Map";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PlantPhotoView from "../moles/PlantPhotoView";
 import { useAppBarTitle } from "../../App";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
@@ -17,7 +18,11 @@ const PlantPhotoPage = () => {
   const { imageHash } = useParams();
   const navigate = useNavigate();
   const { setAppBarTitle } = useAppBarTitle();
-  const { getPlantPhotoByHash, isLoading, error } = useVanamDataContext();
+  const { plantPhotos, getPlantPhotoByHash, isLoading, error } = useVanamDataContext();
+
+  const currentIndex = plantPhotos.findIndex((p) => p.imageHash === imageHash);
+  const prevPhoto = currentIndex > 0 ? plantPhotos[currentIndex - 1] : null;
+  const nextPhoto = currentIndex < plantPhotos.length - 1 ? plantPhotos[currentIndex + 1] : null;
 
   const plantPhoto = getPlantPhotoByHash(imageHash);
 
@@ -58,6 +63,15 @@ const PlantPhotoPage = () => {
     );
   }
 
+  const buttonSx = {
+    position: "fixed",
+    top: "25vh",
+    transform: "translateY(-50%)",
+    zIndex: 10,
+    bgcolor: "rgba(255,255,255,0.5)",
+    "&:hover": { bgcolor: "rgba(255,255,255,0.75)" },
+  };
+
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", position: "relative" }}>
       <Tooltip title="Back to list">
@@ -75,26 +89,26 @@ const PlantPhotoPage = () => {
           <ArrowBackIcon />
         </IconButton>
       </Tooltip>
-      {plantPhoto?.imageLocation?.latitude &&
-        plantPhoto?.imageLocation?.longitude && (
-          <Tooltip title="View on map">
-            <IconButton
-              onClick={() =>
-                navigate("/map", { state: { focusHash: plantPhoto.imageHash } })
-              }
-              sx={{
-                position: "fixed",
-                top: 64,
-                right: 8,
-                zIndex: 10,
-                bgcolor: "rgba(255,255,255,0.5)",
-                "&:hover": { bgcolor: "rgba(255,255,255,0.75)" },
-              }}
-            >
-              <MapIcon />
-            </IconButton>
-          </Tooltip>
-        )}
+      {prevPhoto && (
+        <Tooltip title="Previous plant">
+          <IconButton
+            onClick={() => navigate(`/plant/${prevPhoto.imageHash}`)}
+            sx={{ ...buttonSx, left: 8 }}
+          >
+            <ArrowBackIosNewIcon />
+          </IconButton>
+        </Tooltip>
+      )}
+      {nextPhoto && (
+        <Tooltip title="Next plant">
+          <IconButton
+            onClick={() => navigate(`/plant/${nextPhoto.imageHash}`)}
+            sx={{ ...buttonSx, right: 8 }}
+          >
+            <ArrowForwardIosIcon />
+          </IconButton>
+        </Tooltip>
+      )}
       <PlantPhotoView
         plantPhoto={plantPhoto}
         imageData={plantPhoto.imageData}

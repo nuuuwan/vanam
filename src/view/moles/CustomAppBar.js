@@ -30,7 +30,9 @@ const CustomAppBar = ({ title }) => {
         </Typography>
         <IconButton
           color="inherit"
-          onClick={() => latestImageHash && navigate(`/plant/${latestImageHash}`)}
+          onClick={() =>
+            latestImageHash && navigate(`/plant/${latestImageHash}`)
+          }
           disabled={isPlant || !latestImageHash}
           sx={navButtonSx(isPlant)}
         >
