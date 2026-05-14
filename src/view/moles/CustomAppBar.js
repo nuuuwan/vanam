@@ -16,8 +16,13 @@ const CustomAppBar = ({ title }) => {
   const latestImageHash = plantPhotos?.[0]?.imageHash;
 
   const isPlant = location.pathname.startsWith("/plant/");
-  const isPlants = location.pathname === "/plants";
-  const isMap = location.pathname === "/map";
+  const isPlants = location.pathname.startsWith("/plants");
+  const isMap = location.pathname.startsWith("/map");
+
+  const currentPlantHash = isPlant
+    ? location.pathname.replace("/plant/", "")
+    : null;
+  const mapTarget = currentPlantHash ? `/map/${currentPlantHash}` : "/map";
 
   const navButtonSx = () => ({});
 
@@ -48,7 +53,7 @@ const CustomAppBar = ({ title }) => {
         </IconButton>
         <IconButton
           color="inherit"
-          onClick={() => navigate("/map")}
+          onClick={() => navigate(mapTarget)}
           disabled={isMap}
           sx={navButtonSx(isMap)}
         >

@@ -10,30 +10,25 @@ import {
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 import { useAppBarTitle } from "../../App";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const PAGE_SIZE = 10;
 
 const GalleryPage = () => {
   const { setAppBarTitle } = useAppBarTitle();
   const { plantPhotos, isLoading, error } = useVanamDataContext();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+  const navigate = useNavigate();
+  const { page: pageParam } = useParams();
+  const page = Math.max(1, parseInt(pageParam || "1", 10));
 
   const setPage = (value) =>
-    setSearchParams({ page: value }, { replace: true });
+    navigate(`/plants/${value}`, { replace: true });
 
   useEffect(() => {
     setAppBarTitle(
       plantPhotos.length ? `${plantPhotos.length} Plants` : "Plants",
     );
   }, [setAppBarTitle, plantPhotos.length]);
-
-  // Reset to page 1 when data changes
-  useEffect(() => {
-    setSearchParams({ page: 1 }, { replace: true });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plantPhotos.length]);
 
   if (isLoading) {
     return (
@@ -61,7 +56,14 @@ const GalleryPage = () => {
   const completedPhotos = plantPhotos.filter((p) => !p.pending);
   const pendingPhotos = plantPhotos.filter((p) => p.pending);
 
-  const pageCount = Math.ceil(plantPhotos.length / PAGE_SIZE);
+  const pageCount = Math.ceil(plantPhotos.length / PAGE_SIZE) || 1;
+
+  // Redirect to last valid page if requested page is out of range
+  if (page > pageCount) {
+    navigate(`/plants/${pageCount}`, { replace: true });
+    return null;
+  }
+
   const visiblePhotos = plantPhotos.slice(
     (page - 1) * PAGE_SIZE,
     page * PAGE_SIZE,

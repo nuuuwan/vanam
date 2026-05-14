@@ -28,7 +28,7 @@ const AppLayout = () => {
   const isPulling = useRef(false);
   const { refresh } = useVanamDataContext();
   const location = useLocation();
-  const isPullToRefreshEnabled = location.pathname === "/plants";
+  const isPullToRefreshEnabled = location.pathname.startsWith("/plants");
 
   const handleTouchStart = (e) => {
     if (!isPullToRefreshEnabled) return;
@@ -107,7 +107,9 @@ const AppLayout = () => {
             <Route path="/" element={<Navigate to="/plants" replace />} />
             <Route path="/home" element={<Navigate to="/plants" replace />} />
             <Route path="/plants" element={<GalleryPage />} />
+            <Route path="/plants/:page" element={<GalleryPage />} />
             <Route path="/map" element={<MapPage />} />
+            <Route path="/map/:hash" element={<MapPage />} />
             <Route path="/plant/:imageHash" element={<PlantPhotoPage />} />
             <Route path="*" element={<Navigate to="/plants" replace />} />
           </Routes>

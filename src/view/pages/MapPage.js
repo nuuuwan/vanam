@@ -18,22 +18,22 @@ import PlantMapView from "../moles/PlantMapView";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 import { useAppBarTitle } from "./AppLayout";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const MapPage = () => {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { hash } = useParams();
   const { setAppBarTitle } = useAppBarTitle();
   const { plantPhotos, isLoading } = useVanamDataContext();
   const [expanded, setExpanded] = useState(false);
 
-  const focusHash = searchParams.get("plant");
+  const focusHash = hash ?? null;
   const focusPhoto = focusHash
     ? (plantPhotos.find((p) => p.imageHash === focusHash) ?? null)
     : null;
 
   const handleSelectPhoto = (photo) => {
-    setSearchParams({ plant: photo.imageHash }, { replace: true });
+    navigate(`/map/${photo.imageHash}`, { replace: true });
   };
 
   useEffect(() => {
