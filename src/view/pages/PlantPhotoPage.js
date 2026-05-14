@@ -7,7 +7,6 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PlantPhotoView from "../moles/PlantPhotoView";
@@ -18,11 +17,15 @@ const PlantPhotoPage = () => {
   const { imageHash } = useParams();
   const navigate = useNavigate();
   const { setAppBarTitle } = useAppBarTitle();
-  const { plantPhotos, getPlantPhotoByHash, isLoading, error } = useVanamDataContext();
+  const { plantPhotos, getPlantPhotoByHash, isLoading, error } =
+    useVanamDataContext();
 
   const currentIndex = plantPhotos.findIndex((p) => p.imageHash === imageHash);
   const prevPhoto = currentIndex > 0 ? plantPhotos[currentIndex - 1] : null;
-  const nextPhoto = currentIndex < plantPhotos.length - 1 ? plantPhotos[currentIndex + 1] : null;
+  const nextPhoto =
+    currentIndex < plantPhotos.length - 1
+      ? plantPhotos[currentIndex + 1]
+      : null;
 
   const plantPhoto = getPlantPhotoByHash(imageHash);
 
@@ -74,21 +77,6 @@ const PlantPhotoPage = () => {
 
   return (
     <Box sx={{ maxWidth: 600, mx: "auto", position: "relative" }}>
-      <Tooltip title="Back to list">
-        <IconButton
-          onClick={() => navigate("/plants")}
-          sx={{
-            position: "fixed",
-            top: 64,
-            left: 8,
-            zIndex: 10,
-            bgcolor: "rgba(255,255,255,0.5)",
-            "&:hover": { bgcolor: "rgba(255,255,255,0.75)" },
-          }}
-        >
-          <ArrowBackIcon />
-        </IconButton>
-      </Tooltip>
       {prevPhoto && (
         <Tooltip title="Previous plant">
           <IconButton
