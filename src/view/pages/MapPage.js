@@ -32,10 +32,6 @@ const MapPage = () => {
     ? (plantPhotos.find((p) => p.imageHash === focusHash) ?? null)
     : null;
 
-  const handleSelectPhoto = (photo) => {
-    navigate(`/map/${photo.imageHash}`, { replace: true });
-  };
-
   useEffect(() => {
     setAppBarTitle("Map");
   }, [setAppBarTitle]);
@@ -85,7 +81,6 @@ const MapPage = () => {
       <PlantMapView
         plantPhotos={plantPhotos}
         focusPhoto={focusPhoto}
-        onSelectPhoto={handleSelectPhoto}
       />
       <IconButton
         onClick={() => navigate("/plants")}

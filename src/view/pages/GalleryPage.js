@@ -21,8 +21,7 @@ const GalleryPage = () => {
   const { page: pageParam } = useParams();
   const page = Math.max(1, parseInt(pageParam || "1", 10));
 
-  const setPage = (value) =>
-    navigate(`/plants/${value}`, { replace: true });
+  const setPage = (value) => navigate(`/plants/${value}`, { replace: true });
 
   useEffect(() => {
     setAppBarTitle(
