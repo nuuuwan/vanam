@@ -65,7 +65,9 @@ const PlantPhotoView = ({ plantPhoto, imageData, error }) => {
           {plantPhoto.predictions.length > 0 && (
             <Box sx={{ mt: 2 }}>
               {plantPhoto.predictions.length > 1 && (
-                <Box sx={{ mb: 1, fontSize: "0.75rem", color: "text.secondary" }}>
+                <Box
+                  sx={{ mb: 1, fontSize: "0.75rem", color: "text.secondary" }}
+                >
                   {plantPhoto.predictions.length} species detected
                 </Box>
               )}
