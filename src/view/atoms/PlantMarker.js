@@ -39,8 +39,16 @@ const createPendingIcon = () =>
   });
 
 // Custom marker icon using the plant image
-const createCustomIcon = (imageUrl, pending = false) => {
-  const border = pending ? "3px solid #ff9800" : "3px solid #008800";
+const getInitials = (species) => {
+  if (!species) return "";
+  const parts = species.trim().split(/\s+/);
+  const g = parts[0]?.[0]?.toUpperCase() ?? "";
+  const s = parts[1]?.[0]?.toLowerCase() ?? "";
+  return g + s;
+};
+
+const createCustomIcon = (imageUrl, pending = false, initials = "") => {
+  const border = pending ? "2px solid #ff9800" : "2px solid #008800";
   return L.divIcon({
     className: "custom-plant-marker",
     html: `
@@ -52,6 +60,7 @@ const createCustomIcon = (imageUrl, pending = false) => {
         border: ${border};
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         background: white;
+        position: relative;
       ">
         <img 
           src="${imageUrl}" 
@@ -62,6 +71,19 @@ const createCustomIcon = (imageUrl, pending = false) => {
           "
           alt="Plant"
         />
+        ${initials ? `<div style="
+          position: absolute;
+          inset: 0;
+          background: rgba(0,0,0,0.45);
+          color: white;
+          font-size: 10px;
+          font-weight: bold;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: sans-serif;
+          letter-spacing: 0.5px;
+        ">${initials}</div>` : ""}
       </div>
     `,
     iconSize: [25, 25],
@@ -82,7 +104,7 @@ const PlantMarker = ({ photo }) => {
     photo.imageLocation.longitude,
   ];
   const icon = photo.imageData
-    ? createCustomIcon(photo.imageData, photo.pending)
+    ? createCustomIcon(photo.imageData, photo.pending, getInitials(photo.topPrediction?.species))
     : photo.pending
       ? createPendingIcon()
       : defaultIcon;
