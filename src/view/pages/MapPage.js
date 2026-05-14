@@ -78,10 +78,7 @@ const MapPage = () => {
         bottom: 48,
       }}
     >
-      <PlantMapView
-        plantPhotos={plantPhotos}
-        focusPhoto={focusPhoto}
-      />
+      <PlantMapView plantPhotos={plantPhotos} focusPhoto={focusPhoto} />
       <IconButton
         onClick={() => navigate("/plants")}
         sx={{
