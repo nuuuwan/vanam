@@ -1,4 +1,4 @@
-import { Grid, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import DatabaseLink from "../atoms/DatabaseLink";
 import IucnCategoryChip from "../atoms/IucnCategoryChip";
 
@@ -8,42 +8,30 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
   }
 
   return (
-    <Grid container spacing={1} sx={{ mt: 1 }}>
-      {gbif && gbif.id && (
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <DatabaseLink
-            label="GBIF"
-            href={`https://www.gbif.org/species/${gbif.id}`}
-            displayText={gbif.id}
-          />
-        </Grid>
+    <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1, mt: 1 }}>
+      {gbif?.id && (
+        <DatabaseLink
+          label="GBIF"
+          href={`https://www.gbif.org/species/${gbif.id}`}
+          displayText={gbif.id}
+        />
       )}
-
-      {powo && powo.id && (
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <DatabaseLink
-            label="POWO"
-            href={`https://powo.science.kew.org/taxon/${powo.id}`}
-            displayText={powo.id.split(":").pop()}
-          />
-        </Grid>
+      {powo?.id && (
+        <DatabaseLink
+          label="POWO"
+          href={`https://powo.science.kew.org/taxon/${powo.id}`}
+          displayText={powo.id.split(":").pop()}
+        />
       )}
-
-      {(iucn?.id || iucn?.category) && (
-        <Grid size={12}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {iucn.id && (
-              <DatabaseLink
-                label="IUCN Red List"
-                href={`https://www.iucnredlist.org/species/${iucn.id}`}
-                displayText={iucn.id}
-              />
-            )}
-            {iucn.category && <IucnCategoryChip category={iucn.category} />}
-          </Box>
-        </Grid>
+      {iucn?.id && (
+        <DatabaseLink
+          label="IUCN Red List"
+          href={`https://www.iucnredlist.org/species/${iucn.id}`}
+          displayText={iucn.id}
+        />
       )}
-    </Grid>
+      {iucn?.category && <IucnCategoryChip category={iucn.category} />}
+    </Box>
   );
 };
 

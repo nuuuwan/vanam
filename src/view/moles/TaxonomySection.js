@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid } from "@mui/material";
+import { Box } from "@mui/material";
 import DatabaseLink from "../atoms/DatabaseLink";
 
 const TaxonomySection = ({ genus, family }) => {
@@ -8,30 +8,22 @@ const TaxonomySection = ({ genus, family }) => {
   }
 
   return (
-    <Grid container spacing={1} sx={{ mt: 1 }}>
+    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
       {genus && (
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <DatabaseLink
-            label="Genus"
-            href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
-              genus.scientificName,
-            )}`}
-            displayText={genus.scientificName}
-          />
-        </Grid>
+        <DatabaseLink
+          label="Genus"
+          href={`https://en.wikipedia.org/wiki/${encodeURIComponent(genus.scientificName)}`}
+          displayText={genus.scientificName}
+        />
       )}
       {family && (
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <DatabaseLink
-            label="Family"
-            href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
-              family.scientificName,
-            )}`}
-            displayText={family.scientificName}
-          />
-        </Grid>
+        <DatabaseLink
+          label="Family"
+          href={`https://en.wikipedia.org/wiki/${encodeURIComponent(family.scientificName)}`}
+          displayText={family.scientificName}
+        />
       )}
-    </Grid>
+    </Box>
   );
 };
 
