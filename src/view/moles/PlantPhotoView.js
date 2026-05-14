@@ -62,11 +62,11 @@ const PlantPhotoView = ({ plantPhoto, imageData, error }) => {
               sx={{ mt: 1 }}
             />
           )}
-          {plantPhoto.topPrediction && (
+          {plantPhoto.predictions.length > 0 && (
             <Box sx={{ mt: 2 }}>
-              <PlantResultItem
-                result={toResultItem(plantPhoto.topPrediction)}
-              />
+              {plantPhoto.predictions.map((p, i) => (
+                <PlantResultItem key={i} result={toResultItem(p)} />
+              ))}
             </Box>
           )}
           <Box sx={{ pl: 1 }}>

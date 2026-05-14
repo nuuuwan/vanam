@@ -25,7 +25,11 @@ const PlantPhotoPage = () => {
 
   useEffect(() => {
     if (plantPhoto) {
-      const fullName = plantPhoto.topPrediction?.species || "";
+      const topPrediction = plantPhoto.predictions?.reduce(
+        (best, p) => (!best || p.confidence > best.confidence ? p : best),
+        null,
+      ) || plantPhoto.topPrediction;
+      const fullName = topPrediction?.species || "";
       const binomial = fullName.trim().split(/\s+/).slice(0, 2).join(" ");
       setAppBarTitle(
         plantPhoto.pending ? "Unidentified plant" : binomial || "Plant Photo",
