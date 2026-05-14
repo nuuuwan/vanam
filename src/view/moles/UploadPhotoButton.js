@@ -191,12 +191,12 @@ const UploadPhotoButton = ({ iconOnly = false }) => {
     return (
       <>
         <span>
-            <IconButton onClick={handleFileClick} disabled={isLoading}>
-              <AddAPhotoIcon
-                sx={{ color: isLoading ? "secondary.light" : "white" }}
-              />
-            </IconButton>
-          </span>
+          <IconButton onClick={handleFileClick} disabled={isLoading}>
+            <AddAPhotoIcon
+              sx={{ color: isLoading ? "secondary.light" : "white" }}
+            />
+          </IconButton>
+        </span>
         <input
           ref={fileInputRef}
           type="file"

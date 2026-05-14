@@ -1,11 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Box,
-  CircularProgress,
-  Alert,
-  IconButton,
-} from "@mui/material";
+import { Box, CircularProgress, Alert, IconButton } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PlantPhotoView from "../moles/PlantPhotoView";
@@ -30,7 +25,7 @@ const PlantPhotoPage = () => {
 
   useEffect(() => {
     if (plantPhoto) {
-      setAppBarTitle(plantPhoto.topPrediction?.species || "Plant Photo");
+      setAppBarTitle(plantPhoto.pending ? "Unidentified plant" : (plantPhoto.topPrediction?.species || "Plant Photo"));
     }
   }, [plantPhoto, setAppBarTitle]);
 

@@ -32,12 +32,12 @@ const UserButton = () => {
   return (
     <>
       <IconButton onClick={handleMenuOpen} color="inherit">
-          <Badge badgeContent={pendingCount} color="warning">
-            <Avatar sx={{ width: 32, height: 32, bgcolor: "primary.dark" }}>
-              <PersonIcon fontSize="small" />
-            </Avatar>
-          </Badge>
-        </IconButton>
+        <Badge badgeContent={pendingCount} color="warning">
+          <Avatar sx={{ width: 32, height: 32, bgcolor: "primary.dark" }}>
+            <PersonIcon fontSize="small" />
+          </Avatar>
+        </Badge>
+      </IconButton>
       <Menu
         anchorEl={menuAnchor}
         open={Boolean(menuAnchor)}
