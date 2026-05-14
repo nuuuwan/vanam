@@ -10,7 +10,7 @@ const TaxonomySection = ({ genus, family }) => {
   return (
     <Grid container spacing={1} sx={{ mt: 1 }}>
       {genus && (
-        <Grid item xs={12} sm={6}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <DatabaseLink
             label="Genus"
             href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
@@ -21,7 +21,7 @@ const TaxonomySection = ({ genus, family }) => {
         </Grid>
       )}
       {family && (
-        <Grid item xs={12} sm={6}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <DatabaseLink
             label="Family"
             href={`https://en.wikipedia.org/wiki/${encodeURIComponent(
