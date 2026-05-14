@@ -10,7 +10,7 @@ const GalleryPage = () => {
 
   useEffect(() => {
     setAppBarTitle(
-      plantPhotos.length ? `${plantPhotos.length} Plants` : "Plants"
+      plantPhotos.length ? `${plantPhotos.length} Plants` : "Plants",
     );
   }, [setAppBarTitle, plantPhotos.length]);
 

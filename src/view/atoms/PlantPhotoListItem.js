@@ -61,7 +61,7 @@ const PlantPhotoListItem = ({ photo }) => {
             )}
             {photo.pending && (
               <Chip
-                label="Pending"
+                label="Pending Identification"
                 size="small"
                 color="warning"
                 icon={<HourglassEmptyIcon />}
