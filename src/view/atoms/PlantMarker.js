@@ -71,7 +71,9 @@ const createCustomIcon = (imageUrl, pending = false, initials = "") => {
           "
           alt="Plant"
         />
-        ${initials ? `<div style="
+        ${
+          initials
+            ? `<div style="
           position: absolute;
           inset: 0;
           background: rgba(0,0,0,0.45);
@@ -83,7 +85,9 @@ const createCustomIcon = (imageUrl, pending = false, initials = "") => {
           justify-content: center;
           font-family: sans-serif;
           letter-spacing: 0.5px;
-        ">${initials}</div>` : ""}
+        ">${initials}</div>`
+            : ""
+        }
       </div>
     `,
     iconSize: [25, 25],
@@ -92,7 +96,7 @@ const createCustomIcon = (imageUrl, pending = false, initials = "") => {
   });
 };
 
-const PlantMarker = ({ photo }) => {
+const PlantMarker = ({ photo, onSelect }) => {
   const navigate = useNavigate();
 
   if (!photo.imageLocation?.latitude || !photo.imageLocation?.longitude) {
@@ -104,7 +108,11 @@ const PlantMarker = ({ photo }) => {
     photo.imageLocation.longitude,
   ];
   const icon = photo.imageData
-    ? createCustomIcon(photo.imageData, photo.pending, getInitials(photo.topPrediction?.species))
+    ? createCustomIcon(
+        photo.imageData,
+        photo.pending,
+        getInitials(photo.topPrediction?.species),
+      )
     : photo.pending
       ? createPendingIcon()
       : defaultIcon;
@@ -113,7 +121,10 @@ const PlantMarker = ({ photo }) => {
     <Marker
       position={position}
       icon={icon}
-      eventHandlers={{ click: () => navigate(`/plant/${photo.imageHash}`) }}
+      eventHandlers={{
+        click: () =>
+          onSelect ? onSelect(photo) : navigate(`/plant/${photo.imageHash}`),
+      }}
     />
   );
 };

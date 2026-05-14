@@ -18,19 +18,23 @@ import PlantMapView from "../moles/PlantMapView";
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 import { useAppBarTitle } from "./AppLayout";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const MapPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { setAppBarTitle } = useAppBarTitle();
   const { plantPhotos, isLoading } = useVanamDataContext();
   const [expanded, setExpanded] = useState(false);
 
-  const focusHash = location.state?.focusHash;
+  const focusHash = searchParams.get("plant");
   const focusPhoto = focusHash
     ? (plantPhotos.find((p) => p.imageHash === focusHash) ?? null)
     : null;
+
+  const handleSelectPhoto = (photo) => {
+    setSearchParams({ plant: photo.imageHash }, { replace: true });
+  };
 
   useEffect(() => {
     setAppBarTitle("Map");
@@ -78,7 +82,11 @@ const MapPage = () => {
         bottom: 48,
       }}
     >
-      <PlantMapView plantPhotos={plantPhotos} focusPhoto={focusPhoto} />
+      <PlantMapView
+        plantPhotos={plantPhotos}
+        focusPhoto={focusPhoto}
+        onSelectPhoto={handleSelectPhoto}
+      />
       <IconButton
         onClick={() => navigate("/plants")}
         sx={{

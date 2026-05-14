@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   CircularProgress,
@@ -10,13 +10,18 @@ import {
 import PlantPhotoListItem from "../atoms/PlantPhotoListItem";
 import { useAppBarTitle } from "../../App";
 import { useVanamDataContext } from "../../nonview/core/VanamDataContext";
+import { useSearchParams } from "react-router-dom";
 
 const PAGE_SIZE = 10;
 
 const GalleryPage = () => {
   const { setAppBarTitle } = useAppBarTitle();
   const { plantPhotos, isLoading, error } = useVanamDataContext();
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+
+  const setPage = (value) =>
+    setSearchParams({ page: value }, { replace: true });
 
   useEffect(() => {
     setAppBarTitle(
@@ -26,7 +31,8 @@ const GalleryPage = () => {
 
   // Reset to page 1 when data changes
   useEffect(() => {
-    setPage(1);
+    setSearchParams({ page: 1 }, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plantPhotos.length]);
 
   if (isLoading) {

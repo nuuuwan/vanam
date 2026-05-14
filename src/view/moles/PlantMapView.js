@@ -39,7 +39,7 @@ const MapBoundsUpdater = ({ plantPhotos, focusPhoto }) => {
   return null;
 };
 
-const PlantMapView = ({ plantPhotos, focusPhoto }) => {
+const PlantMapView = ({ plantPhotos, focusPhoto, onSelectPhoto }) => {
   return (
     <Box
       sx={{
@@ -68,7 +68,11 @@ const PlantMapView = ({ plantPhotos, focusPhoto }) => {
         />
         <MapBoundsUpdater plantPhotos={plantPhotos} focusPhoto={focusPhoto} />
         {plantPhotos.map((photo) => (
-          <PlantMarker key={photo.imageHash} photo={photo} />
+          <PlantMarker
+            key={photo.imageHash}
+            photo={photo}
+            onSelect={onSelectPhoto}
+          />
         ))}
       </MapContainer>
     </Box>

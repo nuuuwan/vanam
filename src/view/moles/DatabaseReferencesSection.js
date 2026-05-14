@@ -10,7 +10,7 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
   return (
     <Grid container spacing={1} sx={{ mt: 1 }}>
       {gbif && gbif.id && (
-        <Grid item xs={12} sm={6}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <DatabaseLink
             label="GBIF"
             href={`https://www.gbif.org/species/${gbif.id}`}
@@ -20,7 +20,7 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
       )}
 
       {powo && powo.id && (
-        <Grid item xs={12} sm={6}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <DatabaseLink
             label="POWO"
             href={`https://powo.science.kew.org/taxon/${powo.id}`}
@@ -30,7 +30,7 @@ const DatabaseReferencesSection = ({ gbif, powo, iucn }) => {
       )}
 
       {(iucn?.id || iucn?.category) && (
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {iucn.id && (
               <DatabaseLink
