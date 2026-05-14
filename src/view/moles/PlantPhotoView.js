@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Alert } from "@mui/material";
+import { Box, Alert, Chip } from "@mui/material";
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import PhotoMetadataView from "../atoms/PhotoMetadataView";
 import PlantResultItem from "./PlantResultItem";
 
@@ -52,10 +53,12 @@ const PlantPhotoView = ({ plantPhoto, imageData, error }) => {
       {plantPhoto && (
         <Box sx={{ m: 1 }}>
           {plantPhoto.pending && (
-            <Alert severity="warning" sx={{ mt: 1 }}>
-              Pending identification — this photo has been uploaded and is
-              awaiting processing by the identification system.
-            </Alert>
+            <Chip
+              label="Pending Identification"
+              color="warning"
+              icon={<HourglassEmptyIcon />}
+              sx={{ mt: 1 }}
+            />
           )}
           {plantPhoto.topPrediction && (
             <Box sx={{ mt: 2 }}>
