@@ -120,6 +120,9 @@ const GalleryPage = () => {
             setPage(value);
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
+          siblingCount={0}
+          boundaryCount={1}
+          size="small"
           sx={{ mt: 2, display: "flex", justifyContent: "center" }}
         />
       )}
