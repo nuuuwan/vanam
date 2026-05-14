@@ -32,7 +32,9 @@ const LocationView = ({ location }) => {
         </Box>
       </Box>
       {location.nominatimDisplayName && (
-        <Box sx={{ opacity: 0.8, fontSize: "0.8em" }}>{location.nominatimDisplayName}</Box>
+        <Box sx={{ opacity: 0.8, fontSize: "0.8em" }}>
+          {location.nominatimDisplayName}
+        </Box>
       )}
     </Box>
   );
