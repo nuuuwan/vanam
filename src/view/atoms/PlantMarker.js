@@ -21,21 +21,21 @@ const createPendingIcon = () =>
     className: "pending-plant-marker",
     html: `
       <div style="
-        width: 44px;
-        height: 44px;
+        width: 22px;
+        height: 22px;
         border-radius: 50%;
         background: #ff9800;
-        border: 3px solid #e65100;
+        border: 2px solid #e65100;
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 22px;
+        font-size: 11px;
       ">⏳</div>
     `,
-    iconSize: [44, 44],
-    iconAnchor: [22, 22],
-    popupAnchor: [0, -22],
+    iconSize: [22, 22],
+    iconAnchor: [11, 11],
+    popupAnchor: [0, -11],
   });
 
 // Custom marker icon using the plant image
@@ -45,8 +45,8 @@ const createCustomIcon = (imageUrl, pending = false) => {
     className: "custom-plant-marker",
     html: `
       <div style="
-        width: 50px;
-        height: 50px;
+        width: 25px;
+        height: 25px;
         border-radius: 50%;
         overflow: hidden;
         border: ${border};
@@ -64,9 +64,9 @@ const createCustomIcon = (imageUrl, pending = false) => {
         />
       </div>
     `,
-    iconSize: [50, 50],
-    iconAnchor: [25, 25],
-    popupAnchor: [0, -25],
+    iconSize: [25, 25],
+    iconAnchor: [12, 12],
+    popupAnchor: [0, -12],
   });
 };
 
