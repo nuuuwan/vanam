@@ -38,7 +38,11 @@ function parseSpeciesName(name) {
       segments.push({ text: normalized, italic: true, authority: false });
     } else if (/^[a-z]/.test(token)) {
       // Epithet / infraspecific epithet — lowercase, italic
-      segments.push({ text: token.toLowerCase(), italic: true, authority: false });
+      segments.push({
+        text: token.toLowerCase(),
+        italic: true,
+        authority: false,
+      });
     } else {
       // First non-connector, non-epithet token after genus = start of authority
       inAuthority = true;
@@ -68,10 +72,7 @@ const SpeciesNameView = ({
         {seg.text}
       </em>
     ) : (
-      <span
-        key={i}
-        style={seg.authority ? { opacity: 0.5 } : undefined}
-      >
+      <span key={i} style={seg.authority ? { opacity: 0.5 } : undefined}>
         {prefix}
         {seg.text}
       </span>
