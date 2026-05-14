@@ -1,11 +1,12 @@
 import EXIFUtils from "./EXIFUtils";
 
 export default class LocationPrediction {
-  constructor(latitude, longitude, accuracy, source = "browser") {
+  constructor(latitude, longitude, accuracy, source = "browser", nominatimDisplayName = null) {
     this.latitude = latitude;
     this.longitude = longitude;
     this.accuracy = accuracy;
     this.source = source; // "browser" or "exif"
+    this.nominatimDisplayName = nominatimDisplayName;
   }
 
   static async fromBrowser() {

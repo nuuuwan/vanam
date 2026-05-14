@@ -11,6 +11,7 @@ const PlantPhotoFromJSONMixin = (Base) =>
           json.latLng.lng,
           null,
           json.source || "browser",
+          json.nominatim_display_name || null,
         );
       } else if (json.imageLocation) {
         imageLocation = new LocationPrediction(
