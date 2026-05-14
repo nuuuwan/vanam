@@ -11,7 +11,7 @@ const CustomAppBar = ({ title }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { plantPhotos } = useVanamDataContext();
-  document.title = title;
+  document.title = `Vanam - ${title}`;
 
   const latestImageHash = plantPhotos?.[0]?.imageHash;
 
